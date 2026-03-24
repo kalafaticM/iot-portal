@@ -169,7 +169,7 @@ footer{border-top:1px solid var(--brd);padding:15px 32px;text-align:center;font-
     <div class="sp"><div class="n" style="color:var(--ac2)">24</div><div class="l">Ard. primeri</div></div>
     <div class="sp"><div class="n" style="color:var(--ac3)">5</div><div class="l">Ard.+C#</div></div>
     <div class="sp"><div class="n" style="color:#b388ff">17</div><div class="l">Komponente</div></div>
-    <div class="sp"><div class="n" style="color:#b388ff">13</div><div class="l">IoT teorija</div></div>
+    <div class="sp"><div class="n" style="color:#b388ff">15</div><div class="l">IoT teorija</div></div>
   </div>
 </div>
 </header>
@@ -262,6 +262,8 @@ footer{border-top:1px solid var(--brd);padding:15px 32px;text-align:center;font-
     <a href="#" onclick="oI('iot11');return false"><span class="arr"></span>IoT-11 IoT model</a>
     <a href="#" onclick="oI('iot12');return false"><span class="arr"></span>IoT-12 Aktuatori</a>
     <a href="#" onclick="oI('iot13');return false"><span class="arr"></span>IoT-13 IoT čvorovi</a>
+    <a href="#" onclick="oI('iot14');return false"><span class="arr"></span>IoT-14 Univerzalni pristup</a>
+    <a href="#" onclick="oI('iot15');return false"><span class="arr"></span>IoT-15 Ponavljanje (bank pitanja)</a>
   </nav></div>
 </aside>
 
@@ -2116,7 +2118,7 @@ SerialPort port = <span class="kw">new</span> <span class="fn">SerialPort</span>
 
 <!-- ===== IoT TEORIJA ===== -->
 <div class="sec" data-s="iot" id="iot-sec">
-<div class="sh"><h2 style="color:#b388ff">🌐 IoT TEORIJA</h2><div class="sl"></div><div class="sct">13 jedinica</div></div>
+<div class="sh"><h2 style="color:#b388ff">🌐 IoT TEORIJA</h2><div class="sl"></div><div class="sct">15 jedinica</div></div>
 
 <!-- IoT T1 Naponski delilac -->
 <div class="pc" id="iot1" data-q="naponski delilac otpornici formula struja impedansa opterecenje stabilnost šum izbor vrednosti 10k">
@@ -2148,10 +2150,29 @@ SerialPort port = <span class="kw">new</span> <span class="fn">SerialPort</span>
   </tbody></table>
   <div class="nt">⚠️ Nikad ne koristiti naponski delilac za napajanje Arduina (5V iz 9V) — delilac ne daje stabilan napon pri promeni opterećenja. Koristiti stabilizator <code>LM7805</code> ili USB.</div>
 </div></div>
+<div class="lst"><div class="lstt">Napajanje Arduina — VIN i 5V pin</div><div class="lc">
+  <h4>Načini napajanja Arduino Uno</h4>
+  <table class="pt"><thead><tr><th>Metod</th><th>Pin / konektor</th><th>Opseg</th><th>Komentar</th></tr></thead>
+  <tbody>
+    <tr><td><strong>USB</strong></td><td>USB-B konektor</td><td class="pv">5V</td><td>Za programiranje i razvoj; limitiran na ~500mA</td></tr>
+    <tr><td><strong>Eksterno DC</strong></td><td>DC jack (VIN)</td><td class="pv">7–12V</td><td>Preporučeno za finalne projekte; interni regulator → 5V</td></tr>
+    <tr><td><strong>Direktno 5V pin</strong></td><td>5V pin</td><td class="pv">5V stabilno</td><td>Zaobilazi regulator! Nema zaštite od pogrešnog napona.</td></tr>
+  </tbody></table>
+  <div class="nt">⚠️ NIKADA ne spajaj USB i direktno 5V napajanje istovremeno — može doći do kratkog spoja između izvora! Arduino štiti USB liniju diodama kada je prisutan VIN napon.</div>
+  <h4>Proračuni za naponski delilac</h4>
+  <p>Izračunavanje R1 za zadati izlazni napon: <code>R1 = R2 × (Vin/Vout − 1)</code></p>
+  <p>Primer: 9V → 5V za A0, R2=10kΩ: <code>R1 = 10k × (9/5 − 1) = 10k × 0.8 = 8kΩ</code> (koristiti 8.2kΩ E24)</p>
+  <p>Struja kroz delilac: <code>I = Vin / (R1+R2) = 9/(8k+10k) = 0.5mA</code>. Disipacija: <code>P = 9V × 0.5mA = 4.5mW</code> — mala.</p>
+  <div class="inf">💡 Kondenzator 100nF paralelno sa R2 filtrira visokofrekventni šum na ADC ulazu. Za spore signale (temperatura, svetlost) sasvim dovoljan.</div>
+</div></div>
 <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
   <div class="pi">Zašto biramo 10kΩ umesto 1kΩ za naponski delilac sa Arduino ADC?</div>
   <div class="pi">Šta bi se desilo sa signalom ako koristimo otpornike od 1MΩ?</div>
   <div class="pi">Zašto razdelnik napona nije dobar za napajanje Arduina?</div>
+  <div class="pi">Šta znači VIN na Arduino ploči i koji napon treba dovesti?</div>
+  <div class="pi">Zašto je opasno direktno spojiti USB i 5V pin istovremeno?</div>
+  <div class="pi">Izračunati R1 u deliocu za 9V → 5V na A0, ako je R2=10kΩ.</div>
+  <div class="pi">Kolika je struja i disipacija za delilac R1=8kΩ, R2=10kΩ, Vin=9V?</div>
 </div></div>
 </div></div></div></div></div>
 
@@ -2422,12 +2443,37 @@ npr. BC547 hFE=200: I_baza=5mA → I_kolektor=1000mA (1A)!</pre></div>
     <div class="ci">❌ Ograničena memorija i brzina; nisu za multimediju/AI — za to koristiti SoC ili mikroprocesore</div>
   </div>
 </div></div>
+<div class="lst"><div class="lstt">Razvojna ploča (development board)</div><div class="lc">
+  <h4>Šta je razvojna ploča?</h4>
+  <p>Razvojna ploča je <strong>štampana ploča koja integriše MCU čip sa svim potrebnim blokovim</strong>a za odmah funkcionalan sistem — bez lemljenja sopstvenih kola. Uključuje: regulator napona, USB interface za programiranje, reset dugme, indikatorske LED, standardizovane konektore pinova.</p>
+  <h4>Prednosti razvojnih ploča</h4>
+  <div class="cg">
+    <div class="ci">✅ Odmah funkcionalna bez dodatne elektronike; lako programiranje via USB</div>
+    <div class="ci">✅ Standardizovani raspored pinova (pinout) omogućava shield-ove i module</div>
+    <div class="ci">✅ Zaštitna kola na ploči (regulator, diode); velika zajednica i gotove biblioteke</div>
+    <div class="ci">❌ Skuplja od "golog" MCU čipa; veće dimenzije; viša potrošnja od minimalnog kola</div>
+  </div>
+  <h4>Arduino Uno — ključne karakteristike</h4>
+  <table class="pt"><thead><tr><th>Osobina</th><th>Vrednost</th></tr></thead>
+  <tbody>
+    <tr><td>MCU</td><td class="pv">ATmega328P (8-bit AVR, 16MHz)</td></tr>
+    <tr><td>Flash / RAM / EEPROM</td><td class="pv">32KB / 2KB / 1KB</td></tr>
+    <tr><td>Digitalni I/O</td><td class="pv">14 pinova (6 PWM: 3,5,6,9,10,11)</td></tr>
+    <tr><td>Analogni ulazi</td><td class="pv">6 × 10-bit ADC (A0–A5)</td></tr>
+    <tr><td>Napajanje</td><td class="pv">USB 5V ili VIN 7–12V (regulator → 5V)</td></tr>
+    <tr><td>Komunikacija</td><td class="pv">UART (D0/D1), I²C (A4/A5), SPI (10–13)</td></tr>
+  </tbody></table>
+  <p>Na ploči se nalaze: reset dugme, USB-B konektor (programiranje), DC jack (napajanje), TX/RX LED indikatori, pin 13 LED.</p>
+</div></div>
 <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
   <div class="pi">Šta razlikuje mikrokontroler od mikroprocesora?</div>
   <div class="pi">Navesti 5 komponenti unutar jednog MCU čipa i funkciju svake.</div>
   <div class="pi">Koji Arduino MCU je AVR 8-bitni a koji je ARM 32-bitni?</div>
   <div class="pi">Zašto ESP32 koristimo za IoT umesto Arduino Uno?</div>
   <div class="pi">Šta je deep-sleep i zašto je važan za IoT?</div>
+  <div class="pi">Šta je razvojna ploča i koje prednosti ima u odnosu na "goli" MCU čip?</div>
+  <div class="pi">Zašto standardizovani pinout (raspored pinova) olakšava razvoj?</div>
+  <div class="pi">Koliko PWM pinova ima Arduino Uno i koji su to?</div>
 </div></div>
 </div></div></div></div></div>
 
@@ -2545,12 +2591,44 @@ Wire.<span class="fn">requestFrom</span>(addr, <span class="nm">1</span>);
   </tbody></table>
   <div class="nt">⚠️ Pazi na nivoe napona: 3.3V uređaji (ESP32, BMP280) zahtevaju level-shifter pri spajanju na 5V Arduino Uno!</div>
 </div></div>
+<div class="lst"><div class="lstt">SPI magistrala (dopuna)</div><div class="lc">
+  <h4>SPI — Serial Peripheral Interface</h4>
+  <table class="pt"><thead><tr><th>Osobina</th><th>UART</th><th>I²C</th><th>SPI</th></tr></thead>
+  <tbody>
+    <tr><td>Tip</td><td>Asinhroni</td><td>Sinhroni (SCL)</td><td>Sinhroni (SCK)</td></tr>
+    <tr><td>Žice</td><td class="pv">TX, RX</td><td class="pv">SDA, SCL</td><td class="pv">MOSI, MISO, SCK, SS</td></tr>
+    <tr><td>Adresiranje</td><td>Ne</td><td>Da (7-bit)</td><td>Ne (SS pin po uređaju)</td></tr>
+    <tr><td>Brzina</td><td class="pv">do 1M baud</td><td class="pv">do 1 MHz</td><td class="pv">1–50+ MHz</td></tr>
+    <tr><td>Dupleks</td><td>Full</td><td>Half</td><td><strong>Full duplex</strong></td></tr>
+    <tr><td>Upotreba</td><td>PC, BT, GPS</td><td>Senzori, RTC</td><td>SD kartica, displej, ADC</td></tr>
+  </tbody></table>
+  <p>SPI bira se kad treba <strong>velika brzina i full-duplex</strong> (npr. SD kartica, TFT displej). I²C bira se kad treba <strong>manje žica i adresiranje</strong> više senzora (npr. 8 senzora na 2 žice).</p>
+  <h4>Histerezis — izbegavanje treperenja na pragu</h4>
+  <p>Kada senzor daje vrednost blizu praga (npr. ADC=500 pri pragu 500), mali šum izaziva naizmenično uključivanje/isključivanje. Rešenje: <strong>histerezis</strong> — dva praga umesto jednog.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>histerezis — automatska rasveta sa LDR</span></div>
+<pre><span class="kw">int</span> prag_ukljuci = <span class="nm">400</span>;  <span class="cm">// uključi kada padne ispod 400</span>
+<span class="kw">int</span> prag_iskljuci = <span class="nm">600</span>; <span class="cm">// isključi kada poraste iznad 600</span>
+<span class="kw">bool</span> svetlo = <span class="kw">false</span>;
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> v = <span class="fn">analogRead</span>(A0);
+  <span class="kw">if</span> (!svetlo &amp;&amp; v &lt; prag_ukljuci) {
+    svetlo = <span class="kw">true</span>;  <span class="fn">digitalWrite</span>(<span class="nm">LED</span>, HIGH);
+  }
+  <span class="kw">if</span> (svetlo &amp;&amp; v &gt; prag_iskljuci) {
+    svetlo = <span class="kw">false</span>; <span class="fn">digitalWrite</span>(<span class="nm">LED</span>, LOW);
+  }
+}</pre></div>
+</div></div>
 <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
   <div class="pi">Šta znači "asinhroni" u UART komunikaciji?</div>
   <div class="pi">Koliko uređaja može biti na jednoj I²C magistrali?</div>
   <div class="pi">Zašto su pull-up otpornici obavezni za I²C?</div>
   <div class="pi">Koliko mV je 1 LSB za Arduino ADC pri Vref=5V?</div>
   <div class="pi">Koji Arduino pinovi su TX i RX za UART?</div>
+  <div class="pi">Kada birate SPI umesto I²C? Navesti tehničke razloge.</div>
+  <div class="pi">Šta je histerezis i zašto je korisna kod automatske rasvete?</div>
+  <div class="pi">Izračunati 10-bitni ADC kod za napon 1.65V pri Vref=3.3V.</div>
 </div></div>
 </div></div></div></div></div>
 
@@ -2839,6 +2917,157 @@ AKO temperatura &gt; 40°C:
   <div class="pi">ESP32 šalje WiFi podatke svakih 5 sekundi. Kako optimizovati potrošnju baterije?</div>
   <div class="pi">Koji IoT čvor biste izabrali za: (a) baterijski senzor koji šalje temp. svakih 10 min; (b) AI kamera za detekciju lica?</div>
 </div></div>
+</div></div></div></div></div>
+
+
+
+<!-- IoT T14 Univerzalni pristup -->
+<div class="pc" id="iot14" data-q="IoT problem univerzalni pristup korak analiza ulazi izlazi apstrakcija logika tehnologija bezbednost testiranje model">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,#b388ff,rgba(179,136,255,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('iot14')">
+  <div class="pchl"><div class="pcm"><span class="bg t">IoT-14</span><span class="bg t">Metodologija</span></div>
+  <div class="pcti">Teorijska i logička postavka IoT problema — univerzalni pristup</div>
+  <div class="pcsu">IoT = 3 sveta (fizički + digitalni + komunikacioni). 7 koraka od analize do testiranja. Važi za svaki IoT zadatak.</div></div>
+  <div class="tog" id="tiot14">+</div>
+</div>
+<div class="pcb" id="biot14">
+<div class="pb"><button class="btnp" onclick="pC('iot14')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+<div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+  <h4>IoT problem uvek uključuje 3 sveta</h4>
+  <div class="cg">
+    <div class="ci"><strong>Fizički svet</strong> — veličine koje postoje u realnosti: svetlost, temperatura, pokret, napon, pritisak</div>
+    <div class="ci"><strong>Digitalni svet</strong> — mikrokontroler, logika, podaci, algoritmi, stanja</div>
+    <div class="ci"><strong>Komunikacioni svet</strong> — razmena informacija: lokalno (I2C/UART) ili mreža (WiFi/BT/LoRa)</div>
+  </div>
+  <div class="inf">💡 IoT problem <strong>nikada nije samo programerski ili samo elektronski</strong> — uvek treba sagledati sva 3 sveta.</div>
+  <h4>7 koraka univerzalnog rešavanja IoT problema</h4>
+  <div class="pl">
+    <div class="pi"><strong>Korak 1 — Razumevanje problema</strong>: Šta sistem treba da radi? Koji je cilj? Da li reaguje na okolinu ili korisnika? <em>Bez jasnog cilja nema dobrog IoT rešenja.</em></div>
+    <div class="pi"><strong>Korak 2 — Identifikacija ulaza i izlaza</strong>: Šta sistem "posmatra"? (senzori, tasteri, podaci) Šta sistem "menja" u okolini? (aktuatori, signali, obaveštenja)</div>
+    <div class="pi"><strong>Korak 3 — Apstrakcija (modelovanje)</strong>: Realni svet → uprošćen model. Temperatura → broj; svetlo → ADC vrednost; uređaj ON/OFF → logičko stanje. <em>Učenik radi sa modelom, ne sa stvarnošću direktno.</em></div>
+    <div class="pi"><strong>Korak 4 — Logička pravila odlučivanja</strong>: IF-ELSE, poređenja, pragovi, stanja. <em>Ovo je "srce" IoT sistema — pamet sistema.</em></div>
+    <div class="pi"><strong>Korak 5 — Tehnička realizacija</strong>: Tek sada se bira mikrokontroler, senzori, aktuatori, način upravljanja. <strong>Tehnologija se bira na osnovu modela, ne obrnuto!</strong></div>
+    <div class="pi"><strong>Korak 6 — Bezbednost i pouzdanost</strong>: Šta ako senzor ne radi? Preveliki napon? Da li je sistem bezbedan za korisnika? Električna zaštita.</div>
+    <div class="pi"><strong>Korak 7 — Testiranje i korekcija</strong>: Testiranje u realnim uslovima, podešavanje pragova, optimizacija. Rešenje nije "gotovo" kada se prvi put pokrene.</div>
+  </div>
+  <h4>Logički dijagram — važi za sve IoT sisteme</h4>
+  <div class="cb"><div class="cbh"><span>dijagram toka</span></div>
+<pre>Fizički svet
+    ↓
+Senzori (ulazi)
+    ↓
+Model (brojevi, stanja, ADC vrednosti)
+    ↓
+Logika odlučivanja (IF-THEN, pragovi, stanja)
+    ↓
+Izlazi / aktuatori
+    ↓
+Promena u fizičkom svetu</pre></div>
+  <div class="inf">📌 Ovaj dijagram važi za: pametnu kuću, industrijski IoT, stakleničku automatiku, medicinske uređaje, pametni grad — sve IoT primene.</div>
+  <h4>Ključna ideja</h4>
+  <p>IoT nije samo Arduino, nije samo kod, nije samo elektronika. IoT je <strong>proces rešavanja problema kroz modelovanje realnosti, donošenje odluka i upravljanje okolinom pomoću digitalnih sistema</strong>. Ko savlada ovaj način razmišljanja, može rešavati bilo koji IoT zadatak.</p>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Koja su 3 "sveta" koje svaki IoT problem uključuje?</div>
+  <div class="pi">Koji je najvažniji korak pre pisanja koda — i zašto?</div>
+  <div class="pi">Šta znači "apstrakcija" u kontekstu IoT sistema? Navedi primer.</div>
+  <div class="pi">Napisati IF-THEN logiku za automatsko paljenje ventilatora kad temperatura pređe 28°C.</div>
+  <div class="pi">Zašto se tehnologija bira POSLE definisanja modela?</div>
+  <div class="pi">Navesti 3 bezbednosna pitanja koja treba postaviti pri dizajnu IoT sistema.</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- IoT T15 Ponavljanje — bank pitanja -->
+<div class="pc" id="iot15" data-q="ponavljanje provera znanja IoT pitanja mikrokontroler senzori aktuatori rele PWM naponski delilac galvansko protokoli">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,#b388ff,rgba(179,136,255,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('iot15')">
+  <div class="pchl"><div class="pcm"><span class="bg t">IoT-15</span><span class="bg n">Provera</span></div>
+  <div class="pcti">Ponavljanje — prvo polugodište (bank pitanja)</div>
+  <div class="pcsu">Organizovana pitanja za proveru: Opšte, Senzori, Aktuatori, IoT čvorovi, Rele/galvansko, Naponski delilac, PWM.</div></div>
+  <div class="tog" id="tiot15">+</div>
+</div>
+<div class="pcb" id="biot15">
+<div class="pb"><button class="btnp" onclick="pC('iot15')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+<div class="lst"><div class="lstt">Opšte — Mikrokontroleri i razvojne ploče</div><div class="lc">
+<div class="pl">
+  <div class="pi">Šta je mikrokontroler (MCU) i koje glavne celine sadrži?</div>
+  <div class="pi">Po čemu se mikrokontroler razlikuje od mikroprocesora?</div>
+  <div class="pi">Koja je uloga ADC-a u funkciji "prikupljanje podataka"?</div>
+  <div class="pi">Šta mikrokontroler upravlja u delu "aktuatori" i kojim signalom može da obezbedi preciznu kontrolu?</div>
+  <div class="pi">Koje serijske interfejse mikrokontroler koristi za komunikaciju?</div>
+  <div class="pi">Koji su sleep/deep-sleep režimi i zašto su važni za IoT?</div>
+  <div class="pi">Kako se MCU-i dele prema širini registra? Navesti primere za 8-bit, 16-bit i 32-bit.</div>
+  <div class="pi">Šta je razvojna ploča i koje prednosti ima nad "golim" MCU čipom?</div>
+  <div class="pi">Koje su karakteristike Arduino Uno ploče (MCU, flash, RAM, pinovi)?</div>
+  <div class="pi">Šta donosi standardizacija pinova na pločama poput Arduina?</div>
+</div></div></div>
+<div class="lst"><div class="lstt">Senzori, čvorovi, aktuatori</div><div class="lc">
+<div class="pl">
+  <div class="pi">Kako bi definisao IoT i objasnio njegovu osnovnu svrhu?</div>
+  <div class="pi">Koje komponente čine tipičan IoT sistem i kakvu ulogu ima svaka?</div>
+  <div class="pi">Kako izgleda kompletan tok podataka u IoT sistemu — od senzora do aplikacije?</div>
+  <div class="pi">Po čemu se razlikuju edge i cloud obrada podataka? Kada biraš koju?</div>
+  <div class="pi">Kako objašnjavaš princip rada senzora? Koji fizički efekti se koriste?</div>
+  <div class="pi">Klasifikuj LDR, DS18B20 i PIR senzor prema vrsti izlaznog signala.</div>
+  <div class="pi">Zašto logički nivo 5V može oštetiti ulaz MCU od 3.3V i kako se rešava?</div>
+  <div class="pi">Šta je rezolucija ADC i kako se izračunava digitalni kod za dati napon i referencu?</div>
+  <div class="pi">Šta je histerezis i zašto je koristan kod senzora prisustva ili automatske rasvete?</div>
+  <div class="pi">Navedite konkretne senzore za: temperaturu, pritisak, gasove, osvetljenost.</div>
+  <div class="pi">Kako definišeš aktuator? Navedi 3 vrste sa primerima.</div>
+  <div class="pi">Po čemu se razlikuju ON/OFF, PWM i analogno upravljanje? Kada koristiti svako?</div>
+  <div class="pi">Kako bi u "pametnoj učionici" odabrao i upravljao akuatorima (svetla, roletne)?</div>
+</div></div></div>
+<div class="lst"><div class="lstt">IoT čvorovi</div><div class="lc">
+<div class="pl">
+  <div class="pi">Uporedi Arduino Uno, ESP32, Raspberry Pi i STM32 po mogućnostima i primeni.</div>
+  <div class="pi">Koje napone i struje imaš u vidu za Arduino Uno, ESP32 i RPi?</div>
+  <div class="pi">Koji kriterijumi određuju izbor IoT čvora za projekat?</div>
+  <div class="pi">Koja je uloga UART, I²C i SPI u IoT sistemima?</div>
+  <div class="pi">Kada daješ prednost SPI nad I²C? Navesti tehničke razloge.</div>
+  <div class="pi">Kako se razlikuju aktivno, light-sleep i deep-sleep potrošnja?</div>
+  <div class="pi">Kako planirati raspored pinova kad ima više periferija a malo ADC/PWM pinova?</div>
+  <div class="pi">Osmisli arhitekturu "pametne garaže" — koji čvor, senzori, aktuatori, komunikacija?</div>
+</div></div></div>
+<div class="lst"><div class="lstt">Rele i galvansko odvajanje</div><div class="lc">
+<div class="pl">
+  <div class="pi">Šta znači galvansko odvajanje i zašto je važno u IoT sistemima?</div>
+  <div class="pi">Koja su dva osnovna dela relea? Šta označavaju NO i NC kontakti?</div>
+  <div class="pi">Šta je IN, COM i VCC na rele modulu?</div>
+  <div class="pi">Zašto rele koristimo u IoT sistemu za uključivanje 12V ili 220V potrošača?</div>
+  <div class="pi">Zašto rele NIJE pogodan za PWM prigušivanje LED trake?</div>
+  <div class="pi">Kako galvansko odvajanje štiti Arduino i korisnika?</div>
+  <div class="pi">Šta se dešava u kolu kada Arduino aktivira rele modul?</div>
+  <div class="pi">Napiši pseudokod za pametno svetlo sa LDR-om i relejem.</div>
+  <div class="pi">Kako rele modul sa optokaplerom dodatno izoluje Arduino od potrošača?</div>
+  <div class="pi">Objasni razliku u bezbednosti: direktno 220V na Arduinu vs. rele sa galvanskim odvajanjem.</div>
+</div></div></div>
+<div class="lst"><div class="lstt">Naponski delilac i napajanje Arduina</div><div class="lc">
+<div class="pl">
+  <div class="pi">Šta je naponski delilac i koja je osnovna formula?</div>
+  <div class="pi">Šta znači VIN na Arduino ploči i koji napon treba dovesti?</div>
+  <div class="pi">Koja je razlika između napajanja preko VIN/DC konektora i direktno na 5V pin?</div>
+  <div class="pi">Zašto naponski delilac nije dobar za napajanje Arduina?</div>
+  <div class="pi">Kolika struja prolazi kroz delilac R1=1kΩ, R2=800Ω, Vin=9V? Kolika je disipacija?</div>
+  <div class="pi">Zašto se koriste otpornici 10kΩ-47kΩ a ne 100Ω ili 1MΩ?</div>
+  <div class="pi">Ako R1=8kΩ, R2=10kΩ, Vin=9V — koliki je Vout na A0?</div>
+  <div class="pi">Čemu služi kondenzator 100nF paralelno sa R2 u deliocu za ADC?</div>
+  <div class="pi">Šta se dešava ako istovremeno spojiš USB i eksterno 5V napajanje direktno na 5V pin?</div>
+</div></div></div>
+<div class="lst"><div class="lstt">PWM</div><div class="lc">
+<div class="pl">
+  <div class="pi">Šta znači PWM i čemu služi?</div>
+  <div class="pi">Šta je duty cycle i kako utiče na prosečan napon?</div>
+  <div class="pi">Formula za prosečan napon: Vavg = ?</div>
+  <div class="pi">Zašto je PWM efikasniji od linearne regulacije napona?</div>
+  <div class="pi">Kako PWM utiče na LED i DC motor?</div>
+  <div class="pi">Zašto se stavlja flyback (slobodnotekuća) dioda preko motora?</div>
+  <div class="pi">Koja minimalna frekvencija PWM-a je dovoljna da LED ne treperi?</div>
+  <div class="pi">Zašto se analogWrite() ne koristi za RC servo? Šta se koristi?</div>
+  <div class="pi">Kako PWM signal može biti "pretvoren" u aproksimativni analogni napon?</div>
+  <div class="pi">Koje greške treba izbegavati kod PWM upravljanja (LED, motor, MOSFET)?</div>
+</div></div></div>
 </div></div></div></div></div>
 
 
