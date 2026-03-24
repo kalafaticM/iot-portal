@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arduino & C# — Referentni Indeks</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e17;--bg2:#0f1520;--bg3:#141c2e;--panel:#111827;--brd:#1e2d47;--ac:#00d4ff;--ac2:#ff6b35;--ac3:#39ff14;--tx:#c8d8f0;--dim:#5a7090;--hd:#e8f4ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'Exo 2',sans-serif;font-weight:300;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.01) 2px,rgba(0,212,255,.01) 4px);pointer-events:none;z-index:9999}
+header{background:linear-gradient(135deg,#050b18,#0a1628,#060d1e);border-bottom:1px solid var(--brd);position:relative;overflow:hidden}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,rgba(0,212,255,.07),transparent 60%),radial-gradient(ellipse 60% 80% at 80% 30%,rgba(255,107,53,.05),transparent 60%)}
+.hdr{position:relative;max-width:1400px;margin:0 auto;padding:30px 32px;display:flex;align-items:flex-end;gap:22px}
+.hdr svg{width:58px;height:58px;flex-shrink:0}
+.hdr h1{font-family:'Share Tech Mono',monospace;font-size:2.1rem;color:var(--hd);text-shadow:0 0 30px rgba(0,212,255,.4);line-height:1}
+.hdr h1 .a{color:var(--ac)}.hdr h1 .b{color:var(--ac2)}
+.sub{margin-top:5px;font-size:.76rem;color:var(--dim);letter-spacing:3px;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
+.stats{margin-left:auto;display:flex;gap:14px}
+.sp{text-align:center;padding:6px 12px;border:1px solid var(--brd);border-radius:4px;background:rgba(0,212,255,.05)}
+.sp .n{font-family:'Share Tech Mono',monospace;font-size:1.25rem;color:var(--ac);line-height:1}
+.sp .l{font-size:.56rem;color:var(--dim);text-transform:uppercase;letter-spacing:2px;margin-top:2px}
+.nav{background:var(--bg2);border-bottom:1px solid var(--brd);position:sticky;top:0;z-index:100}
+.nav-in{max-width:1400px;margin:0 auto;padding:0 32px;display:flex;overflow-x:auto;scrollbar-width:none}
+.nav-in::-webkit-scrollbar{display:none}
+.tb{flex-shrink:0;padding:11px 17px;border:none;background:transparent;color:var(--dim);font-family:'Exo 2',sans-serif;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tb:hover{color:var(--tx)}.tb.on{color:var(--ac);border-bottom-color:var(--ac)}
+.srch{background:var(--bg3);border-bottom:1px solid var(--brd);padding:9px 32px}
+.si{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:10px}
+#si{flex:1;background:transparent;border:none;outline:none;font-family:'Share Tech Mono',monospace;font-size:.88rem;color:var(--tx);caret-color:var(--ac)}
+#si::placeholder{color:var(--dim)}
+#sc{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--dim)}
+.main{max-width:1400px;margin:0 auto;padding:22px 32px;display:grid;grid-template-columns:245px 1fr;gap:22px}
+.sdb{position:sticky;top:83px;height:fit-content;max-height:calc(100vh - 100px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--brd) transparent}
+.sb{background:var(--panel);border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:12px}
+.sbh{padding:8px 13px;background:rgba(0,212,255,.06);border-bottom:1px solid var(--brd);font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--dim);text-transform:uppercase;letter-spacing:2px;display:flex;align-items:center;gap:7px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--ac);box-shadow:0 0 5px var(--ac)}
+.sbn a{display:flex;align-items:center;gap:8px;padding:7px 13px;color:var(--dim);text-decoration:none;font-size:.75rem;border-bottom:1px solid rgba(30,45,71,.4);transition:all .15s}
+.sbn a:last-child{border-bottom:none}
+.sbn a:hover{background:rgba(0,212,255,.05);color:var(--ac);padding-left:17px}
+.arr{width:4px;height:4px;border-right:1px solid;border-top:1px solid;transform:rotate(45deg);flex-shrink:0}
+.cnt{min-width:0}
+.sec{margin-bottom:30px}.sec:not(.on){display:none}
+.sh{display:flex;align-items:center;gap:12px;margin-bottom:15px;padding-bottom:8px;border-bottom:1px solid var(--brd)}
+.sh h2{font-family:'Share Tech Mono',monospace;font-size:.92rem;font-weight:400;color:var(--hd);letter-spacing:1px}
+.sl{flex:1;height:1px;background:linear-gradient(to right,var(--brd),transparent)}
+.sct{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--dim);padding:2px 7px;border:1px solid var(--brd);border-radius:3px}
+.pc{background:var(--panel);border:1px solid var(--brd);border-radius:8px;overflow:hidden;margin-bottom:16px;transition:border-color .2s}
+.pc:hover{border-color:rgba(0,212,255,.2)}.pc.cs:hover{border-color:rgba(255,107,53,.2)}
+.pct{display:flex}
+.pcs{width:4px;flex-shrink:0;background:linear-gradient(to bottom,var(--ac),rgba(0,212,255,.1))}
+.pc.cs .pcs{background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))}
+.pc.gr .pcs{background:linear-gradient(to bottom,var(--ac3),rgba(57,255,20,.1))}
+.pch{flex:1;padding:14px 18px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start}
+.pchl{flex:1}
+.pcm{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.bg{padding:2px 7px;border-radius:2px;font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;font-family:'Share Tech Mono',monospace}
+.bg.a{background:#0d4f6b;color:#00d4ff}.bg.c{background:#5a1a0a;color:#ff6b35}
+.bg.g{background:#1a3a10;color:#39ff14}.bg.t{background:#2d1a5a;color:#b388ff}
+.bg.n{background:transparent;border:1px solid var(--brd);color:var(--dim)}
+.pcti{font-size:.98rem;font-weight:700;color:var(--hd);margin-bottom:3px}
+.pcsu{font-size:.76rem;color:var(--dim);line-height:1.5}
+.tog{flex-shrink:0;margin-left:13px;width:25px;height:25px;border:1px solid var(--brd);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.88rem;transition:all .2s;cursor:pointer;user-select:none;background:transparent}
+.tog.op{background:var(--ac);color:var(--bg);border-color:var(--ac)}.pc.cs .tog.op{background:var(--ac2);border-color:var(--ac2)}
+.pcb{display:none;border-top:1px solid var(--brd)}.pcb.op{display:block}
+.pb{padding:8px 18px;border-bottom:1px solid var(--brd);display:flex;justify-content:flex-end;background:rgba(0,0,0,.2)}
+.btnp{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;background:transparent;border:1px solid var(--brd);border-radius:4px;color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:1px;cursor:pointer;transition:all .2s;text-decoration:none}
+.btnp:hover{border-color:var(--ac);color:var(--ac);background:rgba(0,212,255,.05)}
+.pc.cs .btnp:hover{border-color:var(--ac2);color:var(--ac2)}
+.pbi{padding:0 18px 20px}
+.lst{margin-top:18px}
+.lstt{font-family:'Share Tech Mono',monospace;font-size:.63rem;text-transform:uppercase;letter-spacing:2px;color:var(--dim);margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid rgba(30,45,71,.5);display:flex;align-items:center;gap:7px}
+.lstt::before{content:'';width:3px;height:10px;border-radius:2px;background:var(--ac);flex-shrink:0}
+.pc.cs .lstt::before{background:var(--ac2)}.pc.gr .lstt::before{background:var(--ac3)}
+.cg,.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:8px}
+.ci{background:rgba(0,0,0,.2);border-left:3px solid var(--ac);padding:8px 12px;border-radius:0 4px 4px 0;font-size:.79rem;line-height:1.6}
+.ii{background:rgba(0,0,0,.2);border-left:3px solid var(--ac3);padding:8px 12px;border-radius:0 4px 4px 0;font-size:.79rem;line-height:1.6}
+.pl{display:flex;flex-direction:column;gap:7px;counter-reset:p}
+.pi{background:rgba(30,45,71,.3);border:1px solid rgba(30,45,71,.6);border-radius:4px;padding:8px 12px;font-size:.79rem;line-height:1.6;display:flex;gap:10px}
+.pi::before{content:counter(p);counter-increment:p;font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--ac);background:rgba(0,212,255,.1);padding:1px 6px;border-radius:2px;flex-shrink:0;height:fit-content;margin-top:1px}
+.lc{font-size:.83rem;line-height:1.8;color:var(--tx)}
+.lc p{margin-bottom:11px}.lc strong{color:var(--hd);font-weight:600}
+.lc code{font-family:'Share Tech Mono',monospace;background:rgba(0,212,255,.1);color:var(--ac);padding:1px 5px;border-radius:3px;font-size:.84em}
+.lc .nt{background:rgba(255,107,53,.07);border-left:3px solid var(--ac2);padding:8px 12px;border-radius:0 4px 4px 0;margin:11px 0;font-size:.78rem}
+.lc .inf{background:rgba(0,212,255,.05);border-left:3px solid var(--ac);padding:8px 12px;border-radius:0 4px 4px 0;margin:11px 0;font-size:.78rem}
+.lc h4{font-size:.86rem;font-weight:700;color:var(--hd);margin:15px 0 6px;letter-spacing:.5px}
+.lc ul,.lc ol{margin:5px 0 11px 17px}.lc li{margin-bottom:4px;font-size:.81rem}
+.cb{background:#070d1a;border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin:11px 0}
+.cbh{padding:5px 12px;background:rgba(0,212,255,.06);border-bottom:1px solid var(--brd);font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--dim);display:flex;justify-content:space-between}
+.cb pre{padding:13px;font-family:'Share Tech Mono',monospace;font-size:.78rem;line-height:1.7;color:#a8d8f0;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.cm{color:#546e7a;font-style:italic}.st{color:#c3e88d}.nm{color:#f78c6c}
+.pt{width:100%;border-collapse:collapse;font-size:.79rem;margin:8px 0}
+.pt th{padding:5px 10px;background:rgba(0,212,255,.06);border:1px solid var(--brd);font-family:'Share Tech Mono',monospace;font-size:.57rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;text-align:left}
+.pt td{padding:6px 10px;border:1px solid rgba(30,45,71,.4)}.pt tr:hover td{background:rgba(0,212,255,.02)}
+.pv{font-family:'Share Tech Mono',monospace;color:var(--ac);font-size:.82em}
+/* Slike originalnog koda */
+.orig-img{margin:12px 0;border:1px solid var(--brd);border-radius:6px;overflow:hidden}
+.orig-img-hdr{padding:5px 12px;background:rgba(255,220,0,.06);border-bottom:1px solid var(--brd);font-family:'Share Tech Mono',monospace;font-size:.58rem;color:#ffd700;display:flex;align-items:center;gap:7px}
+.orig-img-hdr::before{content:'📷';font-size:.75rem}
+.orig-img img{display:block;max-width:100%;height:auto;background:#070d1a}
+.orig-img img.err{display:none}
+.orig-img .img-fallback{display:none;padding:10px;font-size:.75rem;color:var(--dim);font-family:'Share Tech Mono',monospace;font-style:italic}
+.orig-img img.err + .img-fallback{display:block}
+/* Komponente */
+.kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:9px}
+.ki{background:var(--panel);border:1px solid var(--brd);border-radius:6px;padding:11px;transition:all .2s}
+.ki:hover{border-color:var(--ac3);background:rgba(57,255,20,.03)}
+.kn{font-weight:700;font-size:.84rem;color:var(--ac3);font-family:'Share Tech Mono',monospace;margin-bottom:3px}
+.kd{font-size:.75rem;color:var(--dim);line-height:1.55}
+.kd code{font-family:'Share Tech Mono',monospace;color:var(--ac3);background:rgba(57,255,20,.07);padding:0 4px;border-radius:2px;font-size:.84em}
+/* Biblioteke */
+.bg2g{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:11px}
+.bc{background:var(--panel);border:1px solid var(--brd);border-radius:6px;overflow:hidden}
+.bstr{height:3px}.bbd{padding:11px 14px}
+.bnm{font-family:'Share Tech Mono',monospace;font-size:.88rem;margin-bottom:4px}
+.bau{font-size:.66rem;color:var(--dim);margin-bottom:5px}
+.bds{font-size:.76rem;color:var(--tx);line-height:1.6}
+.bft{padding:7px 14px;border-top:1px solid rgba(30,45,71,.5);display:flex;justify-content:space-between;align-items:center}
+.bu{font-family:'Share Tech Mono',monospace;font-size:.66rem}
+.bdl{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--dim)}
+.binst{margin-top:15px;background:var(--panel);border:1px solid var(--brd);border-radius:6px;overflow:hidden}
+.bih{padding:8px 14px;background:rgba(179,136,255,.06);border-bottom:1px solid var(--brd);font-family:'Share Tech Mono',monospace;font-size:.63rem;color:#b388ff;text-transform:uppercase;letter-spacing:2px}
+.bib2{padding:13px;font-size:.79rem;line-height:1.9}
+.bib2 code{font-family:'Share Tech Mono',monospace;background:rgba(0,212,255,.08);color:var(--ac);padding:1px 5px;border-radius:3px}
+.hl{background:rgba(255,220,0,.2);color:#ffd700;border-radius:2px;padding:0 2px}
+#empty{display:none;padding:48px;text-align:center;color:var(--dim);font-family:'Share Tech Mono',monospace;font-size:.8rem}
+footer{border-top:1px solid var(--brd);padding:15px 32px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.67rem;color:var(--dim);background:var(--bg2)}
+@media print{
+  body{background:#fff!important;color:#111!important}
+  body::before,.nav,.srch,.sdb,.pb,.tog,footer{display:none!important}
+  .main{display:block;padding:0}.cnt{max-width:100%}
+  .sec{display:block!important}.sec:not(.pt){display:none!important}
+  .pc{border:1px solid #ccc!important;page-break-inside:avoid}.pcb{display:block!important}
+  .pcs{background:#333!important}
+  .lc,.lc p,.lc li,.pcsu,.kd{color:#111!important}
+  .lc code,.pv,.bu{background:#f0f0f0!important;color:#333!important}
+  .lstt{color:#333!important;border-bottom-color:#ccc!important}
+  .lstt::before{background:#333!important}
+  .ci,.ii{background:#f8f8f8!important;color:#111!important;border-left-color:#555!important}
+  .pi{background:#f0f0f0!important;color:#111!important;border-color:#ccc!important}
+  .pi::before{background:#e0e0e0!important;color:#333!important}
+  .cb{background:#f5f5f5!important;border-color:#ccc!important}
+  .cb pre,.kw,.fn,.nm,.st{color:#333!important}.cm{color:#888!important}
+  .orig-img{border-color:#ccc!important;background:#fff!important}
+  .orig-img-hdr{background:#f0f0f0!important;color:#333!important;border-bottom-color:#ccc!important}
+  .bg{border:1px solid #999!important;color:#333!important;background:#f0f0f0!important}
+  .pcti{color:#111!important}.pt th{background:#f0f0f0!important;color:#333!important}
+  .pt td{color:#111!important}
+  @page{margin:1.8cm}
+}
+@media(max-width:900px){
+  .main{grid-template-columns:1fr;padding:13px}.sdb{position:static}
+  .stats{display:none}.hdr h1{font-size:1.55rem}.cg,.ig{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="hdr">
+  <svg viewBox="0 0 72 72" fill="none"><rect x="6" y="16" width="60" height="40" rx="3" fill="#0f1a2e" stroke="#1e2d47" stroke-width="1.5"/><rect x="12" y="22" width="48" height="28" rx="2" fill="#0a1220"/><rect x="28" y="30" width="16" height="12" rx="1" fill="#141c2e" stroke="#00d4ff" stroke-width="0.8"/><text x="36" y="38.5" font-family="monospace" font-size="4" fill="#00d4ff" text-anchor="middle">ATmega</text><rect x="16" y="26" width="5" height="1.5" fill="#00d4ff" opacity=".7"/><rect x="16" y="29.5" width="5" height="1.5" fill="#00d4ff" opacity=".7"/><rect x="16" y="33" width="5" height="1.5" fill="#00d4ff" opacity=".7"/><rect x="16" y="36.5" width="5" height="1.5" fill="#00d4ff" opacity=".7"/><rect x="51" y="26" width="5" height="1.5" fill="#ff6b35" opacity=".7"/><rect x="51" y="29.5" width="5" height="1.5" fill="#ff6b35" opacity=".7"/><rect x="51" y="33" width="5" height="1.5" fill="#ff6b35" opacity=".7"/><rect x="51" y="36.5" width="5" height="1.5" fill="#ff6b35" opacity=".7"/><rect x="22" y="48" width="10" height="5" rx="1" fill="#1e2d47" stroke="#00d4ff" stroke-width=".6"/><circle cx="52" cy="50" r="2.5" fill="#39ff14" opacity=".8"/></svg>
+  <div>
+    <h1><span class="a">Arduino</span> &amp; <span class="b">C#</span></h1>
+    <div class="sub">Referentni Indeks · Lekcije · Primeri · Dokumentacija</div>
+  </div>
+  <div class="stats">
+    <div class="sp"><div class="n">7</div><div class="l">Lekcije</div></div>
+    <div class="sp"><div class="n" style="color:var(--ac2)">19</div><div class="l">Ard. primeri</div></div>
+    <div class="sp"><div class="n" style="color:var(--ac3)">5</div><div class="l">Ard.+C#</div></div>
+    <div class="sp"><div class="n" style="color:#b388ff">17</div><div class="l">Komponente</div></div>
+  </div>
+</div>
+</header>
+
+<div class="nav"><div class="nav-in">
+  <button class="tb on" onclick="sT('sve',this)">⬡ SVE</button>
+  <button class="tb" onclick="sT('lk',this)">📖 LEKCIJE</button>
+  <button class="tb" onclick="sT('kp',this)">🔌 KOMPONENTE</button>
+  <button class="tb" onclick="sT('ar',this)">⚡ ARDUINO PRIMERI</button>
+  <button class="tb" onclick="sT('cs',this)">🖥 ARDUINO + C#</button>
+  <button class="tb" onclick="sT('bi',this)">📦 BIBLIOTEKE</button>
+</div></div>
+
+<div class="srch"><div class="si">
+  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style="flex-shrink:0"><circle cx="6.5" cy="6.5" r="5" stroke="#5a7090" stroke-width="1.5"/><line x1="10.5" y1="10.5" x2="14" y2="14" stroke="#5a7090" stroke-width="1.5" stroke-linecap="round"/></svg>
+  <input type="text" id="si" placeholder="Pretraži lekcije, primere, komponente…" oninput="dS(this.value)" autocomplete="off">
+  <span id="sc"></span>
+</div></div>
+
+<div class="main">
+<aside class="sdb">
+  <div class="sb"><div class="sbh"><span class="dot"></span>Navigacija</div>
+  <nav class="sbn">
+    <a href="#" onclick="sT('lk',qS(1));return false"><span class="arr"></span>Lekcije (7)</a>
+    <a href="#" onclick="sT('kp',qS(2));return false"><span class="arr"></span>Komponente (17)</a>
+    <a href="#" onclick="sT('ar',qS(3));return false"><span class="arr"></span>Arduino primeri (19)</a>
+    <a href="#" onclick="sT('cs',qS(4));return false"><span class="arr"></span>Arduino + C# (5)</a>
+    <a href="#" onclick="sT('bi',qS(5));return false"><span class="arr"></span>Biblioteke (7)</a>
+  </nav></div>
+  <div class="sb"><div class="sbh"><span class="dot" style="background:#ffd700;box-shadow:0 0 5px #ffd700"></span>Lekcije</div>
+  <nav class="sbn">
+    <a href="#" onclick="oL('l1');return false"><span class="arr"></span>L1 — O Arduinu</a>
+    <a href="#" onclick="oL('l2');return false"><span class="arr"></span>L2 — Blink</a>
+    <a href="#" onclick="oL('l3');return false"><span class="arr"></span>L3 — Komponente</a>
+    <a href="#" onclick="oL('l4');return false"><span class="arr"></span>L4 — Biblioteke</a>
+    <a href="#" onclick="oL('l5');return false"><span class="arr"></span>L5 — Arduino+C#</a>
+    <a href="#" onclick="oL('l6');return false"><span class="arr"></span>L6 — Serijska kom.</a>
+    <a href="#" onclick="oL('l7');return false"><span class="arr"></span>L7 — PWM</a>
+  </nav></div>
+  <div class="sb"><div class="sbh"><span class="dot" style="background:var(--ac2)"></span>Arduino primeri</div>
+  <nav class="sbn">
+    <a href="#" onclick="oP('p1');return false"><span class="arr"></span>P1 Semafor</a>
+    <a href="#" onclick="oP('p2');return false"><span class="arr"></span>P2 Svetleći prsten</a>
+    <a href="#" onclick="oP('p3');return false"><span class="arr"></span>P3 Dan-noć</a>
+    <a href="#" onclick="oP('p4');return false"><span class="arr"></span>P4 Kockica (LED)</a>
+    <a href="#" onclick="oP('p5');return false"><span class="arr"></span>P5 Kockica (7-SEG)</a>
+    <a href="#" onclick="oP('p6');return false"><span class="arr"></span>P6 Dvobojna LED</a>
+    <a href="#" onclick="oP('p7');return false"><span class="arr"></span>P7 LED matrica</a>
+    <a href="#" onclick="oP('p8');return false"><span class="arr"></span>P8 IR test</a>
+    <a href="#" onclick="oP('p9');return false"><span class="arr"></span>P9 IR On/Off</a>
+    <a href="#" onclick="oP('p10');return false"><span class="arr"></span>P10 Sijalica rele</a>
+    <a href="#" onclick="oP('p11');return false"><span class="arr"></span>P11 Štednja energije</a>
+    <a href="#" onclick="oP('p12');return false"><span class="arr"></span>P12 Termometar</a>
+    <a href="#" onclick="oP('p13');return false"><span class="arr"></span>P13 Tastatura 4×4</a>
+    <a href="#" onclick="oP('p14');return false"><span class="arr"></span>P14 Visinomer</a>
+    <a href="#" onclick="oP('p15');return false"><span class="arr"></span>P15 Robot vozilo</a>
+    <a href="#" onclick="oP('p16');return false"><span class="arr"></span>P16 Praćenje trake</a>
+    <a href="#" onclick="oP('p17');return false"><span class="arr"></span>P17 Metronom</a>
+    <a href="#" onclick="oP('p18');return false"><span class="arr"></span>P18 ESP8266 IoT</a>
+    <a href="#" onclick="oP('p19');return false"><span class="arr"></span>P19 I2C LCD</a>
+  </nav></div>
+  <div class="sb"><div class="sbh"><span class="dot" style="background:var(--ac2)"></span>Arduino + C#</div>
+  <nav class="sbn">
+    <a href="#" onclick="oP('cs1');return false"><span class="arr"></span>CS1 LED na dugmiće</a>
+    <a href="#" onclick="oP('cs2');return false"><span class="arr"></span>CS2 Equalizer</a>
+    <a href="#" onclick="oP('cs3');return false"><span class="arr"></span>CS3 RGB boje</a>
+    <a href="#" onclick="oP('cs4');return false"><span class="arr"></span>CS4 Ventilator</a>
+    <a href="#" onclick="oP('cs5');return false"><span class="arr"></span>CS5 Black&amp;White</a>
+  </nav></div>
+</aside>
+
+<main class="cnt" id="main-cnt">
+<div id="empty">Nema rezultata pretrage.</div>
+
+<!-- ===== LEKCIJE ===== -->
+<div class="sec on" data-s="lk" id="lekcije">
+<div class="sh"><h2>📖 LEKCIJE</h2><div class="sl"></div><div class="sct">7 lekcija</div></div>
+
+
+<!-- L1 -->
+<div class="pc" id="l1" data-q="arduino platforma uvod mikrokontroler modeli uno mega nano shield IDE">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('l1')">
+  <div class="pchl"><div class="pcm"><span class="bg n">L-01</span><span class="bg a">Arduino</span><span class="bg t">Teorija</span></div>
+  <div class="pcti">O Arduinu — platforma, modeli i primena</div>
+  <div class="pcsu">Open-source mikrokontrolerska platforma, hardver, softver, modeli, shield-ovi, primena u nastavi</div></div>
+  <div class="tog" id="tl1">+</div>
+</div>
+<div class="pcb" id="bl1">
+<div class="pb"><button class="btnp" onclick="pC('l1')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+  <div class="lst"><div class="lstt">Ciljevi</div><div class="cg">
+    <div class="ci">Razumeti šta je Arduino i čemu služi kao platforma</div>
+    <div class="ci">Upoznati različite modele Arduino platformi</div>
+    <div class="ci">Razumeti ulogu Arduino IDE i programskog jezika C/C++</div>
+    <div class="ci">Razumeti potencijal Arduina u nastavi TIK i informatike</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Ishodi učenja</div><div class="ig">
+    <div class="ii">Učenik opisuje šta je Arduino i nabraja najmanje 3 modela</div>
+    <div class="ii">Učenik zna koji procesor koristi Uno (ATmega328) i Due (ARM)</div>
+    <div class="ii">Učenik navodi primere ulaznih i izlaznih uređaja za Arduino</div>
+    <div class="ii">Učenik razume pojam shield-a i njegovu ulogu</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+    <h4>Šta je Arduino?</h4>
+    <p>Arduino je <strong>mikrokontrolerska platforma</strong> razvijena 2005. godine na Institutu za interaktivni dizajn u Ivreji, Italija. Open-source hardverska i softverska platforma koja omogućava upravljanje elektronskim komponentama kroz C/C++.</p>
+    <p>Platforma se zasniva na <strong>8-bitnom Atmel AVR mikrokontroleru</strong> (popularni Uno) ili <strong>32-bitnom ARM procesoru</strong> (napredniji Due). Programira se putem besplatnog <strong>Arduino IDE</strong> softvera (www.arduino.cc) koji radi na Windows, macOS i Linux sistemima.</p>
+    <h4>Modeli Arduino platforme</h4>
+    <table class="pt"><thead><tr><th>Model</th><th>Procesor</th><th>Dig. pinovi</th><th>Anal. ulazi</th><th>Flash</th></tr></thead>
+    <tbody>
+      <tr><td><strong style="color:var(--ac)">Arduino Uno R3</strong></td><td>ATmega328P (8-bit)</td><td class="pv">14 (6 PWM)</td><td class="pv">6</td><td class="pv">32 KB</td></tr>
+      <tr><td><strong>Arduino MEGA 2560</strong></td><td>ATmega2560 (8-bit)</td><td class="pv">54 (15 PWM)</td><td class="pv">16</td><td class="pv">256 KB</td></tr>
+      <tr><td><strong>Arduino Due</strong></td><td>SAM3X8E (ARM 32-bit)</td><td class="pv">54 (12 PWM)</td><td class="pv">12</td><td class="pv">512 KB</td></tr>
+      <tr><td><strong>Arduino Leonardo</strong></td><td>ATmega32u4 (8-bit)</td><td class="pv">20 (7 PWM)</td><td class="pv">12</td><td class="pv">32 KB</td></tr>
+      <tr><td><strong>Arduino Nano</strong></td><td>ATmega328 (8-bit)</td><td class="pv">14 (6 PWM)</td><td class="pv">8</td><td class="pv">32 KB</td></tr>
+    </tbody></table>
+    <h4>Hardverska arhitektura</h4>
+    <ul>
+      <li><strong>Digitalni I/O</strong> — HIGH (5V) ili LOW (0V)</li>
+      <li><strong>Analogni ulazi</strong> — 0–5V → vrednosti 0–1023 (10-bit ADC)</li>
+      <li><strong>PWM pinovi (~)</strong> — analogni izlaz digitalnim signalom</li>
+      <li><strong>USB</strong> — komunikacija i upload programa</li>
+      <li><strong>Napajanje</strong> — USB 5V ili eksterno 7–12V DC</li>
+    </ul>
+    <h4>Shield-ovi</h4>
+    <p>Pločice koje se postavljaju direktno na Arduino i proširuju funkcionalnost bez lemljenja. Postoje shield-ovi za: WiFi, Bluetooth, Ethernet, motore, GPS, OLED i mnoge druge namene.</p>
+    <div class="inf">💡 S obzirom na veoma jednostavnu upotrebu i male, bezbedne napone (5V DC), Arduino može poslužiti kao odlično nastavno sredstvo na časovima TIK-a i informatike — bez ikakvih izmena nastavnih planova.</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Pitanja za proveru</div><div class="pl">
+    <div class="pi">Koje godine i u kojoj zemlji je nastao Arduino?</div>
+    <div class="pi">Koji mikrokontroler koristi Uno, a koji Due? Koja je osnovna razlika?</div>
+    <div class="pi">Šta je shield i za šta se koristi? Navedite primer.</div>
+    <div class="pi">Koji napon je na digitalnom pinu kada je HIGH? Kada je LOW?</div>
+    <div class="pi">Koliko analognih ulaza ima Arduino Uno i koje vrednosti može očitati?</div>
+  </div></div>
+</div></div></div></div></div>
+
+<!-- L2 -->
+<div class="pc" id="l2" data-q="blink prvi projekat IDE setup loop pinMode digitalWrite delay pin 13 instalacija COM port">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('l2')">
+  <div class="pchl"><div class="pcm"><span class="bg n">L-02</span><span class="bg a">Arduino</span><span class="bg t">IDE</span></div>
+  <div class="pcti">Moj prvi projekat — Blink</div>
+  <div class="pcsu">Instalacija Arduino IDE, podešavanje ploče i porta, struktura sketcha (setup/loop), program Blink</div></div>
+  <div class="tog" id="tl2">+</div>
+</div>
+<div class="pcb" id="bl2">
+<div class="pb"><button class="btnp" onclick="pC('l2')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+  <div class="lst"><div class="lstt">Ciljevi</div><div class="cg">
+    <div class="ci">Instalirati Arduino IDE i uspešno ga pokrenuti</div>
+    <div class="ci">Podesiti tip ploče i serijski port u Arduino IDE-u</div>
+    <div class="ci">Razumeti strukturu sketcha: <code>setup()</code> i <code>loop()</code></div>
+    <div class="ci">Napisati i učitati prvi program — treptanje LED (Blink)</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Ishodi učenja</div><div class="ig">
+    <div class="ii">Učenik samostalno instalira i pokreće Arduino IDE</div>
+    <div class="ii">Učenik zna razliku između <code>setup()</code> i <code>loop()</code></div>
+    <div class="ii">Učenik koristi <code>pinMode()</code>, <code>digitalWrite()</code>, <code>delay()</code></div>
+    <div class="ii">Učenik uspešno učitava program na Arduino platformu</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+    <div class="inf"><strong>Instalacija:</strong> www.arduino.cc → Software → preuzeti za Windows/macOS/Linux</div>
+    <div class="inf"><strong>Podešavanje:</strong> Tools → Board → Arduino Uno &nbsp;|&nbsp; Tools → Port → COM3 (proveriti u Device Manager)</div>
+    <h4>Struktura programa</h4>
+    <div class="cb"><div class="cbh"><span>arduino / c++</span><span>osnovna struktura sketcha</span></div>
+<pre><span class="cm">// Izvršava se JEDNOM pri pokretanju</span>
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="cm">// inicijalizacija pinova, Serial.begin()...</span>
+}
+
+<span class="cm">// Izvršava se BESKONAČNO u petlji</span>
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="cm">// ovde je glavni program</span>
+}</pre></div>
+    <h4>Blink — treptanje LED na pin 13</h4>
+    <div class="cb"><div class="cbh"><span>arduino / c++</span><span>blink.ino</span></div>
+<pre><span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="nm">13</span>, OUTPUT); <span class="cm">// pin 13 = izlaz</span>
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">digitalWrite</span>(<span class="nm">13</span>, HIGH); <span class="cm">// LED ON</span>
+  <span class="fn">delay</span>(<span class="nm">1000</span>);              <span class="cm">// čekaj 1s</span>
+  <span class="fn">digitalWrite</span>(<span class="nm">13</span>, LOW);  <span class="cm">// LED OFF</span>
+  <span class="fn">delay</span>(<span class="nm">1000</span>);              <span class="cm">// čekaj 1s</span>
+}</pre></div>
+    <h4>Ključne funkcije</h4>
+    <table class="pt"><thead><tr><th>Funkcija</th><th>Opis</th><th>Primer</th></tr></thead>
+    <tbody>
+      <tr><td><code>pinMode(pin, mode)</code></td><td>Smer pina</td><td class="pv">pinMode(13, OUTPUT)</td></tr>
+      <tr><td><code>digitalWrite(pin, val)</code></td><td>HIGH ili LOW na pin</td><td class="pv">digitalWrite(13, HIGH)</td></tr>
+      <tr><td><code>digitalRead(pin)</code></td><td>Čita stanje ulaza</td><td class="pv">digitalRead(2)</td></tr>
+      <tr><td><code>delay(ms)</code></td><td>Pauza u milisekundama</td><td class="pv">delay(500)</td></tr>
+      <tr><td><code>analogRead(pin)</code></td><td>Analogna vrednost 0–1023</td><td class="pv">analogRead(A0)</td></tr>
+      <tr><td><code>analogWrite(pin, val)</code></td><td>PWM izlaz 0–255</td><td class="pv">analogWrite(9, 128)</td></tr>
+    </tbody></table>
+    <div class="nt">⚠️ Greška "programmer is not responding" — proverite ispravan COM port i tip ploče u Tools meniju.</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+    <div class="pi">Koliko puta se izvršava <code>setup()</code>, a koliko <code>loop()</code>?</div>
+    <div class="pi">Šta radi <code>pinMode(13, OUTPUT)</code>? Šta bi se desilo bez te linije?</div>
+    <div class="pi">Koji napon je na pinu 13 kada je HIGH? Kada je LOW?</div>
+    <div class="pi">Kako bismo promenili program da LED trepće svakih pola sekunde?</div>
+  </div></div>
+</div></div></div></div></div>
+
+<!-- L3 -->
+<div class="pc" id="l3" data-q="komponente led taster zujalica servo RGB ultrazvuk foto-otpornik potenciometar pull-down 220 10k HC-SR04 DHT11 rele">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac3),rgba(57,255,20,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('l3')">
+  <div class="pchl"><div class="pcm"><span class="bg n">L-03</span><span class="bg g">Komponente</span></div>
+  <div class="pcti">Vezivanje komponenata</div>
+  <div class="pcsu">LED, taster, zujalica, servo, RGB LED, HC-SR04, LDR, potenciometar, DHT11, relej, matrica, IR, tastatura</div></div>
+  <div class="tog" id="tl3">+</div>
+</div>
+<div class="pcb" id="bl3">
+<div class="pb"><button class="btnp" onclick="pC('l3')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+  <div class="lst"><div class="lstt">Ciljevi</div><div class="cg">
+    <div class="ci" style="border-left-color:var(--ac3)">Pravilno vezati LED, taster i zujalicu</div>
+    <div class="ci" style="border-left-color:var(--ac3)">Razumeti razliku analognih i digitalnih ulaza</div>
+    <div class="ci" style="border-left-color:var(--ac3)">Znati princip pull-down i pull-up otpornika</div>
+    <div class="ci" style="border-left-color:var(--ac3)">Vezati servo motor, RGB LED, HC-SR04 i DHT11</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+    <h4>LED dioda</h4>
+    <p>Duža nožica = <strong>anoda (+)</strong>, kraća = katoda (−). Otpornik <strong>220Ω redno obavezno</strong> — bez njega dioda se uništava. Anoda → 220Ω → pin; Katoda → GND.</p>
+    <h4>Taster</h4>
+    <p>Pull-down <strong>10kΩ</strong> između signal pina i GND. Otpušteno = LOW (0V), pritisnuto = HIGH (5V). Bez pull-down otpornika pin "pluta" i daje nepouzdana očitavanja.</p>
+    <h4>Zujalica</h4>
+    <p>Crvena/duža nožica (+) → digitalni pin (OUTPUT). Crna (−) → GND. Zvuk: <code>tone(pin, frekvencija)</code>.</p>
+    <h4>Ultrazvučni senzor HC-SR04</h4>
+    <table class="pt"><thead><tr><th>Pin</th><th>Veza</th></tr></thead><tbody>
+      <tr><td>Vcc</td><td class="pv">+5V</td></tr>
+      <tr><td>GND</td><td class="pv">GND</td></tr>
+      <tr><td>Trig</td><td class="pv">Digitalni pin (OUTPUT)</td></tr>
+      <tr><td>Echo</td><td class="pv">Digitalni pin (INPUT)</td></tr>
+    </tbody></table>
+    <h4>Foto-otpornik (LDR)</h4>
+    <p>Analogni pin + pull-up <strong>10kΩ</strong> ka +5V. Vrednosti: 0 (svetlo) → 1023 (mrak).</p>
+    <h4>Servo motor</h4>
+    <p>Crvena→5V, crna/braon→GND, žuta/narandžasta→PWM pin (~). Rotacija 0–180°. Biblioteka: <code>Servo.h</code>.</p>
+    <div class="nt">⚠️ Snažniji servo zahteva eksterno napajanje — spojiti masu eksternog napajanja sa GND Arduina!</div>
+    <h4>RGB LED</h4>
+    <p>4 nožice: R, G, B + zajednička katoda (→GND). Obavezno <strong>PWM pinovi</strong>. Uno PWM pinovi: <strong>3, 5, 6, 9, 10, 11</strong>.</p>
+    <h4>DHT11 / DHT22</h4>
+    <p>Pin1→5V, Pin2→signal + pull-up 10kΩ, Pin3→slobodan, Pin4→GND. Biblioteka: <code>DHT.h</code>.</p>
+    <h4>Relej</h4>
+    <p>Vcc→5V, GND→GND, In→signal pin. <strong>NO</strong> (normalno otvoren): HIGH = uključen. <strong>NC</strong> (normalno zatvoren): inverzna logika.</p>
+    <h4>LED matrica MAX7219</h4>
+    <p>VCC→5V, GND→GND, DIN→pin12, CS→pin10, CLK→pin11. Biblioteka: <code>LEDControlMS.h</code>.</p>
+    <h4>IR prijemnik</h4>
+    <p>Leva nožica→digitalni pin, srednja→GND, desna→+5V. Biblioteka: <code>IRremote.h</code>. Prima 38kHz signale.</p>
+  </div></div>
+  <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+    <div class="pi">Koja nožica LED je anoda? Kako je prepoznajemo?</div>
+    <div class="pi">Zašto je potreban otpornik 220Ω za LED?</div>
+    <div class="pi">Šta je pull-down otpornik i zašto se koristi sa tasterom?</div>
+    <div class="pi">Koji pinovi Uno podržavaju PWM? Zašto je to važno za RGB LED?</div>
+    <div class="pi">Koja je razlika između NO i NC kontakta releja?</div>
+  </div></div>
+</div></div></div></div></div>
+
+<!-- L4 -->
+<div class="pc" id="l4" data-q="biblioteke include header zip instalacija LEDControl IRremote DHT NewPing Servo LiquidCrystal Keypad">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('l4')">
+  <div class="pchl"><div class="pcm"><span class="bg n">L-04</span><span class="bg a">Arduino</span><span class="bg t">Programiranje</span></div>
+  <div class="pcti">Biblioteke — proširivanje funkcionalnosti</div>
+  <div class="pcsu">Zaglavlje (.h), #include sintaksa, dva načina instalacije iz ZIP-a, pregled korisnih biblioteka</div></div>
+  <div class="tog" id="tl4">+</div>
+</div>
+<div class="pcb" id="bl4">
+<div class="pb"><button class="btnp" onclick="pC('l4')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+  <div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+    <h4>Šta je biblioteka?</h4>
+    <p>Skup unapred napisanih funkcija i klasa koje proširuju C/C++ jezik. Svaka biblioteka ima <strong>zaglavlje (.h)</strong> sa deklaracijama i <strong>implementaciju (.cpp)</strong> sa kodom.</p>
+    <div class="cb"><div class="cbh"><span>arduino / c++</span><span>#include sintaksa</span></div>
+<pre><span class="cm">// Biblioteka iz Arduino libraries foldera</span>
+#<span class="kw">include</span> <span class="st">&lt;NazivBiblioteke.h&gt;</span>
+
+<span class="cm">// Fajl u istom folderu kao sketch</span>
+#<span class="kw">include</span> <span class="st">"moj_fajl.h"</span></pre></div>
+    <h4>Instalacija — Metod 1 (preporučen)</h4>
+    <div class="inf"><code>Sketch → Import library → Add library</code> → izabrati .zip → Open</div>
+    <h4>Instalacija — Metod 2 (manuelni)</h4>
+    <p>Raspakovati ZIP → preimenovati folder (ukloniti crtice!) → iskopirati u <code>C:\Program Files (x86)\Arduino\libraries\</code> → restartovati IDE.</p>
+    <div class="nt">⚠️ Srednja crtica u nazivu foldera izaziva grešku kompajliranja — obavezno preименовати!</div>
+    <h4>Pregled biblioteka</h4>
+    <table class="pt"><thead><tr><th>Biblioteka</th><th>Autor</th><th>Za komponentu</th></tr></thead>
+    <tbody>
+      <tr><td><strong style="color:var(--ac3)">LEDControlMS</strong></td><td>E. Fahle</td><td>LED matrica MAX7219</td></tr>
+      <tr><td><strong style="color:#ff6060">IRremote</strong></td><td>K. Shirriff</td><td>IR daljinski upravljač</td></tr>
+      <tr><td><strong style="color:#40ffff">DHT</strong></td><td>M. Ruys</td><td>DHT11, DHT22, AM2302</td></tr>
+      <tr><td><strong style="color:#ffd700">NewPing</strong></td><td>T. Eckel</td><td>Ultrazvučni HC-SR04</td></tr>
+      <tr><td><strong style="color:#80c0ff">Servo</strong></td><td>Arduino (ugrađena)</td><td>Servo motori</td></tr>
+      <tr><td><strong style="color:#ffff60">LiquidCrystal</strong></td><td>Arduino (ugrađena)</td><td>LCD 1602, 2004</td></tr>
+      <tr><td><strong style="color:#ffa040">Keypad</strong></td><td>M. Stanley (ugrađena)</td><td>Tastatura 4×4, 3×4</td></tr>
+    </tbody></table>
+  </div></div>
+  <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+    <div class="pi">Šta je zaglavlje biblioteke (.h fajl)?</div>
+    <div class="pi">Razlika između <code>#include &lt;lib.h&gt;</code> i <code>#include "lib.h"</code>?</div>
+    <div class="pi">Navedite 2 načina instalacije biblioteke. Koji je preporučen?</div>
+    <div class="pi">Zašto crtica u nazivu foldera biblioteke pravi problem?</div>
+  </div></div>
+</div></div></div></div></div>
+
+<!-- L5 -->
+<div class="pc cs" id="l5" data-q="visual studio visual micro C# arduino dvoprogramski sistem serial plugin integracija">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('l5')">
+  <div class="pchl"><div class="pcm"><span class="bg n">L-05</span><span class="bg c">C#</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Povezivanje Arduino i C# — Visual Micro</div>
+  <div class="pcsu">Dvoprogramski sistem: C# na računaru + Arduino na kontroleru. Visual Micro plugin za MS Visual Studio.</div></div>
+  <div class="tog" id="tl5">+</div>
+</div>
+<div class="pcb" id="bl5">
+<div class="pb"><button class="btnp" onclick="pC('l5')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+  <div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+    <h4>Dvoprogramski sistem</h4>
+    <p>Kombinacija C# i Arduino znači dva potpuno odvojena programa:</p>
+    <ul>
+      <li><strong>C# program (na računaru)</strong> — WinForms GUI, prima korisnički unos, šalje komande na serijski port</li>
+      <li><strong>Arduino program (na kontroleru)</strong> — prima podatke sa serijskog porta, izvršava fizičke akcije</li>
+    </ul>
+    <p>Potrebno je napisati dva programa — u C# se definiše grafičko okruženje i šalju podaci na serijski port. S druge strane, Arduino prima te podatke i sprovodi određene akcije.</p>
+    <h4>Visual Micro</h4>
+    <p>Besplatan plugin za MS Visual Studio koji omogućava pisanje, kompajliranje i učitavanje Arduino koda direktno iz VS-a. Preuzimanje: <strong>www.visualmicro.com</strong>.</p>
+    <p><strong>Korisnici Ultimate verzije</strong> Visual Studija mogu koristiti Visual Micro koji omogućava učitavanje i pisanje Arduino koda direktno u MS okruženju.</p>
+    <h4>Podešavanje</h4>
+    <p><strong>Korak 1</strong> — Arduino IDE: <code>File → Preferences → Use external editor</code> (čekirati)</p>
+    <p><strong>Korak 2</strong> — MS Visual Studio: izabrati tip platforme, verziju Arduino softvera, naziv COM porta.</p>
+    <div class="nt">⚠️ Pri učitavanju programa, pinove 0 i 1 treba osloboditi — dele TX/RX linije sa USB-om.</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+    <div class="pi">Opišite ulogu C# i ulogu Arduino programa u dvoprogramskom sistemu.</div>
+    <div class="pi">Šta je Visual Micro i sa kojim razvojnim okruženjem se koristi?</div>
+    <div class="pi">Koji korak mora biti urađen u Arduino IDE pre rada sa Visual Micro?</div>
+    <div class="pi">Zašto pinove 0 i 1 treba osloboditi pri učitavanju programa?</div>
+  </div></div>
+</div></div></div></div></div>
+
+<!-- L6 -->
+<div class="pc cs" id="l6" data-q="serijska komunikacija serial port C# BaudRate DataBits SerialPort read write parseInt System.IO.Ports 9600">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('l6')">
+  <div class="pchl"><div class="pcm"><span class="bg n">L-06</span><span class="bg c">C#</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Serijska komunikacija — C# ↔ Arduino</div>
+  <div class="pcsu">System.IO.Ports, SerialPort klasa, parametri 9600/8/N/1, slanje i primanje podataka, Serial.read()</div></div>
+  <div class="tog" id="tl6">+</div>
+</div>
+<div class="pcb" id="bl6">
+<div class="pb"><button class="btnp" onclick="pC('l6')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+  <div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+    <h4>Parametri serijskog porta</h4>
+    <table class="pt"><thead><tr><th>Parametar</th><th>Vrednost</th><th>Opis</th></tr></thead>
+    <tbody>
+      <tr><td>BaudRate</td><td class="pv">9600</td><td>Brzina prenosa bit/s (300–115200)</td></tr>
+      <tr><td>DataBits</td><td class="pv">8</td><td>Bitova po paketu</td></tr>
+      <tr><td>Parity</td><td class="pv">None</td><td>Bit parnosti</td></tr>
+      <tr><td>StopBits</td><td class="pv">One</td><td>Stop bitovi</td></tr>
+    </tbody></table>
+    <div class="cb"><div class="cbh"><span>C#</span><span>System.IO.Ports — definicija i upotreba</span></div>
+<pre><span class="kw">using</span> System.IO.Ports;
+
+SerialPort MySerialPort = <span class="kw">new</span> <span class="fn">SerialPort</span>();
+MySerialPort.PortName  = <span class="st">"COM3"</span>;
+MySerialPort.BaudRate  = <span class="nm">9600</span>;
+MySerialPort.DataBits  = <span class="nm">8</span>;
+MySerialPort.Parity    = Parity.None;
+MySerialPort.StopBits  = StopBits.One;
+
+MySerialPort.<span class="fn">Open</span>();               <span class="cm">// Form_Load</span>
+MySerialPort.<span class="fn">Write</span>(<span class="st">"1"</span>);          <span class="cm">// šalji karakter</span>
+MySerialPort.<span class="fn">WriteLine</span>(<span class="st">"test"</span>);  <span class="cm">// string + newline</span>
+<span class="kw">if</span> (MySerialPort.<span class="fn">IsOpen</span>()) MySerialPort.<span class="fn">Close</span>(); <span class="cm">// FormClosing</span></pre></div>
+    <div class="cb"><div class="cbh"><span>arduino / c++</span><span>primanje podataka sa serijskog porta</span></div>
+<pre><span class="kw">void</span> <span class="fn">setup</span>() { Serial.<span class="fn">begin</span>(<span class="nm">9600</span>); }
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (Serial.<span class="fn">available</span>() > <span class="nm">0</span>) {
+    <span class="kw">char</span> c  = (<span class="kw">char</span>) Serial.<span class="fn">read</span>();      <span class="cm">// jedan karakter — NAJBRŽE</span>
+    <span class="kw">int</span>  br = Serial.<span class="fn">parseInt</span>();        <span class="cm">// ceo broj npr. 255</span>
+    <span class="kw">float</span> f = Serial.<span class="fn">parseFloat</span>();     <span class="cm">// decimalni broj</span>
+    String s = Serial.<span class="fn">readString</span>();   <span class="cm">// ceo string</span>
+  }
+}</pre></div>
+    <div class="inf">💡 Za jednostavne primere sa jednim karakterom, uvek koristiti <strong>Serial.read()</strong> — mnogo brže od parseInt() ili readString() koji usporavaju program bespotrebnom konverzijom.</div>
+  </div></div>
+  <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+    <div class="pi">Koji namespace moramo uključiti za SerialPort klasu?</div>
+    <div class="pi">Šta znači BaudRate 9600?</div>
+    <div class="pi">Koji tip podataka šaljemo kroz serijski port iz C#?</div>
+    <div class="pi">Kada koristimo <code>Serial.read()</code> a kada <code>Serial.parseInt()</code>?</div>
+    <div class="pi">Gde otvaramo, a gde zatvaramo serijski port u C# programu?</div>
+  </div></div>
+</div></div></div></div></div>
+
+<!-- L7 -->
+<div class="pc" id="l7" data-q="PWM modulacija analogWrite servo RGB dimovanje LED duty cycle impuls">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('l7')">
+  <div class="pchl"><div class="pcm"><span class="bg n">L-07</span><span class="bg a">Arduino</span><span class="bg t">Elektronika</span></div>
+  <div class="pcti">PWM modulacija — analogni izlaz digitalnim signalom</div>
+  <div class="pcsu">Duty cycle, analogWrite(0-255), PWM pinovi, dimovanje LED, RGB mešanje boja, Fade primer</div></div>
+  <div class="tog" id="tl7">+</div>
+</div>
+<div class="pcb" id="bl7">
+<div class="pb"><button class="btnp" onclick="pC('l7')">🖨 Štampaj / PDF</button></div>
+<div class="pbi">
+  <div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+    <h4>Princip PWM</h4>
+    <p>Arduino digitalni izlazi daju samo 5V ili 0V. Za dimovanje LED ili upravljanje servo motorom potreban je napon između tih vrednosti. PWM brzo uključuje i isključuje signal simulirajući analogni napon. Ključni pojam: <strong>duty cycle</strong> — procenat vremena u kom je signal HIGH.</p>
+    <table class="pt"><thead><tr><th>analogWrite</th><th>Duty cycle</th><th>Efektivni napon</th></tr></thead>
+    <tbody>
+      <tr><td class="pv">0</td><td class="pv">0%</td><td class="pv">0V</td></tr>
+      <tr><td class="pv">64</td><td class="pv">25%</td><td class="pv">~1.25V</td></tr>
+      <tr><td class="pv">128</td><td class="pv">50%</td><td class="pv">~2.5V</td></tr>
+      <tr><td class="pv">192</td><td class="pv">75%</td><td class="pv">~3.75V</td></tr>
+      <tr><td class="pv">255</td><td class="pv">100%</td><td class="pv">5V</td></tr>
+    </tbody></table>
+    <div class="inf">PWM pinovi Uno: <strong>3, 5, 6, 9, 10, 11</strong> (označeni ~ na ploči). Mega: 2–13 i 44–46.</div>
+    <div class="cb"><div class="cbh"><span>arduino / c++</span><span>Fade + RGB mešanje boja</span></div>
+<pre><span class="cm">// Fade — postepeno dimovanje LED na pin 9</span>
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;=<span class="nm">255</span>; i++) { <span class="fn">analogWrite</span>(<span class="nm">9</span>,i); <span class="fn">delay</span>(<span class="nm">8</span>); }
+  <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">255</span>; i&gt;=<span class="nm">0</span>; i--) { <span class="fn">analogWrite</span>(<span class="nm">9</span>,i); <span class="fn">delay</span>(<span class="nm">8</span>); }
+}
+
+<span class="cm">// RGB LED — R=9, G=10, B=11 (zajednička katoda)</span>
+<span class="cm">// Žuta = R MAX + G MAX</span>
+<span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">255</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">255</span>); <span class="fn">analogWrite</span>(<span class="nm">11</span>,<span class="nm">0</span>);
+<span class="cm">// Ljubičasta</span>
+<span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">180</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">0</span>);   <span class="fn">analogWrite</span>(<span class="nm">11</span>,<span class="nm">200</span>);
+<span class="cm">// Bela = sve MAX</span>
+<span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">255</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">255</span>); <span class="fn">analogWrite</span>(<span class="nm">11</span>,<span class="nm">255</span>);</pre></div>
+  </div></div>
+  <div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+    <div class="pi">Šta znači "duty cycle" i kako utiče na efektivni napon?</div>
+    <div class="pi">Koji je opseg analogWrite()? Čemu odgovaraju 0 i 255?</div>
+    <div class="pi">Koji pinovi Uno podržavaju PWM? Kako ih prepoznajemo na ploči?</div>
+    <div class="pi">Koje R, G, B vrednosti daju žutu boju? Tirkiznu (cyan)?</div>
+  </div></div>
+</div></div></div></div></div>
+
+</div><!-- /lekcije -->
+
+<!-- ===== ARDUINO PRIMERI ===== -->
+<div class="sec" data-s="ar" id="ard-sec">
+<div class="sh"><h2>⚡ ARDUINO PRIMERI</h2><div class="sl"></div><div class="sct">19 primera</div></div>
+
+<!-- Makro za primer karticu — inline slike + rekonstruisan kod -->
+
+<!-- P1 Semafor -->
+<div class="pc" id="p1" data-q="semafor led crvena zuta zelena delay setup loop treptanje">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p1')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-01</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Semafor</div>
+  <div class="pcsu">3 LED diode u semaforskom redosledu. Uvodni primer za digitalWrite() i delay().</div></div>
+  <div class="tog" id="tp1">+</div>
+</div>
+<div class="pcb" id="bp1">
+<div class="pb"><button class="btnp" onclick="pC('p1')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>Tri LED diode (crvena pin 13, žuta pin 12, zelena pin 11) naizmenično svetle u pravom semaforskom redosledu. Svaka LED ima otpornik 220Ω ka GND. Odličan uvodni primer — demonstrira <code>pinMode()</code>, <code>digitalWrite()</code> i <code>delay()</code>.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>semafor.ino</span></div>
+<pre><span class="cm">// Semafor — crvena=pin13, žuta=pin12, zelena=pin11</span>
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="nm">11</span>, OUTPUT); <span class="cm">// zelena</span>
+  <span class="fn">pinMode</span>(<span class="nm">12</span>, OUTPUT); <span class="cm">// žuta</span>
+  <span class="fn">pinMode</span>(<span class="nm">13</span>, OUTPUT); <span class="cm">// crvena</span>
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">digitalWrite</span>(<span class="nm">11</span>, HIGH); <span class="fn">delay</span>(<span class="nm">3000</span>); <span class="fn">digitalWrite</span>(<span class="nm">11</span>, LOW); <span class="cm">// zelena 3s</span>
+  <span class="fn">digitalWrite</span>(<span class="nm">12</span>, HIGH); <span class="fn">delay</span>(<span class="nm">1000</span>); <span class="fn">digitalWrite</span>(<span class="nm">12</span>, LOW); <span class="cm">// žuta 1s</span>
+  <span class="fn">digitalWrite</span>(<span class="nm">13</span>, HIGH); <span class="fn">delay</span>(<span class="nm">3000</span>); <span class="fn">digitalWrite</span>(<span class="nm">13</span>, LOW); <span class="cm">// crvena 3s</span>
+  <span class="cm">// crvena + žuta (prelaz nazad na zelenu)</span>
+  <span class="fn">digitalWrite</span>(<span class="nm">13</span>, HIGH); <span class="fn">digitalWrite</span>(<span class="nm">12</span>, HIGH);
+  <span class="fn">delay</span>(<span class="nm">1000</span>);
+  <span class="fn">digitalWrite</span>(<span class="nm">13</span>, LOW);  <span class="fn">digitalWrite</span>(<span class="nm">12</span>, LOW);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto se sve 3 LED definišu kao OUTPUT u setup()?</div>
+  <div class="pi">Kako bi izgledao ovaj program kraće koristeći nizove?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P2 Svetleci prsten -->
+<div class="pc" id="p2" data-q="svetleci prsten nizovi for petlja map potenciometar pauza 8 LED">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p2')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-02</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Svetleći prsten</div>
+  <div class="pcsu">8 LED dioda, brzina kruženja kontrolisana potenciometrom pomoću map(). Primer nizova i for petlji.</div></div>
+  <div class="tog" id="tp2">+</div>
+</div>
+<div class="pcb" id="bp2">
+<div class="pb"><button class="btnp" onclick="pC('p2')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>Osam LED dioda na pinovima 5–12. Potenciometar na A2 meri pauzu između paljenja. Funkcija <code>map()</code> mapira vrednosti 0–1023 na raspon pauze 30–500ms.</p>
+  <div class="orig-img"><div class="orig-img-hdr">Originalna šema — cecaradlovacki.wordpress.com</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2015/03/prsten1.jpg" alt="Svetleci prsten sema" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna — originalna šema sa WordPress sajta</div>
+  </div>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>svetleci_prsten.ino</span></div>
+<pre><span class="cm">// Svetleći prsten — 8 LED pinovi 5-12, potenciometar A2</span>
+<span class="kw">int</span> pinovi[] = {<span class="nm">5</span>,<span class="nm">6</span>,<span class="nm">7</span>,<span class="nm">8</span>,<span class="nm">9</span>,<span class="nm">10</span>,<span class="nm">11</span>,<span class="nm">12</span>};
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">8</span>; i++) <span class="fn">pinMode</span>(pinovi[i], OUTPUT);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> pauza = <span class="fn">map</span>(<span class="fn">analogRead</span>(A2), <span class="nm">0</span>, <span class="nm">1023</span>, <span class="nm">30</span>, <span class="nm">500</span>);
+  <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">8</span>; i++) {
+    <span class="fn">digitalWrite</span>(pinovi[i], HIGH);
+    <span class="fn">delay</span>(pauza);
+    <span class="fn">digitalWrite</span>(pinovi[i], LOW);
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Šta radi funkcija map() i koji su njeni parametri?</div>
+  <div class="pi">Zašto su nizovi korisni u ovom primeru?</div>
+  <div class="pi">Kako izmeniti program da ide u oba smera naizmenično?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P3 Dan-noc -->
+<div class="pc" id="p3" data-q="dan noc foto-otpornik LDR if-else grananje osvetljenost mrak analogRead">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p3')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-03</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Dan-noć</div>
+  <div class="pcsu">if-else u praksi: foto-otpornik (LDR) na A0, ako je mrak → uključi LED. Automatska uličnu svetiljka.</div></div>
+  <div class="tog" id="tp3">+</div>
+</div>
+<div class="pcb" id="bp3">
+<div class="pb"><button class="btnp" onclick="pC('p3')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>LDR na analognom ulazu A0 sa pull-up 10kΩ ka 5V. LED na pin 13 (220Ω). Ako je vrednost LDR-a ispod praga (mrak), LED svetli. Prag se podešava zavisno od okruženja.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>dan_noc.ino</span></div>
+<pre><span class="cm">// Dan-noć: LDR na A0, LED na pin 13</span>
+<span class="kw">int</span> prag = <span class="nm">500</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="nm">13</span>, OUTPUT);
+  Serial.<span class="fn">begin</span>(<span class="nm">9600</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> v = <span class="fn">analogRead</span>(A0);
+  Serial.<span class="fn">println</span>(v); <span class="cm">// praćenje u Serial Monitoru</span>
+  <span class="fn">digitalWrite</span>(<span class="nm">13</span>, v &lt; prag ? HIGH : LOW);
+  <span class="fn">delay</span>(<span class="nm">100</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto je vrednost 0 pri jakom svetlu a ~1023 pri mraku (pull-up)?</div>
+  <div class="pi">Šta je prag i zašto ga prilagođavamo okruženju?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P4 Kockica -->
+<div class="pc" id="p4" data-q="kockica random taster LED slucajan broj kombinacije dvodimenzionalni niz">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p4')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-04</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Kockica za "Ne ljuti se čoveče"</div>
+  <div class="pcsu">7 LED dioda kao kockica. random() generiše broj 1-6. Taster pauzira 3s. Dva rešenja: if-else i 2D niz.</div></div>
+  <div class="tog" id="tp4">+</div>
+</div>
+<div class="pcb" id="bp4">
+<div class="pb"><button class="btnp" onclick="pC('p4')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>7 LED dioda na pinovima 3–9 postavljene su kao tačkice kockice. Taster na pin 2 (pull-down 10kΩ). Brzo smenjivanje kombinacija — pritiskom tastera kombinacija se zamrzava 3 sekunde.</p>
+  <div class="orig-img"><div class="orig-img-hdr">Originalna šema vezivanja</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2015/03/kockica12-e1427836472980.png" alt="Kockica vezivanje" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+</div></div>
+<div class="lst"><div class="lstt">I rešenje — višestruko grananje (za početnike)</div><div class="lc">
+  <div class="orig-img"><div class="orig-img-hdr">Originalni kod — višestruko grananje</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2015/04/kockica1_kod12.png" alt="Kockica kod 1" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>kockica_grananje.ino — rekonstrukcija I rešenja</span></div>
+<pre><span class="cm">// Pinovi 3-9 = 7 LED, taster na pin 2</span>
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">3</span>; i&lt;=<span class="nm">9</span>; i++) <span class="fn">pinMode</span>(i, OUTPUT);
+  <span class="fn">pinMode</span>(<span class="nm">2</span>, INPUT);
+  <span class="fn">randomSeed</span>(<span class="fn">analogRead</span>(<span class="nm">0</span>));
+}
+<span class="kw">void</span> <span class="fn">ugasiSve</span>() {
+  <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">3</span>; i&lt;=<span class="nm">9</span>; i++) <span class="fn">digitalWrite</span>(i, LOW);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> br = <span class="fn">random</span>(<span class="nm">1</span>, <span class="nm">7</span>); <span class="cm">// 1 do 6</span>
+  <span class="fn">ugasiSve</span>();
+  <span class="kw">if</span>      (br==<span class="nm">1</span>) { <span class="fn">digitalWrite</span>(<span class="nm">5</span>,HIGH); }
+  <span class="kw">else if</span> (br==<span class="nm">2</span>) { <span class="fn">digitalWrite</span>(<span class="nm">3</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">9</span>,HIGH); }
+  <span class="kw">else if</span> (br==<span class="nm">3</span>) { <span class="fn">digitalWrite</span>(<span class="nm">3</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">5</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">9</span>,HIGH); }
+  <span class="kw">else if</span> (br==<span class="nm">4</span>) { <span class="fn">digitalWrite</span>(<span class="nm">3</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">4</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">6</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">7</span>,HIGH); }
+  <span class="kw">else if</span> (br==<span class="nm">5</span>) { <span class="fn">digitalWrite</span>(<span class="nm">3</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">4</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">5</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">6</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">7</span>,HIGH); }
+  <span class="kw">else if</span> (br==<span class="nm">6</span>) { <span class="fn">digitalWrite</span>(<span class="nm">3</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">4</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">6</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">7</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">8</span>,HIGH); <span class="fn">digitalWrite</span>(<span class="nm">9</span>,HIGH); }
+  <span class="fn">delay</span>(<span class="nm">100</span>);
+  <span class="kw">if</span> (<span class="fn">digitalRead</span>(<span class="nm">2</span>) == HIGH) <span class="fn">delay</span>(<span class="nm">3000</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">II rešenje — dvodimenzionalni niz (za starije)</div><div class="lc">
+  <div class="orig-img"><div class="orig-img-hdr">Originalni kod — 2D niz</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2015/04/kockica1_kod24.png" alt="Kockica kod 2" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>kockica_2dniz.ino — rekonstrukcija II rešenja</span></div>
+<pre><span class="cm">// II rešenje — kombinacije LED u 2D nizu</span>
+<span class="cm">// Pinovi: 3  4  5  6  7  8  9</span>
+<span class="kw">int</span> komb[<span class="nm">6</span>][<span class="nm">7</span>] = {
+  {<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>},  <span class="cm">// 1</span>
+  {<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>},  <span class="cm">// 2</span>
+  {<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>},  <span class="cm">// 3</span>
+  {<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">1</span>},  <span class="cm">// 4</span>
+  {<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">1</span>},  <span class="cm">// 5</span>
+  {<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">1</span>}   <span class="cm">// 6</span>
+};
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">3</span>; i&lt;=<span class="nm">9</span>; i++) <span class="fn">pinMode</span>(i,OUTPUT);
+  <span class="fn">pinMode</span>(<span class="nm">2</span>,INPUT); <span class="fn">randomSeed</span>(<span class="fn">analogRead</span>(<span class="nm">0</span>));
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> br = <span class="fn">random</span>(<span class="nm">0</span>,<span class="nm">6</span>);
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">7</span>; i++) <span class="fn">digitalWrite</span>(<span class="nm">3</span>+i, komb[br][i]);
+  <span class="fn">delay</span>(<span class="nm">100</span>);
+  <span class="kw">if</span>(<span class="fn">digitalRead</span>(<span class="nm">2</span>)==HIGH) <span class="fn">delay</span>(<span class="nm">3000</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Šta radi randomSeed(analogRead(0)) i zašto?</div>
+  <div class="pi">Zašto je II rešenje elegantnije od I rešenja?</div>
+  <div class="pi">Da li random(0,6) vraća 6?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P5 7-SEG kockica -->
+<div class="pc" id="p5" data-q="7 segmentni displej zajednička anoda katoda kockica taster cifre">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p5')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-05</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Kockica na 7-segmentnom displeju</div>
+  <div class="pcsu">Cifre 1-6 na 7-seg displeju. Zajednička anoda = obrnuta logika (LOW = svetli). Taster za zaustavljanje.</div></div>
+  <div class="tog" id="tp5">+</div>
+</div>
+<div class="pcb" id="bp5">
+<div class="pb"><button class="btnp" onclick="pC('p5')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>Displej sa <strong>zajedničkom anodom</strong>: zajednički pin → 5V (220Ω). Segmenti a–g na pinove 2–8. <strong>Obrnuta logika</strong>: LOW = segment svetli, HIGH = ugašen! Taster na pin 12.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>kockica_7seg.ino — zajednička anoda</span></div>
+<pre><span class="cm">// Zajednička anoda: LOW = svetli, HIGH = ugašen</span>
+<span class="cm">// Segmenti a,b,c,d,e,f,g na pinove 2,3,4,5,6,7,8</span>
+<span class="kw">byte</span> cifre[<span class="nm">6</span>][<span class="nm">7</span>] = {
+  {<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">1</span>},  <span class="cm">// 1</span>
+  {<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>},  <span class="cm">// 2</span>
+  {<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">0</span>},  <span class="cm">// 3</span>
+  {<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>},  <span class="cm">// 4</span>
+  {<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>},  <span class="cm">// 5</span>
+  {<span class="nm">0</span>,<span class="nm">1</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>,<span class="nm">0</span>}   <span class="cm">// 6</span>
+};
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">2</span>; i&lt;=<span class="nm">8</span>; i++) <span class="fn">pinMode</span>(i,OUTPUT);
+  <span class="fn">pinMode</span>(<span class="nm">12</span>,INPUT); <span class="fn">randomSeed</span>(<span class="fn">analogRead</span>(<span class="nm">0</span>));
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> br=<span class="fn">random</span>(<span class="nm">0</span>,<span class="nm">6</span>);
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">7</span>; i++) <span class="fn">digitalWrite</span>(<span class="nm">2</span>+i, cifre[br][i]);
+  <span class="fn">delay</span>(<span class="nm">100</span>);
+  <span class="kw">if</span>(<span class="fn">digitalRead</span>(<span class="nm">12</span>)==HIGH) <span class="fn">delay</span>(<span class="nm">3000</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto displej sa zajedničkom anodom koristi obrnutu logiku?</div>
+  <div class="pi">Gde je vezan zajednički pin kod zajedničke anode?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P6 Dvobojna -->
+<div class="pc" id="p6" data-q="dvobojna dioda bi-color LED zelena crvena zuta PWM mesanje boja tri boje">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p6')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-06</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Tri boje dvobojne diode</div>
+  <div class="pcsu">Crvena + zelena = žuta. Uvod u PWM mešanje boja. Priprema za RGB LED.</div></div>
+  <div class="tog" id="tp6">+</div>
+</div>
+<div class="pcb" id="bp6">
+<div class="pb"><button class="btnp" onclick="pC('p6')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>Dvobojna LED: 3 nožice — srednja = zajednička katoda (GND), leva = crvena (pin 9, PWM), desna = zelena (pin 10, PWM). Istovremenim paljenjem oba kanala dobijamo žutu boju.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>dvobojna_led.ino</span></div>
+<pre><span class="cm">// Dvobojna LED: crvena=pin9, zelena=pin10 (oba PWM ~)</span>
+<span class="kw">void</span> <span class="fn">setup</span>() { <span class="fn">pinMode</span>(<span class="nm">9</span>,OUTPUT); <span class="fn">pinMode</span>(<span class="nm">10</span>,OUTPUT); }
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">255</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">0</span>);   <span class="fn">delay</span>(<span class="nm">1000</span>); <span class="cm">// crvena</span>
+  <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">0</span>);   <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">255</span>); <span class="fn">delay</span>(<span class="nm">1000</span>); <span class="cm">// zelena</span>
+  <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">255</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">255</span>); <span class="fn">delay</span>(<span class="nm">1000</span>); <span class="cm">// zuta</span>
+  <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">255</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">100</span>); <span class="fn">delay</span>(<span class="nm">1000</span>); <span class="cm">// narandzasta</span>
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto moramo koristiti PWM pinove za mešanje boja?</div>
+  <div class="pi">Šta nastaje kad su oba kanala na 255?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P7 LED matrica -->
+<div class="pc" id="p7" data-q="LED matrica MAX7219 nizovi vrste kolone dijagonale LEDControlMS 8x8">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p7')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-07</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Vrste, kolone, dijagonale — LED matrica</div>
+  <div class="pcsu">MAX7219 8×8 matrica. 2D nizovi u praksi. setLed(), clearDisplay(). Prikaz vrsta, kolona i dijagonala.</div></div>
+  <div class="tog" id="tp7">+</div>
+</div>
+<div class="pcb" id="bp7">
+<div class="pb"><button class="btnp" onclick="pC('p7')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>Vezivanje: VCC→5V, GND→GND, DIN→pin12, CS→pin10, CLK→pin11. Biblioteka: <code>LEDControlMS.h</code>.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>led_matrica.ino</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;LEDControlMS.h&gt;</span>
+LEDControl lc = <span class="fn">LEDControl</span>(<span class="nm">12</span>,<span class="nm">11</span>,<span class="nm">10</span>,<span class="nm">1</span>); <span class="cm">// DIN,CLK,CS,br.</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  lc.<span class="fn">shutdown</span>(<span class="nm">0</span>,<span class="kw">false</span>); lc.<span class="fn">setIntensity</span>(<span class="nm">0</span>,<span class="nm">8</span>); lc.<span class="fn">clearDisplay</span>(<span class="nm">0</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="cm">// Sve diode</span>
+  <span class="kw">for</span>(<span class="kw">int</span> r=<span class="nm">0</span>; r&lt;<span class="nm">8</span>; r++) <span class="kw">for</span>(<span class="kw">int</span> c=<span class="nm">0</span>; c&lt;<span class="nm">8</span>; c++) lc.<span class="fn">setLed</span>(<span class="nm">0</span>,r,c,<span class="kw">true</span>);
+  <span class="fn">delay</span>(<span class="nm">1000</span>); lc.<span class="fn">clearDisplay</span>(<span class="nm">0</span>);
+  <span class="cm">// Vrste</span>
+  <span class="kw">for</span>(<span class="kw">int</span> r=<span class="nm">0</span>; r&lt;<span class="nm">8</span>; r++) {
+    <span class="kw">for</span>(<span class="kw">int</span> c=<span class="nm">0</span>; c&lt;<span class="nm">8</span>; c++) lc.<span class="fn">setLed</span>(<span class="nm">0</span>,r,c,<span class="kw">true</span>);
+    <span class="fn">delay</span>(<span class="nm">200</span>);
+    <span class="kw">for</span>(<span class="kw">int</span> c=<span class="nm">0</span>; c&lt;<span class="nm">8</span>; c++) lc.<span class="fn">setLed</span>(<span class="nm">0</span>,r,c,<span class="kw">false</span>);
+  }
+  <span class="cm">// Kolone</span>
+  <span class="kw">for</span>(<span class="kw">int</span> c=<span class="nm">0</span>; c&lt;<span class="nm">8</span>; c++) {
+    <span class="kw">for</span>(<span class="kw">int</span> r=<span class="nm">0</span>; r&lt;<span class="nm">8</span>; r++) lc.<span class="fn">setLed</span>(<span class="nm">0</span>,r,c,<span class="kw">true</span>);
+    <span class="fn">delay</span>(<span class="nm">200</span>);
+    <span class="kw">for</span>(<span class="kw">int</span> r=<span class="nm">0</span>; r&lt;<span class="nm">8</span>; r++) lc.<span class="fn">setLed</span>(<span class="nm">0</span>,r,c,<span class="kw">false</span>);
+  }
+  <span class="cm">// Dijagonale</span>
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">8</span>; i++) lc.<span class="fn">setLed</span>(<span class="nm">0</span>,i,i,<span class="kw">true</span>); <span class="fn">delay</span>(<span class="nm">500</span>); lc.<span class="fn">clearDisplay</span>(<span class="nm">0</span>);
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">8</span>; i++) lc.<span class="fn">setLed</span>(<span class="nm">0</span>,i,<span class="nm">7</span>-i,<span class="kw">true</span>); <span class="fn">delay</span>(<span class="nm">500</span>); lc.<span class="fn">clearDisplay</span>(<span class="nm">0</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Šta znači parametar 0 u lc.setLed(0, r, c, true)?</div>
+  <div class="pi">Koji je uslov za element na glavnoj dijagonali matrice?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P8 IR test -->
+<div class="pc" id="p8" data-q="IR daljinski test Serial Monitor IRremote kod hex vrednost prijemnik 38kHz">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p8')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-08</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">IR daljinski — test HEX kodova</div>
+  <div class="pcsu">Ispis HEX koda svakog tastera daljinskog na Serial Monitor. Obavezan korak pre pisanja IR programa.</div></div>
+  <div class="tog" id="tp8">+</div>
+</div>
+<div class="pcb" id="bp8">
+<div class="pb"><button class="btnp" onclick="pC('p8')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>IR prijemnik: leva nožica→pin 11, srednja→GND, desna→5V. Biblioteka: <code>IRremote.h</code>. Svaki pritisak tastera prikazuje HEX kod u Serial Monitoru — potrebno za P9.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>ir_test.ino</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;IRremote.h&gt;</span>
+IRrecv irrecv(<span class="nm">11</span>);
+decode_results rezultati;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nm">9600</span>);
+  irrecv.<span class="fn">enableIRIn</span>();
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (irrecv.<span class="fn">decode</span>(&amp;rezultati)) {
+    Serial.<span class="fn">print</span>(<span class="st">"Kod: 0x"</span>);
+    Serial.<span class="fn">println</span>(rezultati.value, HEX);
+    irrecv.<span class="fn">resume</span>(); <span class="cm">// priprema za sledeći</span>
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto se mora pozvati irrecv.resume() posle svakog signala?</div>
+  <div class="pi">Zašto se isti taster ponekad prikazuje kao FFFFFFFF?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P9 IR On/Off -->
+<div class="pc" id="p9" data-q="IR daljinski on off ukljuci iskljuci LED toggle hex kod boolean">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p9')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-09</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">On/Off pomoću starog daljinca</div>
+  <div class="pcsu">Toggle LED pritiskom jednog tastera TV daljinskog. HEX kod iz P-08. Boolean stanje.</div></div>
+  <div class="tog" id="tp9">+</div>
+</div>
+<div class="pcb" id="bp9">
+<div class="pb"><button class="btnp" onclick="pC('p9')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>Koristiti HEX kod dobijen iz P-08. Vrednost <code>0xFF30CF</code> je primer — zaменити sopstvenim kodom!</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>ir_onoff.ino</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;IRremote.h&gt;</span>
+IRrecv irrecv(<span class="nm">11</span>);
+decode_results rezultati;
+<span class="kw">boolean</span> stanje = <span class="kw">false</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(<span class="nm">13</span>, OUTPUT);
+  irrecv.<span class="fn">enableIRIn</span>();
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (irrecv.<span class="fn">decode</span>(&amp;rezultati)) {
+    <span class="kw">if</span> (rezultati.value == <span class="nm">0xFF30CF</span>) { <span class="cm">// ZAMENITI SOPSTVENIM!</span>
+      stanje = !stanje;
+      <span class="fn">digitalWrite</span>(<span class="nm">13</span>, stanje);
+    }
+    irrecv.<span class="fn">resume</span>();
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Šta znači stanje = !stanje?</div>
+  <div class="pi">Kako dodati upravljanje i drugom LED sa drugim tasterom?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P10 Sijalica rele -->
+<div class="pc" id="p10" data-q="sijalica rele 230V NO NC normalno otvoren zatvoren taster">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p10')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-10</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Sijalica — upravljanje relejom</div>
+  <div class="pcsu">Kućna sijalica 230VAC upravljana 5V Arduino signalom kroz relej. NO/NC kontakt. Taster.</div></div>
+  <div class="tog" id="tp10">+</div>
+</div>
+<div class="pcb" id="bp10">
+<div class="pb"><button class="btnp" onclick="pC('p10')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <div class="nt">⚠️ Pažnja pri radu sa 230V! Koristite osigurane konektore i ne dirajte veze dok je struja priključena!</div>
+  <p>Relej: Vcc→5V, GND→GND, In→pin7. Sijalica na NO kontakt. Taster na pin2 (pull-down 10kΩ).</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>sijalica_rele.ino</span></div>
+<pre><span class="kw">int</span> relePin=<span class="nm">7</span>, tasterPin=<span class="nm">2</span>;
+<span class="kw">boolean</span> stanje=<span class="kw">false</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(relePin, OUTPUT); <span class="fn">pinMode</span>(tasterPin, INPUT);
+  <span class="fn">digitalWrite</span>(relePin, LOW);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (<span class="fn">digitalRead</span>(tasterPin) == HIGH) {
+    stanje = !stanje;
+    <span class="fn">digitalWrite</span>(relePin, stanje);
+    <span class="fn">delay</span>(<span class="nm">300</span>); <span class="cm">// debounce</span>
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto koristimo relej umesto da direktno upravljamo sijalicam sa Arduina?</div>
+  <div class="pi">Šta je debounce i zašto je potreban?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P11 Stednja energije -->
+<div class="pc" id="p11" data-q="stednja energije LDR foto if-else LED cetiri osvetljenost pragovi analogRead">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p11')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-11</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Štedimo energiju!</div>
+  <div class="pcsu">Višestruki if-else: zavisno od osvetljenosti (LDR) pali se 0–4 LED. Automatska regulacija.</div></div>
+  <div class="tog" id="tp11">+</div>
+</div>
+<div class="pcb" id="bp11">
+<div class="pb"><button class="btnp" onclick="pC('p11')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>4 LED na pinovima 9–12. LDR + pull-up 10kΩ na A0. Što je mračnije, više LED svetli. Demonstracija višestrukog if-else.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>stednja_energije.ino</span></div>
+<pre><span class="kw">int</span> pinovi[] = {<span class="nm">9</span>,<span class="nm">10</span>,<span class="nm">11</span>,<span class="nm">12</span>};
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">4</span>; i++) <span class="fn">pinMode</span>(pinovi[i], OUTPUT);
+}
+<span class="kw">void</span> <span class="fn">paliN</span>(<span class="kw">int</span> n) {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">4</span>; i++) <span class="fn">digitalWrite</span>(pinovi[i], i&lt;n ? HIGH : LOW);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">int</span> v = <span class="fn">analogRead</span>(A0);
+  <span class="kw">if</span>      (v > <span class="nm">800</span>) <span class="fn">paliN</span>(<span class="nm">0</span>); <span class="cm">// puno svetla</span>
+  <span class="kw">else if</span> (v > <span class="nm">600</span>) <span class="fn">paliN</span>(<span class="nm">1</span>);
+  <span class="kw">else if</span> (v > <span class="nm">400</span>) <span class="fn">paliN</span>(<span class="nm">2</span>);
+  <span class="kw">else if</span> (v > <span class="nm">200</span>) <span class="fn">paliN</span>(<span class="nm">3</span>);
+  <span class="kw">else</span>               <span class="fn">paliN</span>(<span class="nm">4</span>); <span class="cm">// potpuni mrak</span>
+  <span class="fn">delay</span>(<span class="nm">100</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Šta se dešava ako je vrednost tačno 600?</div>
+  <div class="pi">Kako bi se promenio program da koristi map() umesto if-else?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P12 Termometar -->
+<div class="pc" id="p12" data-q="termometar DHT11 temperatura vlaznost LCD1602 displej isnan DHT biblioteka">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p12')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-12</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Napravite svoj termometar!</div>
+  <div class="pcsu">DHT11 senzor + LCD1602 displej. Temperatura i vlažnost u realnom vremenu. Bibl. DHT + LiquidCrystal.</div></div>
+  <div class="tog" id="tp12">+</div>
+</div>
+<div class="pcb" id="bp12">
+<div class="pb"><button class="btnp" onclick="pC('p12')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>DHT11: Pin1→5V, Pin2→pin2 + 10kΩ pull-up, Pin4→GND. LCD1602 sa tasterima: inicijalizacija <code>(8,9,4,5,6,7)</code>.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>termometar.ino</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;DHT.h&gt;</span>
+#<span class="kw">include</span> <span class="st">&lt;LiquidCrystal.h&gt;</span>
+DHT dht(<span class="nm">2</span>, DHT11);
+LiquidCrystal lcd(<span class="nm">8</span>,<span class="nm">9</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>,<span class="nm">7</span>);
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  lcd.<span class="fn">begin</span>(<span class="nm">16</span>,<span class="nm">2</span>); dht.<span class="fn">begin</span>();
+  lcd.<span class="fn">print</span>(<span class="st">"Termometar"</span>); <span class="fn">delay</span>(<span class="nm">2000</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">float</span> t = dht.<span class="fn">readTemperature</span>();
+  <span class="kw">float</span> h = dht.<span class="fn">readHumidity</span>();
+  <span class="kw">if</span> (<span class="fn">isnan</span>(t) || <span class="fn">isnan</span>(h)) {
+    lcd.<span class="fn">clear</span>(); lcd.<span class="fn">print</span>(<span class="st">"Greska senzora!"</span>);
+  } <span class="kw">else</span> {
+    lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>,<span class="nm">0</span>); lcd.<span class="fn">print</span>(<span class="st">"Temp: "</span>); lcd.<span class="fn">print</span>(t,<span class="nm">1</span>); lcd.<span class="fn">print</span>(<span class="st">" C"</span>);
+    lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>,<span class="nm">1</span>); lcd.<span class="fn">print</span>(<span class="st">"Vlaga: "</span>); lcd.<span class="fn">print</span>(h,<span class="nm">0</span>); lcd.<span class="fn">print</span>(<span class="st">" %"</span>);
+  }
+  <span class="fn">delay</span>(<span class="nm">2000</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Šta proverava isnan(t) i zašto je to važno?</div>
+  <div class="pi">Šta radi lcd.setCursor(0,1)?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P13 Tastatura -->
+<div class="pc" id="p13" data-q="tastatura 4x4 Keypad karakter Serial Monitor vrste kolone mapa pinovi">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p13')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-13</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Tastatura 4×4 — test</div>
+  <div class="pcsu">Ispis pritisnutog karaktera na Serial Monitor. Biblioteka Keypad. Osnova za PIN sistem i kalkulator.</div></div>
+  <div class="tog" id="tp13">+</div>
+</div>
+<div class="pcb" id="bp13">
+<div class="pb"><button class="btnp" onclick="pC('p13')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>Tastatura 4×4 ima 8 pinova (4 vrste + 4 kolone). Vrste R1–R4 → Arduino pinovi 9,8,7,6. Kolone C1–C4 → Arduino pinovi 5,4,3,2.</p>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>tastatura_test.ino</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;Keypad.h&gt;</span>
+<span class="kw">const byte</span> R=<span class="nm">4</span>, C=<span class="nm">4</span>;
+<span class="kw">char</span> mapa[R][C]={
+  {<span class="st">'1'</span>,<span class="st">'2'</span>,<span class="st">'3'</span>,<span class="st">'A'</span>}, {<span class="st">'4'</span>,<span class="st">'5'</span>,<span class="st">'6'</span>,<span class="st">'B'</span>},
+  {<span class="st">'7'</span>,<span class="st">'8'</span>,<span class="st">'9'</span>,<span class="st">'C'</span>}, {<span class="st">'*'</span>,<span class="st">'0'</span>,<span class="st">'#'</span>,<span class="st">'D'</span>}
+};
+<span class="kw">byte</span> vrste[]={<span class="nm">9</span>,<span class="nm">8</span>,<span class="nm">7</span>,<span class="nm">6</span>}, kolone[]={<span class="nm">5</span>,<span class="nm">4</span>,<span class="nm">3</span>,<span class="nm">2</span>};
+Keypad tast = <span class="fn">Keypad</span>(<span class="fn">makeKeymap</span>(mapa), vrste, kolone, R, C);
+
+<span class="kw">void</span> <span class="fn">setup</span>() { Serial.<span class="fn">begin</span>(<span class="nm">9600</span>); }
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">char</span> k = tast.<span class="fn">getKey</span>();
+  <span class="kw">if</span> (k) Serial.<span class="fn">println</span>(k);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Kako tastatura 4×4 detektuje pritisak sa samo 8 pinova?</div>
+  <div class="pi">Kako proširiti program na 4-cifreni PIN?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P14 Visinomer -->
+<div class="pc" id="p14" data-q="visinomer HC-SR04 sonar LCD merenje visine rastojanje ultrazvuk NewPing">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p14')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-14</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Ultrazvučni visinomer</div>
+  <div class="pcsu">HC-SR04 na 210cm meri rastojanje do glave. Visina = 210 − rastojanje − 1. Prikaz na LCD1602.</div></div>
+  <div class="tog" id="tp14">+</div>
+</div>
+<div class="pcb" id="bp14">
+<div class="pb"><button class="btnp" onclick="pC('p14')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>visinomer.ino</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;NewPing.h&gt;</span>
+#<span class="kw">include</span> <span class="st">&lt;LiquidCrystal.h&gt;</span>
+NewPing sonar(<span class="nm">9</span>, <span class="nm">10</span>, <span class="nm">250</span>); <span class="cm">// trig, echo, max 250cm</span>
+LiquidCrystal lcd(<span class="nm">12</span>,<span class="nm">11</span>,<span class="nm">5</span>,<span class="nm">4</span>,<span class="nm">3</span>,<span class="nm">2</span>);
+<span class="kw">int</span> montiranjeVis = <span class="nm">210</span>; <span class="cm">// cm od poda</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() { lcd.<span class="fn">begin</span>(<span class="nm">16</span>,<span class="nm">2</span>); lcd.<span class="fn">print</span>(<span class="st">"Visinomer"</span>); <span class="fn">delay</span>(<span class="nm">1500</span>); }
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="fn">delay</span>(<span class="nm">200</span>);
+  <span class="kw">int</span> dist = sonar.<span class="fn">ping_cm</span>();
+  <span class="kw">if</span> (dist==<span class="nm">0</span> || dist><span class="nm">200</span>) {
+    lcd.<span class="fn">clear</span>(); lcd.<span class="fn">print</span>(<span class="st">"Stanite ispod!"</span>);
+  } <span class="kw">else</span> {
+    <span class="kw">int</span> visina = montiranjeVis - dist - <span class="nm">1</span>;
+    lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>,<span class="nm">0</span>); lcd.<span class="fn">print</span>(<span class="st">"Visina: "</span>); lcd.<span class="fn">print</span>(visina); lcd.<span class="fn">print</span>(<span class="st">" cm"</span>);
+    lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>,<span class="nm">1</span>); lcd.<span class="fn">print</span>(<span class="st">"Dist:   "</span>); lcd.<span class="fn">print</span>(dist);  lcd.<span class="fn">print</span>(<span class="st">" cm"</span>);
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Kako ultrazvučni senzor meri rastojanje — koja fizička formula?</div>
+  <div class="pi">Zašto proveravamo da li je dist == 0 ili > 200?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P15 Robot vozilo -->
+<div class="pc" id="p15" data-q="robot vozilo H-most motor napred nazad smer brzina DC motor L298 upravljanje">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p15')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-15</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Upravljanje vozilom — H-most</div>
+  <div class="pcsu">Robot-vozilo: smer, kočnica, brzina DC motora kroz H-bridge. Upravljanje Bluetooth-om ili C# aplikacijom.</div></div>
+  <div class="tog" id="tp15">+</div>
+</div>
+<div class="pcb" id="bp15">
+<div class="pb"><button class="btnp" onclick="pC('p15')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>H-most (L298P) za upravljanje dva jednosmerna motora na do 12V. Parametri: smer, kočnica, brzina. Eksterno napajanje motora obavezno — ukloniti džamper sa modula.</p>
+  <div class="orig-img"><div class="orig-img-hdr">Pinovi H-mosta (originalna tabela)</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2016/02/motor.png" alt="H-most pinovi" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="orig-img"><div class="orig-img-hdr">Primer koda — kretanje unazad i stop (original)</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2016/02/kretanje.png" alt="Kretanje kod" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="orig-img"><div class="orig-img-hdr">Upravljanje serijskom komunikacijom — višestruko grananje (original)</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2016/02/kretanje21.png" alt="Kretanje grananje" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>robot_vozilo.ino — rekonstrukcija</span></div>
+<pre><span class="cm">// H-most L298: IN1=2,IN2=3,ENA=9, IN3=4,IN4=5,ENB=10</span>
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">2</span>; i&lt;=<span class="nm">5</span>; i++) <span class="fn">pinMode</span>(i,OUTPUT);
+  <span class="fn">pinMode</span>(<span class="nm">9</span>,OUTPUT); <span class="fn">pinMode</span>(<span class="nm">10</span>,OUTPUT);
+  Serial.<span class="fn">begin</span>(<span class="nm">9600</span>);
+}
+<span class="kw">void</span> <span class="fn">napred</span>(<span class="kw">int</span> b) {
+  <span class="fn">analogWrite</span>(<span class="nm">9</span>,b); <span class="fn">analogWrite</span>(<span class="nm">10</span>,b);
+  <span class="fn">digitalWrite</span>(<span class="nm">2</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">3</span>,LOW);<span class="fn">digitalWrite</span>(<span class="nm">4</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">5</span>,LOW);
+}
+<span class="kw">void</span> <span class="fn">nazad</span>(<span class="kw">int</span> b) {
+  <span class="fn">analogWrite</span>(<span class="nm">9</span>,b); <span class="fn">analogWrite</span>(<span class="nm">10</span>,b);
+  <span class="fn">digitalWrite</span>(<span class="nm">2</span>,LOW);<span class="fn">digitalWrite</span>(<span class="nm">3</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">4</span>,LOW);<span class="fn">digitalWrite</span>(<span class="nm">5</span>,HIGH);
+}
+<span class="kw">void</span> <span class="fn">stop</span>() { <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">0</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">0</span>); }
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (Serial.<span class="fn">available</span>()><span class="nm">0</span>) {
+    <span class="kw">char</span> c = (<span class="kw">char</span>)Serial.<span class="fn">read</span>();
+    <span class="kw">if</span>      (c==<span class="st">'1'</span>) <span class="fn">napred</span>(<span class="nm">200</span>);
+    <span class="kw">else if</span> (c==<span class="st">'2'</span>) <span class="fn">nazad</span>(<span class="nm">150</span>);
+    <span class="kw">else if</span> (c==<span class="st">'3'</span>) { <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">80</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">200</span>); <span class="cm">// levo</span>
+      <span class="fn">digitalWrite</span>(<span class="nm">2</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">3</span>,LOW);<span class="fn">digitalWrite</span>(<span class="nm">4</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">5</span>,LOW); }
+    <span class="kw">else if</span> (c==<span class="st">'4'</span>) { <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">200</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">80</span>); <span class="cm">// desno</span>
+      <span class="fn">digitalWrite</span>(<span class="nm">2</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">3</span>,LOW);<span class="fn">digitalWrite</span>(<span class="nm">4</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">5</span>,LOW); }
+    <span class="kw">else if</span> (c==<span class="st">'5'</span>) <span class="fn">stop</span>();
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto je potreban H-most za kretanje motora u oba smera?</div>
+  <div class="pi">Zašto se motorima vezuje eksterno napajanje?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P16 Pracenje trake -->
+<div class="pc" id="p16" data-q="pracenje trake TCRT5000 crna linija robot senzor motor H-most autonomno A4 A5">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p16')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-16</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Praćenje trake</div>
+  <div class="pcsu">Robot-vozilo prati crnu/belu liniju pomoću dva TCRT5000 senzora na A4 i A5. Autonomno upravljanje.</div></div>
+  <div class="tog" id="tp16">+</div>
+</div>
+<div class="pcb" id="bp16">
+<div class="pb"><button class="btnp" onclick="pC('p16')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>Dva TCRT5000 senzora na prednjem delu vozila na analognim ulazima A4 i A5. Prinada vrednosti ispod/iznad praga 500 određuje akciju: pravo, levo, desno ili stop.</p>
+  <div class="orig-img"><div class="orig-img-hdr">Originalna šema upravljanja (princip)</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2016/07/blackline.png" alt="Praćenje trake princip" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="orig-img"><div class="orig-img-hdr">Originalni kod praćenja trake</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2016/07/tracker.jpg" alt="Tracker kod" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+</div></div>
+<div class="lst"><div class="lstt">Rekonstruisan kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>pracenje_trake.ino — senzori na A4/A5</span></div>
+<pre><span class="cm">// Senzori TCRT5000: levi=A4, desni=A5, prag=500</span>
+<span class="cm">// H-most: IN1=2,IN2=3,ENA=9, IN3=4,IN4=5,ENB=10</span>
+<span class="kw">int</span> prag=<span class="nm">500</span>, brzina=<span class="nm">180</span>;
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">2</span>; i&lt;=<span class="nm">5</span>; i++) <span class="fn">pinMode</span>(i,OUTPUT);
+  <span class="fn">pinMode</span>(<span class="nm">9</span>,OUTPUT); <span class="fn">pinMode</span>(<span class="nm">10</span>,OUTPUT);
+}
+<span class="kw">void</span> <span class="fn">idi</span>(<span class="kw">int</span> bL, <span class="kw">int</span> bD) {
+  <span class="fn">analogWrite</span>(<span class="nm">9</span>,bL); <span class="fn">analogWrite</span>(<span class="nm">10</span>,bD);
+  <span class="fn">digitalWrite</span>(<span class="nm">2</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">3</span>,LOW);<span class="fn">digitalWrite</span>(<span class="nm">4</span>,HIGH);<span class="fn">digitalWrite</span>(<span class="nm">5</span>,LOW);
+}
+<span class="kw">void</span> <span class="fn">stop</span>() { <span class="fn">analogWrite</span>(<span class="nm">9</span>,<span class="nm">0</span>); <span class="fn">analogWrite</span>(<span class="nm">10</span>,<span class="nm">0</span>); }
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">boolean</span> L = (<span class="fn">analogRead</span>(A4) &lt; prag);
+  <span class="kw">boolean</span> D = (<span class="fn">analogRead</span>(A5) &lt; prag);
+  <span class="kw">if</span>      (!L &amp;&amp; !D) <span class="fn">idi</span>(brzina, brzina); <span class="cm">// pravo</span>
+  <span class="kw">else if</span> ( L &amp;&amp; !D) <span class="fn">idi</span>(<span class="nm">60</span>, brzina);     <span class="cm">// skreni levo</span>
+  <span class="kw">else if</span> (!L &amp;&amp;  D) <span class="fn">idi</span>(brzina, <span class="nm">60</span>);     <span class="cm">// skreni desno</span>
+  <span class="kw">else</span>               <span class="fn">stop</span>();               <span class="cm">// kraj trake</span>
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto crna podloga daje malu vrednost a bela veliku?</div>
+  <div class="pi">Šta se dešava kada oba senzora detektuju crno?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P17 Metronom -->
+<div class="pc" id="p17" data-q="metronom zujalica potenciometar brzina ritam ton zvuk analogRead map">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p17')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-17</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Lukin mali metronom</div>
+  <div class="pcsu">Zujalica + potenciometar = metronom. Okretanjem potenciometra menja se tempo (brzina otkucaja).</div></div>
+  <div class="tog" id="tp17">+</div>
+</div>
+<div class="pcb" id="bp17">
+<div class="pb"><button class="btnp" onclick="pC('p17')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>Primer koji dokazuje da učenik IV razreda OŠ može samostalno osmisliti i realizovati koristan uređaj uz Arduino. Zujalica na digitalnom pinu, potenciometar na analognom ulazu.</p>
+  <div class="orig-img"><div class="orig-img-hdr">Originalni kod metronomа — autor: Luka Jerković</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2016/12/metronom_kod3.jpg" alt="Metronom kod" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+</div></div>
+<div class="lst"><div class="lstt">Rekonstruisan kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>metronom.ino</span></div>
+<pre><span class="cm">// Metronom — zujalica na pin 8, potenciometar na A0</span>
+<span class="kw">void</span> <span class="fn">setup</span>() { <span class="fn">pinMode</span>(<span class="nm">8</span>, OUTPUT); }
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="cm">// Potenciometar određuje pauzu između otkucaja</span>
+  <span class="kw">int</span> pauzaMs = <span class="fn">map</span>(<span class="fn">analogRead</span>(A0), <span class="nm">0</span>, <span class="nm">1023</span>, <span class="nm">200</span>, <span class="nm">2000</span>);
+
+  <span class="cm">// Kratki ton (klik)</span>
+  <span class="fn">tone</span>(<span class="nm">8</span>, <span class="nm">1000</span>);
+  <span class="fn">delay</span>(<span class="nm">50</span>);
+  <span class="fn">noTone</span>(<span class="nm">8</span>);
+
+  <span class="cm">// Pauza do sledeceg otkucaja</span>
+  <span class="fn">delay</span>(pauzaMs);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Kako bismo tačno definisali tempo u BPM (otkucaja po minuti)?</div>
+  <div class="pi">Šta radi noTone()? Zašto je potreban?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P18 ESP8266 -->
+<div class="pc" id="p18" data-q="ESP8266 IoT internet of things WiFi web server bežično">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p18')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-18</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">ESP8266 — uvod u IoT</div>
+  <div class="pcsu">WiFi modul za bežičnu komunikaciju. Internet of Things — upravljanje Arduinom putem interneta.</div></div>
+  <div class="tog" id="tp18">+</div>
+</div>
+<div class="pcb" id="bp18">
+<div class="pb"><button class="btnp" onclick="pC('p18')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>ESP8266 je WiFi modul koji se vezuje na serijske pinove Arduina i omogućava povezivanje na bežičnu mrežu. Sa njim Arduino može da prima komande putem interneta, šalje senzorske podatke na web server, ili direktno hostuje malu web stranicu.</p>
+  <p>Modul komunicira sa Arduinom AT komandama. Biblioteke kao <code>ESP8266WiFi.h</code> olakšavaju rad.</p>
+  <div class="nt">⚠️ ESP8266 radi na 3.3V — nikako na 5V! Koristiti razdelnik napona (1kΩ + 2.2kΩ) na TX liniji Arduina pre vezivanja na RX modula.</div>
+  <div class="inf">💡 Alternativno: ESP8266 može raditi i kao samostalan mikrokontroler (ESP-based Arduino) bez dodatnog Arduina.</div>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>esp8266_test.ino — AT komande osnove</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;SoftwareSerial.h&gt;</span>
+SoftwareSerial esp(<span class="nm">2</span>, <span class="nm">3</span>); <span class="cm">// RX=2, TX=3</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  Serial.<span class="fn">begin</span>(<span class="nm">9600</span>);
+  esp.<span class="fn">begin</span>(<span class="nm">9600</span>);
+  esp.<span class="fn">println</span>(<span class="st">"AT"</span>);           <span class="cm">// test komunikacije → OK</span>
+  <span class="fn">delay</span>(<span class="nm">1000</span>);
+  esp.<span class="fn">println</span>(<span class="st">"AT+CWMODE=1"</span>); <span class="cm">// station mode</span>
+  <span class="fn">delay</span>(<span class="nm">1000</span>);
+  <span class="cm">// Spojiti na mrežu:</span>
+  esp.<span class="fn">println</span>(<span class="st">"AT+CWJAP=\"ssid\",\"password\""</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (esp.<span class="fn">available</span>()) Serial.<span class="fn">write</span>(esp.<span class="fn">read</span>());
+  <span class="kw">if</span> (Serial.<span class="fn">available</span>()) esp.<span class="fn">write</span>(Serial.<span class="fn">read</span>());
+}</pre></div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- P19 I2C LCD -->
+<div class="pc" id="p19" data-q="I2C LCD 1602 serijski modul SDA SCL A4 A5 adresa LiquidCrystal_I2C pinovi">
+<div class="pct"><div class="pcs"></div><div style="flex:1">
+<div class="pch" onclick="tC('p19')">
+  <div class="pchl"><div class="pcm"><span class="bg n">P-19</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">I2C 1602 serijski LCD modul — test</div>
+  <div class="pcsu">I2C LCD modul koristi samo 4 pina (SDA→A4, SCL→A5). Adrese 0x20 ili 0x27. Biblioteka LiquidCrystal_I2C.</div></div>
+  <div class="tog" id="tp19">+</div>
+</div>
+<div class="pcb" id="bp19">
+<div class="pb"><button class="btnp" onclick="pC('p19')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>Osnovna prednost I2C LCD modula je što koristi samo <strong>4 pina</strong>: VCC→5V, GND→GND, SCL→A5, SDA→A4. Štedi digitalne I/O pinove koji su inače potrebni standardnom LCD-u.</p>
+  <p>Standardne I2C adrese: <strong>0x20</strong> ili <strong>0x27</strong>. Za detekciju adrese koristiti I2C Scanner skicu sa Arduino Playground-a.</p>
+  <p>Ako se ne vide karakteri — podesiti kontrast malim plavim potenciometrom na I2C modulu. Ako ekran ne svetli — džamperom kratko spojiti LED pinove.</p>
+  <div class="orig-img"><div class="orig-img-hdr">Originalni kod — I2C LCD test</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2017/12/lcd_i2c_kod.jpg" alt="I2C LCD kod" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+</div></div>
+<div class="lst"><div class="lstt">Rekonstruisan kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>i2c_lcd_test.ino</span></div>
+<pre>#<span class="kw">include</span> <span class="st">&lt;Wire.h&gt;</span>
+#<span class="kw">include</span> <span class="st">&lt;LiquidCrystal_I2C.h&gt;</span>
+<span class="cm">// adresa 0x27 ili 0x20 — testirati sa I2C scannerom</span>
+LiquidCrystal_I2C lcd(<span class="nm">0x27</span>, <span class="nm">16</span>, <span class="nm">2</span>);
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  lcd.<span class="fn">init</span>();
+  lcd.<span class="fn">backlight</span>(); <span class="cm">// uključi pozadinsko osvetljenje</span>
+  lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>, <span class="nm">0</span>);
+  lcd.<span class="fn">print</span>(<span class="st">"I2C LCD Test!"</span>);
+  lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>, <span class="nm">1</span>);
+  lcd.<span class="fn">print</span>(<span class="st">"SDA=A4, SCL=A5"</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() { <span class="cm">/* ništa */</span> }</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Koja je osnovna prednost I2C LCD modula u odnosu na standardni?</div>
+  <div class="pi">Šta je I2C adresa i kako je detektujemo?</div>
+  <div class="pi">Šta uraditi ako se ne vide karakteri na displeju?</div>
+</div></div>
+</div></div></div></div></div>
+
+</div><!-- /ard-sec -->
+
+<!-- ===== ARDUINO + C# PRIMERI ===== -->
+<div class="sec" data-s="cs" id="cs-sec">
+<div class="sh"><h2 style="color:var(--ac2)">🖥 ARDUINO + C# PRIMERI</h2><div class="sl"></div><div class="sct">5 primera</div></div>
+
+<!-- CS1 LED na dugmice -->
+<div class="pc cs" id="cs1" data-q="LED dugmici C# WinForms SerialPort button click 1 0 osnova">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('cs1')">
+  <div class="pchl"><div class="pcm"><span class="bg n">CS-01</span><span class="bg c">C#</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">LED na dugmiće</div>
+  <div class="pcsu">Osnova C#+Arduino: WinForms dugmad šalju '1'/'0' na serijski port. Arduino prima i pali/gasi LED.</div></div>
+  <div class="tog" id="tcs1">+</div>
+</div>
+<div class="pcb" id="bcs1">
+<div class="pb"><button class="btnp" onclick="pC('cs1')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">C# kod (WinForms)</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>C#</span><span>Form1.cs — LED na dugmiće</span></div>
+<pre><span class="kw">using</span> System.IO.Ports;
+
+SerialPort port = <span class="kw">new</span> <span class="fn">SerialPort</span>();
+
+<span class="kw">private void</span> <span class="fn">Form1_Load</span>(...) {
+  port.PortName = <span class="st">"COM3"</span>; port.BaudRate = <span class="nm">9600</span>;
+  port.DataBits = <span class="nm">8</span>; port.Parity = Parity.None; port.StopBits = StopBits.One;
+  port.<span class="fn">Open</span>();
+}
+<span class="kw">private void</span> <span class="fn">btnUkljuci_Click</span>(...) { port.<span class="fn">Write</span>(<span class="st">"1"</span>); }
+<span class="kw">private void</span> <span class="fn">btnIskljuci_Click</span>(...) { port.<span class="fn">Write</span>(<span class="st">"0"</span>); }
+<span class="kw">private void</span> <span class="fn">Form1_FormClosing</span>(...) {
+  <span class="kw">if</span> (port.<span class="fn">IsOpen</span>()) port.<span class="fn">Close</span>();
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Arduino kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>led_na_dugmice.ino</span></div>
+<pre><span class="kw">void</span> <span class="fn">setup</span>() { <span class="fn">pinMode</span>(<span class="nm">13</span>,OUTPUT); Serial.<span class="fn">begin</span>(<span class="nm">9600</span>); }
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (Serial.<span class="fn">available</span>() > <span class="nm">0</span>) {
+    <span class="kw">char</span> c = (<span class="kw">char</span>) Serial.<span class="fn">read</span>();
+    <span class="fn">digitalWrite</span>(<span class="nm">13</span>, c==<span class="st">'1'</span> ? HIGH : LOW);
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto šaljemo '1' i '0' kao string/karakter a ne kao broj?</div>
+  <div class="pi">Gde otvaramo i gde zatvaramo port?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- CS2 Equalizer -->
+<div class="pc cs" id="cs2" data-q="equalizer klizac TrackBar LED broj dioda vrednost SerialPort Write 0-5">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('cs2')">
+  <div class="pchl"><div class="pcm"><span class="bg n">CS-02</span><span class="bg c">C#</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Mali equalizer</div>
+  <div class="pcsu">TrackBar (0–5) određuje broj upaljenih LED. Vrednost se šalje serijski. char - '0' konverzija.</div></div>
+  <div class="tog" id="tcs2">+</div>
+</div>
+<div class="pcb" id="bcs2">
+<div class="pb"><button class="btnp" onclick="pC('cs2')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">C# kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>C#</span><span>Form1.cs — TrackBar equalizer</span></div>
+<pre><span class="kw">private void</span> <span class="fn">trackBar1_Scroll</span>(...) {
+  port.<span class="fn">Write</span>(trackBar1.Value.<span class="fn">ToString</span>());
+  label1.Text = <span class="st">"Vrednost: "</span> + trackBar1.Value;
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Arduino kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>equalizer.ino</span></div>
+<pre><span class="cm">// 5 LED na pinovima 8-12</span>
+<span class="kw">int</span> pinovi[] = {<span class="nm">8</span>,<span class="nm">9</span>,<span class="nm">10</span>,<span class="nm">11</span>,<span class="nm">12</span>};
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">5</span>; i++) <span class="fn">pinMode</span>(pinovi[i], OUTPUT);
+  Serial.<span class="fn">begin</span>(<span class="nm">9600</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (Serial.<span class="fn">available</span>() > <span class="nm">0</span>) {
+    <span class="kw">char</span> c = (<span class="kw">char</span>) Serial.<span class="fn">read</span>();
+    <span class="kw">int</span> n = c - <span class="st">'0'</span>; <span class="cm">// konverzija char → int</span>
+    <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;<span class="nm">5</span>; i++) <span class="fn">digitalWrite</span>(pinovi[i], i&lt;n ? HIGH : LOW);
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Šta radi <code>c - '0'</code>? Zašto je to potrebno?</div>
+  <div class="pi">Kako proširiti na 8 LED sa vrednostima 0-8?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- CS3 RGB boje -->
+<div class="pc cs" id="cs3" data-q="RGB boje ColorDialog C# PWM analogWrite boja Color R G B taraba prefiks">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('cs3')">
+  <div class="pchl"><div class="pcm"><span class="bg n">CS-03</span><span class="bg c">C#</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Sve boje RGB diode</div>
+  <div class="pcsu">C# ColorDialog bira boju. Šalje se prefiks+vrednost ('R',val,'G',val,'P',val). Arduino podešava PWM.</div></div>
+  <div class="tog" id="tcs3">+</div>
+</div>
+<div class="pcb" id="bcs3">
+<div class="pb"><button class="btnp" onclick="pC('cs3')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis</div><div class="lc">
+  <p>Originalni protokol sa sajta: svaka boja šalje se kao <strong>par karakter+vrednost</strong> — slovo 'R', 'G' ili 'P' (plava) i odmah potom vrednost (char). Kada Arduino primi slovo, pamti kom kanalu se odnosi sledeća vrednost.</p>
+  <div class="orig-img"><div class="orig-img-hdr">Originalni C# kod — ColorDialog + slanje</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2015/05/rgbtaraba.png" alt="RGB C# kod" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="orig-img"><div class="orig-img-hdr">Originalni Arduino kod — primanje R/G/P+vrednost</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2015/05/rgbarduino1.png" alt="RGB Arduino kod" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+  <div class="orig-img"><div class="orig-img-hdr">WinForms kontrole</div>
+    <img src="https://cecaradlovacki.wordpress.com/wp-content/uploads/2015/05/rgbkontrole.png" alt="RGB kontrole" onerror="this.className='err'">
+    <div class="img-fallback">Slika nije dostupna</div>
+  </div>
+</div></div>
+<div class="lst"><div class="lstt">Rekonstruisan kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>C#</span><span>Form1.cs — RGB ColorDialog, originalni protokol</span></div>
+<pre><span class="kw">private void</span> <span class="fn">btnBoja_Click</span>(...) {
+  ColorDialog cd = <span class="kw">new</span> <span class="fn">ColorDialog</span>();
+  <span class="kw">if</span> (cd.<span class="fn">ShowDialog</span>() == DialogResult.OK) {
+    Color b = cd.Color;
+    panelBoja.BackColor = b;
+    <span class="cm">// Originalni protokol: slovo + vrednost kao char</span>
+    port.<span class="fn">Write</span>(<span class="st">"R"</span>); port.<span class="fn">Write</span>(<span class="kw">new</span> <span class="kw">char</span>[] { (<span class="kw">char</span>)b.R }, <span class="nm">0</span>, <span class="nm">1</span>);
+    port.<span class="fn">Write</span>(<span class="st">"G"</span>); port.<span class="fn">Write</span>(<span class="kw">new</span> <span class="kw">char</span>[] { (<span class="kw">char</span>)b.G }, <span class="nm">0</span>, <span class="nm">1</span>);
+    port.<span class="fn">Write</span>(<span class="st">"P"</span>); port.<span class="fn">Write</span>(<span class="kw">new</span> <span class="kw">char</span>[] { (<span class="kw">char</span>)b.B }, <span class="nm">0</span>, <span class="nm">1</span>);
+  }
+}</pre></div>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>rgb_boje.ino — originalni protokol R/G/P</span></div>
+<pre><span class="cm">// RGB LED: R=3, G=5, B=6 (PWM pinovi)</span>
+<span class="kw">int</span> pinR=<span class="nm">3</span>, pinG=<span class="nm">5</span>, pinB=<span class="nm">6</span>;
+<span class="kw">char</span> ocekujemo = <span class="st">' '</span>; <span class="cm">// koji kanal sledi</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  <span class="fn">pinMode</span>(pinR,OUTPUT); <span class="fn">pinMode</span>(pinG,OUTPUT); <span class="fn">pinMode</span>(pinB,OUTPUT);
+  Serial.<span class="fn">begin</span>(<span class="nm">9600</span>);
+}
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">while</span> (Serial.<span class="fn">available</span>() > <span class="nm">0</span>) {
+    <span class="kw">char</span> c = (<span class="kw">char</span>) Serial.<span class="fn">read</span>();
+    <span class="kw">if</span>      (c == <span class="st">'R'</span>) ocekujemo = <span class="st">'R'</span>;
+    <span class="kw">else if</span> (c == <span class="st">'G'</span>) ocekujemo = <span class="st">'G'</span>;
+    <span class="kw">else if</span> (c == <span class="st">'P'</span>) ocekujemo = <span class="st">'P'</span>;
+    <span class="kw">else</span> {
+      <span class="kw">int</span> val = (<span class="kw">int</span>) c;
+      <span class="kw">if</span>      (ocekujemo == <span class="st">'R'</span>) <span class="fn">analogWrite</span>(pinR, val);
+      <span class="kw">else if</span> (ocekujemo == <span class="st">'G'</span>) <span class="fn">analogWrite</span>(pinG, val);
+      <span class="kw">else if</span> (ocekujemo == <span class="st">'P'</span>) <span class="fn">analogWrite</span>(pinB, val);
+      ocekujemo = <span class="st">' '</span>;
+    }
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto se šalje slovo prefiks pre vrednosti? Šta to rešava?</div>
+  <div class="pi">Zašto je vrednost preneta kao char a ne kao string broj?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- CS4 Ventilator -->
+<div class="pc cs" id="cs4" data-q="ventilator motor rele 12V C# GUI toggle stanje">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('cs4')">
+  <div class="pchl"><div class="pcm"><span class="bg n">CS-04</span><span class="bg c">C#</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Malo osveženja — upravljanje ventilatorom</div>
+  <div class="pcsu">Isti princip kao CS-01, lepši GUI. Ventilator 12V upravljan relejom iz C# aplikacije. Toggle stanje.</div></div>
+  <div class="tog" id="tcs4">+</div>
+</div>
+<div class="pcb" id="bcs4">
+<div class="pb"><button class="btnp" onclick="pC('cs4')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">Opis i kod</div><div class="lc">
+  <p>Identičan princip kao CS-01, ali sa boljim grafičkim okruženjem. Umesto LED — ventilator 12V. Arduino kontroliše relej koji uključuje/isključuje ventilator sa eksternog napajanja.</p>
+  <div class="cb"><div class="cbh"><span>C#</span><span>Form1.cs — ventilator toggle</span></div>
+<pre><span class="kw">bool</span> ukljucen = <span class="kw">false</span>;
+
+<span class="kw">void</span> <span class="fn">azurirajGUI</span>() {
+  btnOnOff.Text      = ukljucen ? <span class="st">"⏸ ISKLJUČI"</span> : <span class="st">"▶ UKLJUČI"</span>;
+  btnOnOff.BackColor = ukljucen ? Color.OrangeRed : Color.LimeGreen;
+  lblStatus.Text     = ukljucen ? <span class="st">"Ventilator: ON 🌀"</span> : <span class="st">"Ventilator: OFF"</span>;
+}
+<span class="kw">private void</span> <span class="fn">btnOnOff_Click</span>(...) {
+  ukljucen = !ukljucen;
+  port.<span class="fn">Write</span>(ukljucen ? <span class="st">"1"</span> : <span class="st">"0"</span>);
+  <span class="fn">azurirajGUI</span>();
+}
+<span class="kw">private void</span> <span class="fn">Form1_FormClosing</span>(...) {
+  port.<span class="fn">Write</span>(<span class="st">"0"</span>); <span class="cm">// isključi pre zatvaranja!</span>
+  <span class="kw">if</span> (port.<span class="fn">IsOpen</span>()) port.<span class="fn">Close</span>();
+}</pre></div>
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>ventilator.ino</span></div>
+<pre><span class="cm">// Relej na pin 7, ventilator (12V) na NO kontakt</span>
+<span class="kw">void</span> <span class="fn">setup</span>() { <span class="fn">pinMode</span>(<span class="nm">7</span>,OUTPUT); <span class="fn">digitalWrite</span>(<span class="nm">7</span>,LOW); Serial.<span class="fn">begin</span>(<span class="nm">9600</span>); }
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">if</span> (Serial.<span class="fn">available</span>() > <span class="nm">0</span>) {
+    <span class="kw">char</span> c = (<span class="kw">char</span>) Serial.<span class="fn">read</span>();
+    <span class="fn">digitalWrite</span>(<span class="nm">7</span>, c == <span class="st">'1'</span> ? HIGH : LOW);
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto šaljemo '0' pre zatvaranja forme?</div>
+  <div class="pi">Zašto je obavezno spojiti masu eksternog 12V sa GND Arduina?</div>
+</div></div>
+</div></div></div></div></div>
+
+<!-- CS5 TCRT5000 Black&White -->
+<div class="pc cs" id="cs5" data-q="TCRT5000 crna bela C# vizualizacija PictureBox DataReceived Invoke cross-thread">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,var(--ac2),rgba(255,107,53,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('cs5')">
+  <div class="pchl"><div class="pcm"><span class="bg n">CS-05</span><span class="bg c">C#</span><span class="bg a">Arduino</span></div>
+  <div class="pcti">Black&amp;White — TCRT5000 testiranje</div>
+  <div class="pcsu">C# vizualizuje TCRT5000 stanje u realnom vremenu. DataReceived event + Invoke(). Boja panel-a = podloga.</div></div>
+  <div class="tog" id="tcs5">+</div>
+</div>
+<div class="pcb" id="bcs5">
+<div class="pb"><button class="btnp" onclick="pC('cs5')">🖨 Štampaj / PDF</button></div>
+<div class="pbi"><div class="lst"><div class="lstt">C# kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>C#</span><span>Form1.cs — DataReceived + Invoke cross-thread</span></div>
+<pre><span class="kw">private void</span> <span class="fn">Form1_Load</span>(...) {
+  port = <span class="kw">new</span> <span class="fn">SerialPort</span>(<span class="st">"COM3"</span>, <span class="nm">9600</span>);
+  port.DataReceived += <span class="kw">new</span> SerialDataReceivedEventHandler(<span class="fn">port_DataReceived</span>);
+  port.<span class="fn">Open</span>();
+}
+<span class="kw">void</span> <span class="fn">port_DataReceived</span>(<span class="kw">object</span> sender, SerialDataReceivedEventArgs e) {
+  <span class="kw">string</span> data = port.<span class="fn">ReadLine</span>();
+  <span class="kw">int</span> v;
+  <span class="kw">if</span> (<span class="kw">int</span>.<span class="fn">TryParse</span>(data.<span class="fn">Trim</span>(), <span class="kw">out</span> v)) {
+    <span class="cm">// Invoke jer DataReceived je na drugom threadu!</span>
+    <span class="fn">Invoke</span>((<span class="fn">Action</span>)(() => {
+      lblVrednost.Text = <span class="st">"Vrednost: "</span> + v;
+      progressBar1.Value = Math.<span class="fn">Min</span>(v, <span class="nm">1023</span>);
+      <span class="kw">bool</span> crno = v &lt; <span class="nm">500</span>;
+      picBox.BackColor = crno ? Color.Black : Color.White;
+      lblBoja.Text     = crno ? <span class="st">"■ CRNA"</span> : <span class="st">"□ BELA"</span>;
+    }));
+  }
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Arduino kod</div><div class="lc">
+  <div class="cb"><div class="cbh"><span>arduino / c++</span><span>tcrt5000.ino</span></div>
+<pre><span class="cm">// TCRT5000 na A0, pull-up 10kΩ ka 5V</span>
+<span class="kw">void</span> <span class="fn">setup</span>() { Serial.<span class="fn">begin</span>(<span class="nm">9600</span>); }
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  Serial.<span class="fn">println</span>(<span class="fn">analogRead</span>(A0));
+  <span class="fn">delay</span>(<span class="nm">100</span>);
+}</pre></div>
+</div></div>
+<div class="lst"><div class="lstt">Pitanja</div><div class="pl">
+  <div class="pi">Zašto se koristi Invoke() za ažuriranje GUI-ja iz DataReceived event-a?</div>
+  <div class="pi">Šta bi se desilo bez Invoke() — šta je "cross-thread exception"?</div>
+</div></div>
+</div></div></div></div></div>
+
+</div><!-- /cs-sec -->
+
+<!-- ===== KOMPONENTE ===== -->
+<div class="sec" data-s="kp" id="komp-sec">
+<div class="sh"><h2 style="color:var(--ac3)">🔌 KOMPONENTE</h2><div class="sl"></div><div class="sct">17 komponenti</div></div>
+<div class="kg">
+  <div class="ki" data-q="led dioda anoda katoda 220 otpornik polaritet"><div class="kn">💡 LED Dioda</div><div class="kd">Duža nožica = anoda (+). Otpornik <code>220Ω</code> redno obavezno. Napon 1.8–2.2V, maks. 20mA. Kratka nožica / zarez = katoda → GND.</div></div>
+  <div class="ki" data-q="taster dugme pull-down 10k HIGH LOW pritisnut nozice"><div class="kn">🔘 Taster</div><div class="kd">Pull-down <code>10kΩ</code> ka GND. Otpušteno = LOW (0V). Pritisnuto = HIGH (5V). 4 nožice u 2 para.</div></div>
+  <div class="ki" data-q="zujalica piezo buzzer tone zvuk frequency pozitivna crvena"><div class="kn">🔔 Zujalica (Piezo)</div><div class="kd">Crvena (+) → dig. pin (OUTPUT). Crna (−) → GND. Koristiti <code>tone(pin, freq)</code> ili digitalWrite. Bez biblioteke.</div></div>
+  <div class="ki" data-q="ultrazvucni HC-SR04 trig echo rastojanje newping sonar impuls"><div class="kn">📡 Ultrazvučni HC-SR04</div><div class="kd">Vcc→5V, GND→GND, Trig→dig.out, Echo→dig.in. Rastojanje = (t×340)/2. Biblioteka <code>NewPing</code>.</div></div>
+  <div class="ki" data-q="foto-otpornik LDR svetlost analogni 10k pull-up osvetljenost"><div class="kn">☀️ Foto-otpornik (LDR)</div><div class="kd">Analogni pin + pull-up <code>10kΩ</code> ka +5V. Vrednosti: 0 (svetlo) → 1023 (mrak). Detekcija osvetljenosti.</div></div>
+  <div class="ki" data-q="potenciometar promenljivi otpornik analogni razdelnik srednji kraj"><div class="kn">🎛 Potenciometar</div><div class="kd">Srednji kraj → analogni ulaz. Spoljni → 5V i GND. Okretanjem: 0–5V → 0–1023. Razdelnik napona.</div></div>
+  <div class="ki" data-q="7 segmentni displej zajednička anoda katoda segment cifre LOW HIGH"><div class="kn">7️⃣ 7-segmentni displej</div><div class="kd">Zajednička anoda: zajednički pin → 5V, obrnuta logika (LOW = svetli). Zajednička katoda: pin → GND. Otpornik <code>220Ω</code>.</div></div>
+  <div class="ki" data-q="servo motor ugao 180 servo biblioteka PWM tri zice crvena crna zuta"><div class="kn">⚙️ Servo motor</div><div class="kd">Crvena→5V, crna/braon→GND, žuta/narandžasta→PWM pin (~). Rotacija 0–180°. <code>#include &lt;Servo.h&gt;</code>. Ekst. napajanje za snažne.</div></div>
+  <div class="ki" data-q="dvobojna dioda bi-color LED zelena crvena zuta PWM tri nozice katoda"><div class="kn">🔴🟢 Dvobojna LED</div><div class="kd">3 nožice: srednja = zajednička katoda → GND. Leva = crvena, desna = zelena. Istovremeno paljenje = žuta. PWM za nijanse.</div></div>
+  <div class="ki" data-q="RGB led dioda crvena zelena plava PWM 255 analogWrite zajednička katoda"><div class="kn">🌈 RGB LED</div><div class="kd">4 nožice: R, G, B + zajednička katoda (2. nožica) → GND. Obavezno PWM pinovi. Uno PWM: <code>3,5,6,9,10,11</code>.</div></div>
+  <div class="ki" data-q="LED matrica MAX7219 DIN CS CLK LEDControlMS 8x8 lancanjesad"><div class="kn">▦ LED matrica MAX7219</div><div class="kd">VCC→5V, GND→GND, DIN→pin12, CS→pin10, CLK→pin11. <code>#include &lt;LEDControlMS.h&gt;</code>. Lančanje matrica. Samo zajednička katoda.</div></div>
+  <div class="ki" data-q="IR prijemnik daljinski 38kHz IRremote infrared signali leva nozica"><div class="kn">📻 IR prijemnik</div><div class="kd">Leva nožica→dig. pin, srednja→GND, desna→+5V. Prima 38kHz IR. <code>#include &lt;IRremote.h&gt;</code>. Prva koristiti P-08 za HEX kodove.</div></div>
+  <div class="ki" data-q="JY-MCU bluetooth modul bezicna komunikacija 3.3V razdelnik TX RX pin 0 1"><div class="kn">📶 JY-MCU Bluetooth</div><div class="kd">Vcc→5V, GND→GND. TXD → razdelnik (1kΩ+2.2kΩ) → pin0. RXD → pin1. Osloboditi pinove 0 i 1 pri upload-u!</div></div>
+  <div class="ki" data-q="rele relej NO NC normalno otvoren zatvoren 230V upravljanje signal pin"><div class="kn">🔁 Relej</div><div class="kd">Vcc→5V, GND→GND, In→signal pin. <strong>NO</strong>: HIGH = uključen. <strong>NC</strong>: inverzna logika, za havarijski stop.</div></div>
+  <div class="ki" data-q="LCD1602 displej LiquidCrystal tasteri A0 pinovi 8 9 4 5 6 7 kontrast"><div class="kn">📟 LCD1602 + tasteri</div><div class="kd">Inicijalizacija: <code>(8,9,4,5,6,7)</code>. Tasteri → različiti naponi na A0. Kontrast: plavi potenciometar. <code>#include &lt;LiquidCrystal.h&gt;</code>.</div></div>
+  <div class="ki" data-q="DHT11 DHT22 temperatura vlaga senzor 10k pull-up cetiri nozice pin 1 2 4"><div class="kn">🌡 DHT11/DHT22</div><div class="kd">Pin1→5V, Pin2→signal + pull-up <code>10kΩ</code>, Pin3→slobodan, Pin4→GND. DHT22 = precizniji. <code>#include &lt;DHT.h&gt;</code>.</div></div>
+  <div class="ki" data-q="TCRT5000 IR senzor crna bela traka robot pracenje optokapler refleksni A0"><div class="kn">👁 TCRT5000 optokapler</div><div class="kd">IR emiter + foto-tranzistor. Izlaz → analogni pin + pull-up <code>10kΩ</code>. Crna podloga ≈ mala vrednost. Praćenje trake.</div></div>
+</div>
+</div><!-- /komponente -->
+
+<!-- ===== BIBLIOTEKE ===== -->
+<div class="sec" data-s="bi" id="bib-sec">
+<div class="sh"><h2>📦 BIBLIOTEKE</h2><div class="sl"></div><div class="sct">7 biblioteka</div></div>
+<div class="bg2g">
+  <div class="bc"><div class="bstr" style="background:var(--ac3)"></div><div class="bbd"><div class="bnm" style="color:var(--ac3)">LEDControlMS</div><div class="bau">Autor: Eberhard Fahle</div><div class="bds">Kontrola LED matrica 8×8 sa MAX7219/MAX7221 čipom. Podržava lančanje više matrica, kontrolu osvetljenosti i animacije.</div></div><div class="bft"><span class="bu" style="color:var(--ac3)">#include &lt;LEDControlMS.h&gt;</span><span class="bdl">Komponenta: LED matrica</span></div></div>
+  <div class="bc"><div class="bstr" style="background:#ff6060"></div><div class="bbd"><div class="bnm" style="color:#ff8080">IRremote</div><div class="bau">Autor: Ken Shirriff</div><div class="bds">Primanje i slanje IR signala sa daljinskog upravljača. Podržava protokole: NEC, Sony, RC5, JVC, Panasonic i druge.</div></div><div class="bft"><span class="bu" style="color:#ff8080">#include &lt;IRremote.h&gt;</span><span class="bdl">Komponenta: IR prijemnik</span></div></div>
+  <div class="bc"><div class="bstr" style="background:#40ffff"></div><div class="bbd"><div class="bnm" style="color:#40ffff">DHT</div><div class="bau">Autor: Mark Ruys</div><div class="bds">Merenje temperature i vlažnosti sa DHT11, DHT22, AM2302 i RHT03 senzorima. readTemperature() i readHumidity().</div></div><div class="bft"><span class="bu" style="color:#40ffff">#include &lt;DHT.h&gt;</span><span class="bdl">Komponenta: DHT11/DHT22</span></div></div>
+  <div class="bc"><div class="bstr" style="background:#ffd700"></div><div class="bbd"><div class="bnm" style="color:#ffd700">NewPing</div><div class="bau">Autor: Tim Eckel</div><div class="bds">Upravljanje ultrazvučnim senzorima (HC-SR04 i kompatibilni). Smanjuje mogućnost lažnih očitavanja. ping_cm(), ping_in().</div></div><div class="bft"><span class="bu" style="color:#ffd700">#include &lt;NewPing.h&gt;</span><span class="bdl">Komponenta: HC-SR04</span></div></div>
+  <div class="bc"><div class="bstr" style="background:#80c0ff"></div><div class="bbd"><div class="bnm" style="color:#80c0ff">Servo <span style="color:var(--dim);font-size:.75em">(ugrađena)</span></div><div class="bau">Autor: Arduino</div><div class="bds">Upravljanje servo motorima. attach(pin), write(ugao 0-180), writeMicroseconds(). Dolazi uz Arduino IDE.</div></div><div class="bft"><span class="bu" style="color:#80c0ff">#include &lt;Servo.h&gt;</span><span class="bdl">Komponenta: Servo motor</span></div></div>
+  <div class="bc"><div class="bstr" style="background:#ffff60"></div><div class="bbd"><div class="bnm" style="color:#ffff60">LiquidCrystal <span style="color:var(--dim);font-size:.75em">(ugrađena)</span></div><div class="bau">Autor: Arduino</div><div class="bds">Upravljanje HD44780 LCD displejem (1602, 2004, itd). begin(16,2), print(), setCursor(). Dolazi uz Arduino IDE.</div></div><div class="bft"><span class="bu" style="color:#ffff60">#include &lt;LiquidCrystal.h&gt;</span><span class="bdl">Komponenta: LCD 1602</span></div></div>
+  <div class="bc"><div class="bstr" style="background:#ffa040"></div><div class="bbd"><div class="bnm" style="color:#ffa040">Keypad <span style="color:var(--dim);font-size:.75em">(ugrađena)</span></div><div class="bau">Autor: Mark Stanley</div><div class="bds">Upravljanje matrično organizovanim tastaturama (4×4, 3×4, itd). getKey() vraća char pritisnutog tastera. Dolazi uz IDE.</div></div><div class="bft"><span class="bu" style="color:#ffa040">#include &lt;Keypad.h&gt;</span><span class="bdl">Komponenta: Tastatura 4×4</span></div></div>
+</div>
+<div class="binst"><div class="bih">Instalacija biblioteke iz ZIP arhive</div>
+<div class="bib2">
+  <strong>Metod 1 — preporučen:</strong> <code>Sketch → Import library → Add library</code> → izabrati .zip fajl → Open<br><br>
+  <strong>Metod 2 — manuelni:</strong> Raspakovati ZIP → preименовati folder (ukloniti crtice!) → kopirati u <code>C:\Program Files (x86)\Arduino\libraries\</code> → restartovati IDE<br><br>
+  <div class="w">⚠️ Srednja crtica u nazivu foldera biblioteke izaziva grešku pri kompajliranju!</div>
+</div></div>
+</div><!-- /biblioteke -->
+
+</main><!-- /cnt -->
+</div><!-- /main -->
+
+<footer>Arduino &amp; C# Referentni Indeks · Sadržaj baziran na materijalima sa cecaradlovacki.wordpress.com</footer>
+
+<script>
+// ===== NAVIGACIJA =====
+function sT(s, btn, cls) {
+  document.querySelectorAll('.sec').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(x => {x.classList.remove('on','on2','on3')});
+  if (s === 'sve') {
+    document.querySelectorAll('.sec').forEach(x => x.classList.add('on'));
+  } else {
+    document.querySelectorAll('[data-s="'+s+'"]').forEach(x => x.classList.add('on'));
+  }
+  if (btn) btn.classList.add(cls || 'on');
+  document.getElementById('empty').style.display = 'none';
+}
+function qS(n) {
+  return document.querySelectorAll('.tb')[n];
+}
+function oL(id) {
+  sT('lk', qS(1));
+  setTimeout(() => { tC(id, true); scrollTo(id); }, 50);
+}
+function oP(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var sec = el.closest('.sec');
+  var s = sec ? sec.dataset.s : 'ar';
+  var idx = s === 'cs' ? 4 : 3;
+  sT(s, qS(idx), s==='cs'?'on2':undefined);
+  setTimeout(() => { tC(id, true); scrollTo(id); }, 50);
+}
+function scrollTo(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ===== TOGGLE KARTICA =====
+function tC(id, forceOpen) {
+  var b = document.getElementById('b'+id);
+  var t = document.getElementById('t'+id);
+  if (!b || !t) return;
+  var isOpen = b.classList.contains('op');
+  if (forceOpen && isOpen) return;
+  b.classList.toggle('op');
+  t.classList.toggle('op');
+  t.textContent = b.classList.contains('op') ? '−' : '+';
+}
+
+// ===== PRETRAGA =====
+var debounce;
+function dS(q) {
+  clearTimeout(debounce);
+  debounce = setTimeout(() => _dS(q), 120);
+}
+function _dS(q) {
+  var sc = document.getElementById('sc');
+  if (!q) {
+    document.querySelectorAll('.pc').forEach(x => {
+      x.style.display = '';
+      x.querySelectorAll('.hl').forEach(h => {
+        h.outerHTML = h.textContent;
+      });
+    });
+    document.getElementById('empty').style.display = 'none';
+    sc.textContent = '';
+    return;
+  }
+  // Prikaži sve sekcije za pretragu
+  document.querySelectorAll('.sec').forEach(x => x.classList.add('on'));
+  document.querySelectorAll('.tb').forEach(x => x.classList.remove('on','on2','on3'));
+  document.querySelector('.tb').classList.add('on');
+
+  var terms = q.toLowerCase().split(/\s+/).filter(t => t.length > 1);
+  var count = 0;
+  document.querySelectorAll('.pc').forEach(x => {
+    var text = (x.dataset.q||'') + ' ' + (x.querySelector('.pcti')||{textContent:''}).textContent + ' ' + (x.querySelector('.pcsu')||{textContent:''}).textContent;
+    var match = terms.every(t => text.toLowerCase().includes(t));
+    x.style.display = match ? '' : 'none';
+    if (match) count++;
+  });
+  document.getElementById('empty').style.display = count === 0 ? 'block' : 'none';
+  sc.textContent = count > 0 ? count + ' rezultata' : '';
+}
+
+// ===== ŠTAMPA =====
+function pC(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var b = document.getElementById('b'+id);
+  var wasOpen = b && b.classList.contains('op');
+  if (!wasOpen && b) { b.classList.add('op'); }
+  window.print();
+  if (!wasOpen && b) { b.classList.remove('op'); }
+}
+</script>
+</body>
+</html>
