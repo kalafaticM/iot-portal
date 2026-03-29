@@ -105,7 +105,7 @@ main{max-width:1200px;margin:0 auto;padding:16px 18px 60px}
 .card-term{font-size:.9rem;font-weight:700;color:var(--tx);font-family:"Exo 2",sans-serif;line-height:1.3}
 .badge{
   flex-shrink:0;font-size:.6rem;padding:3px 9px;border-radius:999px;
-  border:1px solid transparent;color:#fff;font-weight:700;letter-spacing:.5px;
+  border:1px solid transparent;font-weight:700;letter-spacing:.5px;
   font-family:"Share Tech Mono",monospace;white-space:nowrap
 }
 
@@ -212,7 +212,7 @@ footer{max-width:1200px;margin:0 auto;padding:0 18px 20px;color:var(--dim);font-
   <div class="hdr-top">
     <h1>IoT <span>Pojmovnik</span> + Baza pitanja</h1>
     <div class="hdr-stats">
-      <div class="hstat"><b id="s-t">126</b> pojmova</div>
+      <div class="hstat"><b id="s-t">145</b> pojmova</div>
       <div class="hstat"><b id="s-q" style="color:var(--ac2,#fb923c)">231</b> pitanja</div>
       <div class="hstat"><b id="s-top">16</b> tema</div>
     </div>
@@ -285,6 +285,13 @@ const TOPIC_COLOR = {
   "Napajanje": "#84cc16",
   "Elektronika osnove": "#6b7280",
   "IDE & alati": "#c084fc",
+  "Histereza": "#ec4899",
+  "Histerezis": "#ec4899",
+  "Serijska komunikacija": "#3b82f6",
+  "PWM + Potenciometar": "#f59e0b",
+  "Potenciometar": "#f59e0b",
+  "Upravljanje": "#a78bfa",
+  "Bezbednost": "#ef4444",
   "default": "#5a7090"
 };
 
@@ -316,7 +323,7 @@ const TERMS = [
   { term:"PWM", def:"Pulse Width Modulation: duty cycle menja prosečnu snagu/napon na opterećenju.", topic:"PWM", tags:["pwm","duty"] },
   { term:"Duty cycle", def:"Procenat vremena HIGH u periodi (0–100%).", topic:"PWM", tags:["duty"] },
   { term:"Komparator", def:"Poredi dva napona i daje digitalni izlaz (0/1).", topic:"Komparatori", tags:["comparator"] },
-  { term:"Histerezis", def:"Dva praga (uključenje/isključenje) radi stabilnosti na šum (Schmitt).", topic:"Komparatori", tags:["hysteresis","schmitt"] },
+  { term:"Histereza", def:"Dva praga (uključenje/isključenje) radi stabilnosti na šum (Schmitt).", topic:"Komparatori", tags:["hysteresis","schmitt"] },
   { term:"Aktuator", def:"Uređaj koji izvodi fizičku akciju (svetlo, motor, ventil).", topic:"Aktuatori", tags:["actuator"] },
   { term:"Relej", def:"Elektromehanički prekidač za uključivanje većih napona/struja.", topic:"Releji", tags:["relay","no","nc"] },
   { term:"Galvansko odvajanje", def:"Električno odvajanje upravljačkog i energetskog dela (npr. optokapler).", topic:"Releji", tags:["isolation","opto"] },
@@ -397,9 +404,9 @@ const TERMS = [
   { term:"Prosečan napon PWM-a", def:"‘Analogni efekat’ PWM-a posle filtriranja/opterećenja; nije isto što i pravi DAC.", topic:"PWM", tags:["average","analog"] },
   { term:"RC filter", def:"Otpornik + kondenzator za ‘peglanje’ PWM-a u približno analogni napon.", topic:"PWM", tags:["rc","filter"] },
   { term:"Prag (threshold)", def:"Vrednost na kojoj komparator menja stanje izlaza.", topic:"Komparatori", tags:["threshold","trip"] },
-  { term:"Schmitt trigger", def:"Komparator sa histerezisom (pozitivna povratna sprega).", topic:"Komparatori", tags:["schmitt","feedback"] },
-  { term:"Pozitivna povratna sprega", def:"Deo izlaza vraćen na ulaz da bi se formirala histerezis i stabilno okidanje.", topic:"Komparatori", tags:["positive","feedback"] },
-  { term:"Lažno okidanje", def:"Brzo prebacivanje izlaza zbog šuma oko praga (bez histerezisa).", topic:"Komparatori", tags:["false","trigger"] },
+  { term:"Schmitt trigger", def:"Komparator sa histerezom (pozitivna povratna sprega).", topic:"Komparatori", tags:["schmitt","feedback"] },
+  { term:"Pozitivna povratna sprega", def:"Deo izlaza vraćen na ulaz da bi se formirala histereza i stabilno okidanje.", topic:"Komparatori", tags:["positive","feedback"] },
+  { term:"Lažno okidanje", def:"Brzo prebacivanje izlaza zbog šuma oko praga (bez histereze).", topic:"Komparatori", tags:["false","trigger"] },
   { term:"Analog Comparator (MCU periferija)", def:"Hardverska jedinica u MCU koja poredi dva ulazna napona i može generisati prekid.", topic:"Komparatori", tags:["avr","peripheral"] },
   { term:"AIN0 / AIN1", def:"Ulazi analognog komparatora (termini vezani za MCU; mapirani na određene pinove).", topic:"Komparatori", tags:["ain0","ain1"] },
   { term:"Client", def:"Uređaj/aplikacija koja se povezuje na broker i publish/subscribe-uje.", topic:"MQTT", tags:["client","device"] },
@@ -415,6 +422,26 @@ const TERMS = [
   { term:"Regulator napona", def:"Sklop za stabilan napon (linearni ili DC-DC).", topic:"Napajanje", tags:["regulator","stabilizacija"] },
   { term:"MPPT", def:"Algoritam/uređaj koji traži tačku maksimalne snage solarnog panela.", topic:"Napajanje", tags:["mppt","efficiency"] },
   { term:"QoS", def:"Nivo isporuke poruke (0/1/2) uz različit kompromis pouzdanosti i troška.", topic:"MQTT", tags:["qos","delivery"] },
+
+    { term:"Histerezis (Schmitt)", def:"Tehnika koja uvodi dve granice okidanja: gornji prag (ON) i donji prag (OFF). Razlika između pragova (histerezisni pojas) filtrira šum i sprečava lažno okidanje. Implementira se pozitivnom povratnom spregom kod komparatora ili Schmitt trigger kola.", topic:"Komparatori", tags:["histerezis","schmitt","prag","gornji","donji","pojasni","filtar","sum"] },
+    { term:"Gornji prag (Upper threshold)", def:"Vrednost napona iznad koje komparator prelazi u stanje HIGH. Deo histerezis mehanizma. Uvek veći od donjeg praga.", topic:"Komparatori", tags:["gornji","prag","threshold","high","komparator"] },
+    { term:"Donji prag (Lower threshold)", def:"Vrednost napona ispod koje komparator prelazi u stanje LOW. Razlika između gornjeg i donjeg praga čini histerezisni pojas koji apsorbuje šum.", topic:"Komparatori", tags:["donji","prag","threshold","low","komparator","sum"] },
+    { term:"Analogni komparator (MCU)", def:"Hardverska periferija unutar MCU (npr. ATmega328P ima AIN0/AIN1 pinove) koja poredi dva napona bez potrebe za ADC-om i može generisati prekid (interrupt) kada se stanje promeni.", topic:"Komparatori", tags:["ain0","ain1","interrupt","periferija","atmega","hardver"] },
+    { term:"NTC termistor (merenje temp.)", def:"U Arduino kolu: NTC + fiksni otpornik (10 kΩ) čine naponski delilac. analogRead() → napon → Steinhart-Hart ili B-parametar formula → temperatura u °C. Kalibracija povećava tačnost.", topic:"Senzori & ADC", tags:["ntc","termistor","steinhart","b-parametar","kalibracija","temperatura","delilac"] },
+    { term:"Steinhart-Hart formula", def:"Matematička veza između otpora termistora i temperature: 1/T = A + B·ln(R) + C·(ln(R))³. Za školsku primenu koristi se pojednostavljena B-parametar verzija: 1/T = 1/T₀ + (1/B)·ln(R/R₀).", topic:"Senzori & ADC", tags:["steinhart","hart","termistor","temperatura","formula","b-parametar","ntc"] },
+    { term:"LDR u naponskom deliocu", def:"LDR (fotootpornik) i fiksni otpornik (tipično 10 kΩ) grade delilac. Kada svetlost raste → otpor LDR pada → napon na analognom ulazu raste (ili pada, zavisno od pozicije). analogRead() → 0–1023. Kalibracija min/max za procenat osvetljenosti.", topic:"Senzori & ADC", tags:["ldr","delilac","fotootpornik","osvetljenost","analogread","kalibracija","min","max"] },
+    { term:"ADC kalibracija", def:"Proces kojim se sirova ADC vrednost (0–1023) prevodi u fizičku veličinu: temperatura, osvetljenost, napon. Zahteva merenje realnih referentnih tačaka. map() i constrain() su korisne Arduino funkcije.", topic:"Senzori & ADC", tags:["kalibracija","map","constrain","fizicka","velicina","referentna","tacka"] },
+    { term:"MQTT Broker", def:"Centralni server koji prima PUBLISH poruke i prosleđuje ih svim SUBSCRIBE klijentima koji su se pretplatili na isti topic. Primeri brokera: Mosquitto (open-source), HiveMQ, EMQX, AWS IoT Core.", topic:"MQTT", tags:["broker","mosquitto","hivemq","emqx","aws","server","publish","subscribe"] },
+    { term:"MQTT Topic hijerarhija", def:"Kanali za poruke organizovani kao putanje: kuca/spavaca/temperatura. Wildcard + zamenjuje jedan nivo (kuca/+/temperatura), # zamenjuje sve nivoe (kuca/#). Dobra praksa: koristiti smislenu hijerarhiju od opšteg ka specifičnom.", topic:"MQTT", tags:["topic","wildcard","hijerarhija","putanja","plus","hash","kanalisi"] },
+    { term:"QoS 0 / 1 / 2", def:"Nivoi isporuke MQTT poruka: QoS 0 = šalji i zaboravi (best-effort, može se izgubiti); QoS 1 = bar jednom (može doći duplikat); QoS 2 = tačno jednom (najpouzdaniji, ali najsporiji). Za IoT senzore obično QoS 0 ili 1.", topic:"MQTT", tags:["qos","isporuka","pouzdanost","duplikat","0","1","2","mqtt"] },
+    { term:"HTTP vs MQTT", def:"HTTP: request-response, svaki zahtev otvara novu konekciju, pogodan za REST API i web. MQTT: publish-subscribe, trajna konekcija, optimizovan za malu propusnost i nestabilne mreže — idealan za IoT senzore.", topic:"MQTT", tags:["http","mqtt","rest","api","publish","subscribe","konekcija","iot","poredenje"] },
+    { term:"ESP32 WiFi napajanje", def:"ESP32 pri aktivnom WiFi troši 80–240 mA. U deep-sleep modu samo 10–150 µA. Strategija: wake up → izmeri → pošalji MQTT → deep-sleep. Power bank (5V/USB) ili Li-Ion baterija sa TP4056 punjačem su tipična rešenja za baterijsko napajanje.", topic:"Napajanje", tags:["esp32","wifi","deep-sleep","baterija","power-bank","tp4056","lipo","strategija"] },
+    { term:"Arduino napajanje — opcije", def:"4 načina: (1) USB 5V preko računara/adaptera. (2) DC jack 7–12V → interni LM7805-kompatibilni regulator → 5V. (3) Direktno 5V pin (zaobilazi regulator — opasno bez zaštite). (4) 3.3V pin (samo mali potrošači). VIN = isto što i DC jack.", topic:"Napajanje", tags:["vin","5v","3v3","usb","dc-jack","lm7805","regulator","direktno","pin"] },
+    { term:"Pad napona na kablu", def:"Svaki kabl ima otpor. Pad napona: Upad = I × R_kabla. Za motor koji vuče 2A na kablu 0.5Ω: Upad = 1V — značajan gubitak. Rešenje: kraći i deblji kabl (manji otpor), ili napajanje bliže potrošaču.", topic:"Napajanje", tags:["pad","napon","kabl","otpor","struja","motor","gubitak","debljina"] },
+    { term:"Brown-out detekcija", def:"MCU ima hardverski brown-out detector (BOD) koji resetuje čip ako napon padne ispod praga (tipično 2.7V ili 1.8V za AVR). Simptom: neobjašnjivi reset pri startovanju motora ili pri praznoj bateriji.", topic:"Napajanje", tags:["brown-out","bod","reset","napon","pad","avr","motor","baterija","prag"] },
+    { term:"Level shifter (pretvarač nivoa)", def:"Kolo koje prevodi logičke nivoe između 5V sistema (Arduino Uno) i 3.3V sistema (ESP32, BMP280). Bez njega, 5V signal može oštetiti 3.3V pin. Tipovi: jednosmerni (resistor divider) i dvosmerni (MOSFET-based, npr. BSS138).", topic:"Serijska komunikacija", tags:["level-shifter","logicki","nivo","5v","3v3","esp32","bss138","mosfet","prevod"] },
+    { term:"1-Wire protokol", def:"Jednosmerna serijska magistrala za komunikaciju sa jednim ili više uređaja na jednoj liniji podataka + GND. Zahteva pull-up otpornik 4.7kΩ. Tipičan primer: DS18B20 digitalni termometar. Sporiji od I²C ali pravi samo jednu žicu.", topic:"Serijska komunikacija", tags:["1-wire","ds18b20","jednozan","pull-up","4k7","digitalni","termometar","protokol"] },
+    { term:"SPI vs I²C — kada koristiti", def:"SPI: kad treba BRZINA (displej, SD kartica, brzi ADC) — full-duplex, nema adresiranja, ali potreban CS pin za svaki uređaj. I²C: kad treba VIŠE UREĐAJA na 2 žice (senzori, RTC, EEPROM) — 128 adresa, half-duplex, sporiji ali ekonomičniji.", topic:"Serijska komunikacija", tags:["spi","i2c","brzina","full-duplex","cs","adresiranje","zice","poredenje","displej","sd"] },
 ];
 
 const QUESTIONS = [
@@ -441,7 +468,7 @@ const QUESTIONS = [
   { area:"PWM", q:"Zašto se analogWrite() ne koristi za RC servo?", a:"Servo traži 50 Hz impulse 1–2 ms; analogWrite() daje PWM druge frekvencije/format." },
   { area:"PWM", q:"Kako PWM pretvoriti u približno analogni napon?", a:"RC low-pass filter (R+C) ili inercija opterećenja; ripple zavisi od RC i frekvencije." },
   { area:"Komparatori", q:"Šta je komparator i kako se razlikuje od ADC-a?", a:"Komparator daje binarnu odluku (iznad/ispod praga), ADC daje numeričku vrednost napona." },
-  { area:"Komparatori", q:"Šta je histerezis, kako se uvodi i zašto je korisna?", a:"Dva praga (uključenje/isključenje); uvodi se pozitivnom povratnom spregom/Schmitt ulazom; sprečava treperenje zbog šuma." },
+  { area:"Komparatori", q:"Šta je histereza, kako se uvodi i zašto je korisna?", a:"Dva praga (uključenje/isključenje); uvodi se pozitivnom povratnom spregom/Schmitt ulazom; sprečava treperenje zbog šuma." },
   { area:"Aktuatori", q:"Kako definišeš aktuator i koje tri glavne vrste možeš navesti?", a:"Uređaj koji izvodi fizičku akciju. Vrste: elektromehanički (relej/ventil), motori (DC/servo/step), svetlosni (LED/LED traka)." },
   { area:"Aktuatori", q:"Po čemu se razlikuju ON/OFF, PWM i pravo analogno upravljanje?", a:"ON/OFF: samo uključeno/isključeno. PWM: impulsno upravljanje prosečnom snagom. Pravo analogno: kontinuiran napon/struja (DAC/analogni regulator) kad PWM smeta ili je potreban stabilan analogni nivo." },
   { area:"Aktuatori", q:"Zašto se PWM koristi za LED intenzitet i brzinu DC motora?", a:"Efikasan je, lako se generiše, a oko i mehanička inercija „vide“ prosečnu snagu." },
@@ -472,8 +499,8 @@ const QUESTIONS = [
   { area:"Senzori & ADC", q:"Šta radi ADC i šta znači 10-bitna rezolucija?", a:"ADC pretvara analogni napon u broj; 10-bit znači 1024 diskretna nivoa (0–1023)." },
   { area:"Senzori & ADC", q:"Šta je Vref i zašto je bitan za tačnost ADC merenja?", a:"Vref je referentni napon prema kojem ADC skališe merenje; promena/šum Vref direktno utiče na rezultat." },
   { area:"Senzori & ADC", q:"Šta je naponski delilac i zašto se koristi sa LDR/NTC?", a:"Deli napon na osnovu odnosa otpornika; LDR/NTC menja otpor pa se na srednjoj tački dobija merljiv napon." },
-  { area:"Komparatori", q:"Objasni pojam histerezisa i zašto pomaže kod šuma.", a:"histerezis uvodi dva praga (uključenje/isključenje) i sprečava ‘treperenje’ izlaza oko praga usled šuma." },
-  { area:"Komparatori", q:"Šta je Schmitt trigger?", a:"Komparator sa histerezisom realizovan pozitivnom povratnom spregom." },
+  { area:"Komparatori", q:"Objasni pojam histereze i zašto pomaže kod šuma.", a:"Histereza uvodi dva praga (uključenje/isključenje) i sprečava ‘treperenje’ izlaza oko praga usled šuma." },
+  { area:"Komparatori", q:"Šta je Schmitt trigger?", a:"Komparator sa histerezom realizovan pozitivnom povratnom spregom." },
   { area:"Mikrokontroleri", q:"Šta znači da pin ima alternativne funkcije?", a:"Jedan fizički pin može da radi kao GPIO ili kao ulaz/izlaz neke periferije (PWM, UART, AIN...)." },
   { area:"Mikrokontroleri", q:"Šta je interrupt (prekid) i čemu služi u ugrađenim sistemima?", a:"Mehanizam da MCU odmah reaguje na događaj bez čekanja u glavnoj petlji (npr. timer, promena pina, komparator)." },
   { area:"Napajanje", q:"Nabroj tipične DC izvore za male IoT uređaje i jednu ključnu stvar na koju moraš paziti.", a:"Adapter, power bank, baterije/akumulator, DC-DC; mora se paziti na stabilan napon i dovoljnu struju (i šum/ripple)." },
@@ -493,7 +520,7 @@ const QUESTIONS = [
   { area:"PWM", q:"Koju ulogu ima potenciometar u PWM kolu koje smo obrađivali?", options:["a) Pojačava signal","b) Deli napon i daje promenljivi analogni signal","c) Generiše PWM signal","d) Filtrira smetnje"], a:"b) Deli napon i daje promenljivi analogni signal" },
   { area:"Komparatori", q:"Šta je komparator?", options:["a) Pojačava analogni signal","b) Poredi dva napona i daje logički izlaz","c) Generiše PWM signal","d) Stabilizuje napajanje"], a:"b) Poredi dva napona i daje logički izlaz" },
   { area:"Komparatori", q:"Kada je izlaz komparatora u logičkom stanju „1“?", options:["a) Kada je ulazni napon manji od referentnog","b) Kada su naponi jednaki","c) Kada je ulazni napon veći od referentnog","d) Uvek"], a:"c) Kada je ulazni napon veći od referentnog" },
-  { area:"Komparatori", q:"Koja je uloga pozitivne povratne sprege kod komparatora sa histerezisom?", options:["a) Povećanje šuma","b) Smanjenje oscilacija na izlazu","c) Smanjenje napona napajanja","d) Povećanje frekvencije"], a:"b) Smanjenje oscilacija na izlazu" },
+  { area:"Komparatori", q:"Koja je uloga pozitivne povratne sprege kod komparatora sa histerezom?", options:["a) Povećanje šuma","b) Smanjenje oscilacija na izlazu","c) Smanjenje napona napajanja","d) Povećanje frekvencije"], a:"b) Smanjenje oscilacija na izlazu" },
   { area:"Napajanje", q:"Koja je osnovna uloga napajanja u elektronskom kolu?", options:["a) Obrada signala","b) Merenje napona","c) Obezbeđivanje potrebnog napona i struje","d) Generisanje PWM signala"], a:"c) Obezbeđivanje potrebnog napona i struje" },
   { area:"Aktuatori", q:"Kako definišeš aktuator i koje tri glavne vrste sa tipičnim primenama možeš da navedeš?", a:"Uređaj koji izvodi fizičku akciju; vrste: elektromehanički (relej/ventil), motori (DC/servo/step), svetlosni (LED)." },
   { area:"PWM", q:"Zašto Arduino koristi PWM umesto pravog analognog izlaza?", a:"Arduino nema DAC; PWM simulira analogni napon promenom širine impulsa." },
@@ -507,8 +534,8 @@ const QUESTIONS = [
   { area:"PWM + Potenciometar", q:"Zašto se vrednost sa analogRead() mora prilagoditi pre analogWrite()?", a:"analogRead() daje opseg 0–1023, a analogWrite() prima 0–255." },
   { area:"Komparatori", q:"Šta radi komparator?", a:"Poredi dva napona i daje digitalni izlaz." },
   { area:"Komparatori", q:"Koliko stanja ima izlaz komparatora?", a:"Dva (0 i 1)" },
-  { area:"Histerezis", q:"Kako se zovu pragovi kod histerezisa?", a:"Gornji i donji prag." },
-  { area:"Histerezis", q:"Koji problem histerezis rešava?", a:"Treperenje / nestabilnost izlaza zbog šuma." },
+  { area:"Histereza", q:"Kako se zovu pragovi kod histereze?", a:"Gornji i donji prag." },
+  { area:"Histereza", q:"Koji problem histereza rešava?", a:"Treperenje / nestabilnost izlaza zbog šuma." },
   { area:"Napajanje", q:"Zašto svi delovi kola moraju imati zajedničku masu?", a:"Da bi napon bio pravilno referenciran i meren." },
   { area:"Elektronika", q:"Zašto LED mora imati otpornik i kod PWM upravljanja?", a:"PWM ne ograničava struju; otpornik štiti LED." },
   { area:"PWM", q:"Kako PWM signal daje utisak promenljivog napona?", a:"Promenom odnosa uključenog i isključenog vremena." },
@@ -522,8 +549,8 @@ const QUESTIONS = [
   { area:"PWM + Potenciometar", q:"Šta se dešava sa PWM izlazom kada je potenciometar na minimumu?", a:"PWM vrednost je blizu 0 → izlaz isključen." },
   { area:"Komparatori", q:"Kada je izlaz komparatora u logičkoj „1“?", a:"Kada je ulazni napon veći od referentnog." },
   { area:"Komparatori", q:"Zašto je izlaz komparatora digitalan?", a:"Komparator donosi logičku odluku, ne daje analogni signal." },
-  { area:"Histerezis", q:"Zašto komparator sa histerezisom ima dva praga?", a:"Da bi se sprečilo stalno prebacivanje izlaza oko jednog praga." },
-  { area:"Histerezis", q:"Kako se ostvaruje histerezis u kolu?", a:"Pozitivnom povratnom spregom." },
+  { area:"Histereza", q:"Zašto komparator sa histerezom ima dva praga?", a:"Da bi se sprečilo stalno prebacivanje izlaza oko jednog praga." },
+  { area:"Histereza", q:"Kako se ostvaruje histereza u kolu?", a:"Pozitivnom povratnom spregom." },
   { area:"Napajanje", q:"Šta se može desiti ako Arduino i komparator nemaju zajedničku masu?", a:"Pogrešno merenje, nestabilan ili neispravan rad." },
   { area:"Senzori & ADC", q:"Koji su praktični saveti za dobijanje stabilnijih ADC merenja?", a:null },
   { area:"IoT osnove", q:"Kako bi svojim rečima definisao Internet stvari (IoT) i objasnio njegovu osnovnu svrhu?", a:null },
@@ -662,7 +689,7 @@ const TOPIC_ORDER = [
   "IoT osnove","IoT čvorovi","Serijska komunikacija",
   "Arduino & MCU","Arduino pinovi",
   "Senzori & ADC","Senzori i merenja",
-  "PWM","Komparatori","Histerezis",
+  "PWM","Komparatori","Histereza",
   "Aktuatori","Aktuatori & motori",
   "Releji","MQTT","Napajanje",
   "Elektronika osnove","Elektronika","Mikrokontroleri",
@@ -770,7 +797,11 @@ function renderGlossary(query) {
       const tags = (t.tags||[]);
       const card = document.createElement("article");
       card.className = "card";
-      card.onclick = () => { card.classList.toggle("open"); };
+      card.onclick = () => { 
+          card.classList.toggle("open");
+          const exp = card.querySelector(".card-expand");
+          if(exp) exp.textContent = card.classList.contains("open") ? "▴ zatvori" : "▾ klikni za više";
+        };
 
       // Proveri da li postoji "dodatni sadržaj" — koristimo def kao detalj
       // Kratki preview: prva 2 reda; klik = puna definicija + dodatan detalj
@@ -794,7 +825,7 @@ function renderGlossary(query) {
             ${tags.map(tg=>`<span class="tag hl-tag">${esc(tg)}</span>`).join("")}
           </div>
         </div>
-        <div class="card-expand">▾ klikni za detalje</div>
+        <div class="card-expand">▾ klikni za više</div>
         ` : ''}
       `;
 
