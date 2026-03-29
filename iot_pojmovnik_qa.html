@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IoT Pojmovnik + Baza pitanja</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f14;--bg2:#0c131c;--bg3:#0f1620;--card:#0b111a;
+  --brd:#1f2a37;--brd2:#263241;
+  --tx:#e8eef6;--dim:#9fb0c2;--dim2:#b9c7d6;
+  font-family:"Exo 2",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);min-height:100vh}
+
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:20;
+  background:var(--bg);border-bottom:1px solid var(--brd);
+  padding:16px 18px 12px;
+}
+.hdr-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+header h1{font-family:"Share Tech Mono",monospace;font-size:1.15rem;color:var(--tx)}
+header h1 span{color:#00d4ff}
+.hdr-stats{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.hstat{font-family:"Share Tech Mono",monospace;font-size:.65rem;color:var(--dim);
+  padding:3px 9px;border:1px solid var(--brd2);border-radius:4px;background:var(--bg3)}
+.hstat b{color:#00d4ff}
+.hdr-sub{color:var(--dim);font-size:.72rem;margin-bottom:10px;line-height:1.4}
+
+/* TABS */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tab{
+  padding:7px 14px;border-radius:999px;border:1px solid var(--brd2);
+  background:var(--bg3);color:var(--tx);cursor:pointer;font-size:.75rem;
+  font-family:"Exo 2",sans-serif;font-weight:600;letter-spacing:.5px;
+  transition:all .2s;user-select:none
+}
+.tab.active{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15) inset;color:#93c5fd}
+
+/* SEARCH ROW */
+.search-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.srch{
+  flex:1;min-width:200px;padding:9px 13px;border-radius:999px;
+  border:1px solid var(--brd2);background:var(--bg3);color:var(--tx);
+  outline:none;font-size:.82rem;font-family:"Exo 2",sans-serif
+}
+.srch:focus{border-color:#3b82f6}
+.srch::placeholder{color:var(--dim)}
+.btn{
+  padding:8px 14px;border-radius:999px;border:1px solid var(--brd2);
+  background:var(--bg3);color:var(--tx);cursor:pointer;font-size:.75rem;
+  font-family:"Exo 2",sans-serif;transition:all .2s;white-space:nowrap
+}
+.btn:hover{border-color:#3b82f6;color:#93c5fd}
+.btn.hi{border-color:#00d4ff;color:#00d4ff;background:rgba(0,212,255,.07)}
+.srch-count{font-family:"Share Tech Mono",monospace;font-size:.65rem;color:var(--dim);
+  padding:3px 9px;border:1px solid var(--brd2);border-radius:4px}
+
+/* CHIPS (filter teme) */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  padding:5px 11px;border-radius:999px;border:1px solid var(--brd2);
+  background:var(--bg3);color:var(--dim2);font-size:.7rem;cursor:pointer;
+  transition:all .15s;user-select:none;font-family:"Exo 2",sans-serif;font-weight:600
+}
+.chip:hover{border-color:#3b82f6;color:#93c5fd}
+.chip.active{box-shadow:0 0 0 2px rgba(59,130,246,.2) inset}
+
+/* MAIN */
+main{max-width:1200px;margin:0 auto;padding:16px 18px 60px}
+.panel{display:none}.panel.active{display:block}
+
+/* GRUPE pojmovnika */
+.group{margin:14px 0;border:1px solid var(--brd);border-radius:14px;overflow:hidden;background:var(--bg3)}
+.group-h{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--brd)
+}
+.group-h-left{display:flex;align-items:center;gap:10px}
+.group-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.group-h h2{margin:0;font-size:.88rem;font-family:"Exo 2",sans-serif;font-weight:700;letter-spacing:.3px}
+.group-meta{color:var(--dim);font-size:.68rem;font-family:"Share Tech Mono",monospace;
+  padding:2px 8px;border:1px solid var(--brd2);border-radius:4px}
+
+/* GRID KARTICE */
+.cards{padding:10px;display:grid;gap:10px;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+
+/* KARTICA */
+.card{
+  border:1px solid var(--brd);border-radius:12px;background:var(--card);
+  overflow:hidden;transition:all .2s;cursor:pointer;
+  display:flex;flex-direction:column
+}
+.card:hover{border-color:rgba(59,130,246,.4);transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.card.open{border-color:rgba(0,212,255,.3)}
+
+/* KARTICA — gornji deo (uvek vidljiv) */
+.card-top{padding:12px 14px 10px;display:flex;flex-direction:column;gap:6px}
+.card-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-term{font-size:.9rem;font-weight:700;color:var(--tx);font-family:"Exo 2",sans-serif;line-height:1.3}
+.badge{
+  flex-shrink:0;font-size:.6rem;padding:3px 9px;border-radius:999px;
+  border:1px solid transparent;color:#fff;font-weight:700;letter-spacing:.5px;
+  font-family:"Share Tech Mono",monospace;white-space:nowrap
+}
+
+/* PREVIEW def (uvek vidljiv, skraćen) */
+.card-preview{font-size:.76rem;color:var(--dim2);line-height:1.45;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* TAGOVI (uvek vidljivi) */
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 10px}
+.tag{
+  font-size:.62rem;padding:3px 9px;border-radius:999px;
+  border:1px solid var(--brd2);background:var(--bg3);color:var(--dim2);
+  font-family:"Share Tech Mono",monospace;transition:all .15s
+}
+.tag.hl-tag{border-color:#ffd700;color:#ffd700;background:rgba(255,215,0,.08)}
+
+/* PROSIRENI deo (klik) */
+.card-body{
+  display:none;border-top:1px solid var(--brd);
+  padding:12px 14px;font-size:.79rem;color:var(--dim2);line-height:1.65;
+  background:rgba(0,0,0,.15)
+}
+.card.open .card-body{display:block}
+.card.open .card-preview{-webkit-line-clamp:unset;overflow:visible}
+
+/* EXPAND INDICATOR */
+.card-expand{
+  display:flex;justify-content:center;padding:5px 0 6px;
+  color:var(--dim);font-size:.65rem;font-family:"Share Tech Mono",monospace;
+  letter-spacing:1px;border-top:1px solid rgba(30,45,71,.4)
+}
+.card.open .card-expand{color:#00d4ff}
+
+mark{background:rgba(255,215,0,.25);color:#ffd700;border-radius:2px;padding:0 1px}
+
+/* PITANJA */
+.qa-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.qa-group{
+  border:1px solid var(--brd);border-radius:14px;overflow:hidden;
+  background:var(--bg3);margin-bottom:14px
+}
+.qa-group-h{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 16px;background:var(--bg2);border-bottom:1px solid var(--brd)
+}
+.qa-group-h-left{display:flex;align-items:center;gap:10px}
+.qa-group h2{margin:0;font-size:.88rem;font-weight:700;font-family:"Exo 2",sans-serif}
+.qa-list{padding:10px;display:grid;gap:8px}
+
+/* QCARD */
+.qcard{
+  border:1px solid var(--brd);border-radius:12px;background:var(--card);
+  overflow:hidden;transition:border-color .2s
+}
+.qcard:hover{border-color:rgba(59,130,246,.3)}
+.qcard-top{
+  padding:11px 14px;display:flex;gap:10px;align-items:flex-start;cursor:pointer
+}
+.qnum{
+  font-family:"Share Tech Mono",monospace;font-size:.62rem;color:var(--dim);
+  background:rgba(0,212,255,.07);padding:2px 7px;border-radius:3px;
+  flex-shrink:0;margin-top:1px;border:1px solid rgba(0,212,255,.15)
+}
+.qtype-badge{
+  flex-shrink:0;font-size:.6rem;padding:2px 7px;border-radius:999px;
+  font-family:"Share Tech Mono",monospace;margin-top:1px;border:1px solid transparent
+}
+.qtype-badge.mc{background:rgba(255,107,53,.1);color:#fb923c;border-color:rgba(255,107,53,.25)}
+.qtype-badge.open{background:rgba(0,212,255,.06);color:#7dd3fc;border-color:rgba(0,212,255,.2)}
+.qtext{flex:1;font-size:.82rem;line-height:1.5;color:var(--tx)}
+.qtog-btn{
+  flex-shrink:0;padding:3px 9px;border-radius:6px;border:1px solid var(--brd2);
+  background:transparent;color:var(--dim);font-size:.65rem;cursor:pointer;
+  font-family:"Share Tech Mono",monospace;transition:all .2s;white-space:nowrap
+}
+.qtog-btn:hover,.qtog-btn.on{border-color:#3b82f6;color:#93c5fd;background:rgba(59,130,246,.07)}
+
+.qcard-ans{
+  display:none;border-top:1px dashed var(--brd2);
+  padding:10px 14px 12px;background:rgba(0,0,0,.12)
+}
+.qcard-ans.show{display:block}
+.qcard-opts{display:flex;flex-direction:column;gap:5px;margin-bottom:8px}
+.qopt{
+  padding:7px 12px;border-radius:8px;font-size:.78rem;background:rgba(0,0,0,.2);
+  border:1px solid var(--brd2);color:var(--dim2);display:flex;align-items:center;gap:8px
+}
+.qopt.correct{background:rgba(57,255,20,.07);border-color:rgba(57,255,20,.3);color:#86efac}
+.ans-label{font-family:"Share Tech Mono",monospace;font-size:.58rem;color:var(--dim);
+  text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px}
+.ans-text{
+  font-size:.8rem;line-height:1.7;color:var(--dim2);
+  border-left:3px solid #3b82f6;padding:7px 12px;
+  background:rgba(59,130,246,.05);border-radius:0 6px 6px 0
+}
+
+.hidden{display:none!important}
+footer{max-width:1200px;margin:0 auto;padding:0 18px 20px;color:var(--dim);font-size:.68rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <h1>IoT <span>Pojmovnik</span> + Baza pitanja</h1>
+    <div class="hdr-stats">
+      <div class="hstat"><b id="s-t">126</b> pojmova</div>
+      <div class="hstat"><b id="s-q" style="color:var(--ac2,#fb923c)">231</b> pitanja</div>
+      <div class="hstat"><b id="s-top">16</b> tema</div>
+    </div>
+  </div>
+  <p class="hdr-sub">
+    Pretraga normalizuje dijakritike (č/ć→c, š→s, ž→z, đ→dj) — radi i latinica i ćirilica.<br>
+    Klikni na karticu da vidiš detaljan opis. Filter po temi radi na oba panela.
+  </p>
+
+  <div class="tabs">
+    <div class="tab active" id="tabGlossary" onclick="switchTab('glossary',this)">📖 Pojmovnik</div>
+    <div class="tab" id="tabQuiz" onclick="switchTab('quiz',this)">❓ Pitanja</div>
+  </div>
+
+  <div class="search-row">
+    <input id="q" class="srch" type="search" placeholder="Pretraži pojmove, tagove, definicije…" autocomplete="off">
+    <button class="btn" onclick="resetAll()">↺ Reset</button>
+    <button class="btn hi" id="btn-ans" onclick="toggleAllAns()" style="display:none">▶ Prikaži rešenja</button>
+    <span class="srch-count" id="srch-count"></span>
+  </div>
+
+  <div class="chips" id="chips"></div>
+</header>
+
+<main>
+  <section class="panel active" id="panelGlossary">
+    <div id="glossaryRoot"></div>
+  </section>
+
+  <section class="panel" id="panelQuiz">
+    <div class="qa-controls">
+      <button class="btn hi" onclick="toggleAllAns()">▶ Prikaži sva rešenja</button>
+      <button class="btn" onclick="hideAllAns()">✕ Sakrij sva rešenja</button>
+      <span class="srch-count" id="qstats"></span>
+    </div>
+    <div id="quizRoot"></div>
+  </section>
+
+  <div id="empty-msg" class="hidden" style="text-align:center;padding:40px;color:var(--dim);font-size:.82rem;font-family:'Share Tech Mono',monospace">
+    Nema rezultata. Pokušajte drugačiji upit ili filter.
+  </div>
+</main>
+
+<footer>
+  IoT Pojmovnik + Baza pitanja · Arduino & C# Referentni Indeks ·
+  Pretraga normalizuje dijakritike · Kliknite karticu za detaljan sadržaj
+</footer>
+
+<script>
+const norm = (s) => (s||"")
+  .toLowerCase()
+  .replace(/[čć]/g,"c").replace(/đ/g,"dj").replace(/š/g,"s").replace(/ž/g,"z");
+
+const esc = (s) => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+const TOPIC_COLOR = {
+  "IoT osnove": "#00d4ff",
+  "IoT čvorovi": "#00d4ff",
+  "Arduino & MCU": "#a78bfa",
+  "Arduino pinovi": "#a78bfa",
+  "Serijska komunikacija": "#3b82f6",
+  "Senzori & ADC": "#10b981",
+  "Senzori i merenja": "#10b981",
+  "PWM": "#f59e0b",
+  "Komparatori": "#ec4899",
+  "Aktuatori": "#f97316",
+  "Aktuatori & motori": "#f97316",
+  "Releji": "#ef4444",
+  "MQTT": "#06b6d4",
+  "Napajanje": "#84cc16",
+  "Elektronika osnove": "#6b7280",
+  "IDE & alati": "#c084fc",
+  "default": "#5a7090"
+};
+
+const TERMS = [
+  { term:"IoT (Internet stvari)", def:"Povezivanje uređaja sa senzorima/aktuatorima radi prikupljanja podataka, automatizacije i daljinskog nadzora/upravljanja.", topic:"IoT osnove", tags:["iot","automatizacija"] },
+  { term:"IoT sistem", def:"Senzori → čvor (MCU) → mreža/protokol → server/broker/cloud → baza/analitika → aplikacija → komande nazad ka aktuatorima.", topic:"IoT osnove", tags:["tok","arhitektura"] },
+  { term:"IoT čvor", def:"Uređaj na terenu koji čita senzore, obrađuje podatke, komunicira i upravlja aktuatorima.", topic:"IoT čvorovi", tags:["node","mcu"] },
+  { term:"Gejtvej (gateway)", def:"Uređaj koji spaja lokalne protokole (UART/I2C/SPI) sa IP mrežom, često radi filtriranje, agregaciju i bezbednost.", topic:"IoT čvorovi", tags:["gateway","ip"] },
+  { term:"Edge obrada", def:"Obrada blizu senzora (na čvoru/gejtveju): mala latencija, radi i bez interneta.", topic:"IoT osnove", tags:["edge","latency"] },
+  { term:"Cloud obrada", def:"Obrada i skladištenje u oblaku: istorija, analitika, dashboard, integracije.", topic:"IoT osnove", tags:["cloud","analytics"] },
+  { term:"Telemetrija", def:"Podaci koje uređaj šalje (temperatura, napon, stanje).", topic:"IoT osnove", tags:["telemetry"] },
+  { term:"Komanda", def:"Poruka ka uređaju (uključi relej, promeni setpoint).", topic:"IoT osnove", tags:["command"] },
+  { term:"MQTT", def:"Publish/subscribe protokol za IoT poruke iznad TCP/IP.", topic:"MQTT", tags:["mqtt","pubsub"] },
+  { term:"Broker", def:"Server koji prima publish poruke i prosleđuje ih subscriber-ima.", topic:"MQTT", tags:["broker"] },
+  { term:"Topic", def:"Hijerarhijski kanal poruka, npr. kuca/soba1/temp.", topic:"MQTT", tags:["topic"] },
+  { term:"QoS (0/1/2)", def:"Nivo isporuke poruke: 0 best-effort, 1 bar jednom, 2 tačno jednom (najskuplji).", topic:"MQTT", tags:["qos"] },
+  { term:"Retained message", def:"Broker pamti poslednju poruku za topic i šalje je novim subscriber-ima.", topic:"MQTT", tags:["retain"] },
+  { term:"LWT", def:"Last Will and Testament: poruka koju broker objavi kad klijent neočekivano nestane.", topic:"MQTT", tags:["lwt"] },
+  { term:"UART", def:"Asinhroni serijski prenos (TX/RX), tipično 8N1, bez zajedničkog takta.", topic:"Serijska komunikacija", tags:["uart","8n1","baud"] },
+  { term:"I²C", def:"Dvožična magistrala (SDA/SCL) sa adresiranjem i pull-up otpornicima (open-drain).", topic:"Serijska komunikacija", tags:["i2c","pull-up"] },
+  { term:"SPI", def:"Sinhrona magistrala (SCK, MOSI, MISO, CS) za brze periferije; CS po uređaju.", topic:"Serijska komunikacija", tags:["spi","cs"] },
+  { term:"Senzor", def:"Pretvara fizičku veličinu u električni signal.", topic:"Senzori i merenja", tags:["sensor"] },
+  { term:"Analogni senzor", def:"Daje analogni napon/otpornost (npr. LDR/NTC u deliocu).", topic:"Senzori i merenja", tags:["analog"] },
+  { term:"Digitalni senzor", def:"Daje digitalni izlaz (0/1) ili protokol (I2C/SPI/1-Wire).", topic:"Senzori i merenja", tags:["digital"] },
+  { term:"ADC", def:"Pretvara analogni napon u digitalni kod (UNO: 10-bit, 0–1023).", topic:"Senzori i merenja", tags:["adc","10bit"] },
+  { term:"Vref", def:"Referentni napon ADC-a; određuje opseg i rezoluciju.", topic:"Senzori i merenja", tags:["vref"] },
+  { term:"LSB", def:"Najmanji idealni korak ADC-a: Vref/1024 za 10-bit.", topic:"Senzori i merenja", tags:["lsb"] },
+  { term:"Naponski delilac", def:"R1/R2 daju Vout = Vin·(R2/(R1+R2)); koristi se za merenje/prilagođenje nivoa.", topic:"Napajanje", tags:["divider","r1","r2"] },
+  { term:"PWM", def:"Pulse Width Modulation: duty cycle menja prosečnu snagu/napon na opterećenju.", topic:"PWM", tags:["pwm","duty"] },
+  { term:"Duty cycle", def:"Procenat vremena HIGH u periodi (0–100%).", topic:"PWM", tags:["duty"] },
+  { term:"Komparator", def:"Poredi dva napona i daje digitalni izlaz (0/1).", topic:"Komparatori", tags:["comparator"] },
+  { term:"Histereza", def:"Dva praga (uključenje/isključenje) radi stabilnosti na šum (Schmitt).", topic:"Komparatori", tags:["hysteresis","schmitt"] },
+  { term:"Aktuator", def:"Uređaj koji izvodi fizičku akciju (svetlo, motor, ventil).", topic:"Aktuatori", tags:["actuator"] },
+  { term:"Relej", def:"Elektromehanički prekidač za uključivanje većih napona/struja.", topic:"Releji", tags:["relay","no","nc"] },
+  { term:"Galvansko odvajanje", def:"Električno odvajanje upravljačkog i energetskog dela (npr. optokapler).", topic:"Releji", tags:["isolation","opto"] },
+  { term:"NPN tranzistor", def:"Baza upravlja, kolektor ka opterećenju, emiter ka masi (low-side).", topic:"Aktuatori", tags:["bjt","low-side"] },
+  { term:"MOSFET (logic-level)", def:"MOSFET koji se potpuno otvara na 3.3/5 V gate-u; idealan za PWM i LED trake.", topic:"Aktuatori", tags:["mosfet","logic-level"] },
+  { term:"Flyback dioda", def:"Dioda preko motora/releja (induktivno) protiv prenapona pri isključenju.", topic:"Aktuatori", tags:["flyback"] },
+  { term:"DC izvor", def:"Jednosmerno napajanje (adapter, power bank, baterija, DC-DC).", topic:"Napajanje", tags:["dc"] },
+  { term:"Pad napona", def:"Vpad = I·R u kablu/izvoru; uzrokuje reset i greške.", topic:"Napajanje", tags:["voltage-drop"] },
+  { term:"Ripple", def:"Talasanje DC napona; uvodi šum u ADC i nestabilnost.", topic:"Napajanje", tags:["ripple"] },
+  { term:"Decoupling 100 nF", def:"Kondenzator blizu MCU koji filtrira brzi šum napajanja.", topic:"Napajanje", tags:["decoupling"] },
+  { term:"Bulk kondenzator (100–220 µF)", def:"Rezerva energije za strujne pikove (motor/servo/Wi-Fi).", topic:"Napajanje", tags:["bulk"] },
+  { term:"UNO UART pinovi", def:"D0=RX, D1=TX (deljeno sa USB-serial).", topic:"Arduino pinovi", tags:["d0","d1"] },
+  { term:"UNO I²C pinovi", def:"A4=SDA, A5=SCL.", topic:"Arduino pinovi", tags:["a4","a5"] },
+  { term:"UNO PWM pinovi", def:"~3, ~5, ~6, ~9, ~10, ~11.", topic:"Arduino pinovi", tags:["pwm-pins"] },
+  { term:"UNO ADC pinovi", def:"A0–A5 (10-bit ADC).", topic:"Arduino pinovi", tags:["adc-pins"] },
+  { term:"IoT (Internet of Things)", def:"Mreža fizičkih uređaja koji mere (senzori), upravljaju (aktuatori) i komuniciraju sa drugim sistemima.", topic:"IoT osnove", tags:["iot","senzori","aktuatori","komunikacija"] },
+  { term:"Edge uređaj", def:"Uređaj na ivici mreže koji prikuplja podatke i reaguje lokalno (npr. Arduino/ESP).", topic:"IoT osnove", tags:["edge","mcu"] },
+  { term:"Gateway (pristupnik)", def:"Uređaj koji spaja lokalne interfejse/protokole sa IP mrežom; često preuzima teške zadatke (npr. TLS, obrada).", topic:"IoT osnove", tags:["gateway","ip","bridge"] },
+  { term:"Komanda (command)", def:"Poruka ka uređaju da izvrši akciju (uključi relej, promeni setpoint, reset).", topic:"IoT osnove", tags:["control","actuation"] },
+  { term:"Event (događaj)", def:"Poruka koja se šalje kad se desi promena (alarm, prelazak praga, greška).", topic:"IoT osnove", tags:["event","alarm"] },
+  { term:"Arduino UNO", def:"Razvojna ploča bazirana na ATmega328P; mreža se dodaje modulom (Ethernet/Wi-Fi).", topic:"Arduino & MCU", tags:["uno","atmega328p"] },
+  { term:"Mikrokontroler (MCU)", def:"CPU + memorija + periferije (ADC, timere, UART…) na jednom čipu.", topic:"Arduino & MCU", tags:["mcu","periferije"] },
+  { term:"ATmega328P", def:"AVR MCU na UNO; poseduje ADC, timere, UART, SPI, I2C i analogni komparator.", topic:"Arduino & MCU", tags:["avr","adc","timer","uart"] },
+  { term:"GPIO", def:"Digitalni pin koji se može konfigurisati kao ulaz ili izlaz (HIGH/LOW).", topic:"Arduino & MCU", tags:["digital","pin"] },
+  { term:"Digitalni signal", def:"Signal sa dva logička nivoa (0/1) definisana naponskim pragovima.", topic:"Arduino & MCU", tags:["logic","high","low"] },
+  { term:"Analogni signal", def:"Kontinuirana vrednost napona u vremenu (npr. 0–5 V).", topic:"Arduino & MCU", tags:["analog","voltage"] },
+  { term:"Alternativne funkcije pinova", def:"Jedan fizički pin može imati više uloga (GPIO, PWM, UART, AIN…).", topic:"Arduino & MCU", tags:["pinout","mux"] },
+  { term:"Interrupt (prekid)", def:"Mehanizam da MCU odmah reaguje na događaj (pin change, timer, komparator).", topic:"Arduino & MCU", tags:["interrupt","isr"] },
+  { term:"Timer", def:"Hardverski brojač za merenje vremena, generisanje PWM-a i periodične prekide.", topic:"Arduino & MCU", tags:["timer","pwm"] },
+  { term:"Watchdog", def:"Tajmer koji resetuje MCU ako se program zaglavi ili ne odgovara.", topic:"Arduino & MCU", tags:["wdt","reset"] },
+  { term:"Bootloader", def:"Mali program koji omogućava upload firmware-a preko serijskog interfejsa.", topic:"IDE & alati", tags:["upload","serial"] },
+  { term:"Firmware", def:"Softver koji radi na mikrokontroleru (Arduino sketch je firmware).", topic:"Arduino & MCU", tags:["embedded","program"] },
+  { term:"Sketch", def:"Arduino program sa funkcijama setup() i loop().", topic:"IDE & alati", tags:["arduino","code"] },
+  { term:"IDE (Integrated Development Environment)", def:"Okruženje za pisanje, kompajliranje i upload programa na uređaj.", topic:"IDE & alati", tags:["ide","compile","upload"] },
+  { term:"Arduino IDE", def:"Standardni alat: izbor ploče/porta, upload, Serial Monitor, biblioteke.", topic:"IDE & alati", tags:["board","port","serial"] },
+  { term:"Board definition", def:"Opis ploče (MCU, frekvencija, bootloader, pinovi) koji IDE koristi.", topic:"IDE & alati", tags:["boards","config"] },
+  { term:"COM port / Serial port", def:"Virtuelni serijski port (USB-Serial) za upload i komunikaciju.", topic:"IDE & alati", tags:["com","usb","uart"] },
+  { term:"Serial Monitor", def:"Alat za slanje/čitanje teksta preko serijske veze (debug, log).", topic:"IDE & alati", tags:["debug","log"] },
+  { term:"Tinkercad Circuits", def:"Online simulacija Arduino kola; korisna za demonstracije, ali ne emulira sve periferije potpuno verno.", topic:"IDE & alati", tags:["tinkercad","simulacija"] },
+  { term:"Napon (V)", def:"Razlika potencijala; određuje ‘koliko jako’ pogoni struju kroz kolo.", topic:"Elektronika osnove", tags:["voltage","v"] },
+  { term:"Struja (A)", def:"Protok naelektrisanja kroz kolo.", topic:"Elektronika osnove", tags:["current","a"] },
+  { term:"Otpor (Ω)", def:"Svojstvo elementa da ograničava struju (R).", topic:"Elektronika osnove", tags:["resistance","ohm"] },
+  { term:"Snaga (W)", def:"Brzina prenosa energije; P = V·I (disipacija, grejanje).", topic:"Elektronika osnove", tags:["power","w"] },
+  { term:"Ohmov zakon", def:"Veza napona, struje i otpora: V = I·R.", topic:"Elektronika osnove", tags:["ohm"] },
+  { term:"Masa (GND)", def:"Referentni potencijal (0 V) u kolu.", topic:"Elektronika osnove", tags:["ground","gnd"] },
+  { term:"Decoupling (bypass) kondenzator", def:"Kondenzator blizu napajanja MCU koji smanjuje šum i sprečava nestabilnosti/reset.", topic:"Elektronika osnove", tags:["decoupling","noise"] },
+  { term:"Šum (noise)", def:"Neželjene brze promene signala koje kvare merenje i okidanje (posebno oko praga).", topic:"Elektronika osnove", tags:["noise","emi"] },
+  { term:"Adapter (AC-DC)", def:"Pretvara mrežni AC u stabilan DC napon.", topic:"Napajanje", tags:["adapter","acdc"] },
+  { term:"Power bank", def:"Baterija + elektronika; tipično daje 5 V preko USB izlaza.", topic:"Napajanje", tags:["usb","5v"] },
+  { term:"Baterija", def:"Izvor energije: primarna (ne puni se) ili sekundarna (punjiva).", topic:"Napajanje", tags:["battery"] },
+  { term:"Akumulator", def:"Punjiva baterija (olovni, Li-ion, LiPo…).", topic:"Napajanje", tags:["accu","lipo","li-ion"] },
+  { term:"Regulator napona (linearni)", def:"Snižava napon disipacijom (toplota); jednostavan ali manje efikasan.", topic:"Napajanje", tags:["linear","lDO"] },
+  { term:"DC-DC buck", def:"Efikasan step-down pretvarač (snižava napon).", topic:"Napajanje", tags:["buck","step-down"] },
+  { term:"DC-DC boost", def:"Step-up pretvarač (podiže napon).", topic:"Napajanje", tags:["boost","step-up"] },
+  { term:"Stabilizacija", def:"Održavanje napona stabilnim pod promenljivim opterećenjem.", topic:"Napajanje", tags:["stability"] },
+  { term:"Brown-out", def:"Pad napona ispod granice → reset ili nestabilan rad MCU.", topic:"Napajanje", tags:["brownout","reset"] },
+  { term:"Solarni panel", def:"Izvor DC napona/struje zavisan od osvetljenja.", topic:"Napajanje", tags:["solar","pv"] },
+  { term:"Kontroler punjenja", def:"Upravlja punjenjem akumulatora (zaštita, režimi punjenja).", topic:"Napajanje", tags:["charge","controller"] },
+  { term:"PWM kontroler punjenja", def:"Jednostavniji tip; panel ‘secka’ PWM-om prema bateriji.", topic:"Napajanje", tags:["pwm","charging"] },
+  { term:"MPPT kontroler punjenja", def:"Traži tačku maksimalne snage panela radi bolje efikasnosti.", topic:"Napajanje", tags:["mppt","efficiency"] },
+  { term:"Reverse current", def:"Povratna struja ka panelu (npr. noću) ako nema zaštite.", topic:"Napajanje", tags:["reverse","diode"] },
+  { term:"ADC (Analog-to-Digital Converter)", def:"Pretvara analogni napon u broj (UNO tipično 10-bit).", topic:"Senzori & ADC", tags:["adc","10bit"] },
+  { term:"Rezolucija ADC-a", def:"Broj diskretnih koraka (10-bit → 1024 nivoa).", topic:"Senzori & ADC", tags:["resolution"] },
+  { term:"Referentni napon (Vref)", def:"Napon prema kojem ADC meri (5 V ili interna referenca).", topic:"Senzori & ADC", tags:["vref"] },
+  { term:"LDR", def:"Fotootpornik; otpor se menja sa osvetljenjem, tipično u deliocu napona.", topic:"Senzori & ADC", tags:["ldr","light"] },
+  { term:"NTC", def:"Termistor; otpor opada sa temperaturom, tipično u deliocu napona.", topic:"Senzori & ADC", tags:["ntc","temperature"] },
+  { term:"Kalibracija", def:"Podešavanje merenja prema realnim vrednostima (offset/gain).", topic:"Senzori & ADC", tags:["calibration"] },
+  { term:"Tranzistor (BJT)", def:"Poluprovodnički prekidač/pojačavač; često za relej/motor.", topic:"Aktuatori & motori", tags:["bjt","switch"] },
+  { term:"MOSFET", def:"Efikasan prekidač za veće struje; pogodan za PWM upravljanje.", topic:"Aktuatori & motori", tags:["mosfet","pwm"] },
+  { term:"Driver", def:"Sklop/IC koji omogućava upravljanje opterećenjem (motor driver, MOSFET driver).", topic:"Aktuatori & motori", tags:["driver","stage"] },
+  { term:"DC motor", def:"Motor na jednosmerni napon; brzina često PWM-om, smer preko H-mosta.", topic:"Aktuatori & motori", tags:["dc","motor"] },
+  { term:"H-most (H-bridge)", def:"Topologija koja menja polaritet napona na motoru (napred/nazad).", topic:"Aktuatori & motori", tags:["h-bridge","direction"] },
+  { term:"Induktivno opterećenje", def:"Motor/kalem; pri prekidu struje generiše prenapon.", topic:"Aktuatori & motori", tags:["inductive","spike"] },
+  { term:"Flyback dioda (freewheel)", def:"Zaštitna dioda preko induktivnog opterećenja protiv prenapona.", topic:"Aktuatori & motori", tags:["flyback","diode"] },
+  { term:"EMI / smetnje", def:"Elektromagnetne smetnje usled prekidanja struje (PWM, releji, motori).", topic:"Aktuatori & motori", tags:["emi","noise"] },
+  { term:"PWM (Pulse Width Modulation)", def:"Impulsni signal sa promenljivim odnosom uključenosti (duty cycle).", topic:"PWM", tags:["pwm","duty"] },
+  { term:"Frekvencija PWM-a", def:"Broj perioda u sekundi; utiče na treperenje i filtriranje.", topic:"PWM", tags:["frequency","hz"] },
+  { term:"Prosečan napon PWM-a", def:"‘Analogni efekat’ PWM-a posle filtriranja/opterećenja; nije isto što i pravi DAC.", topic:"PWM", tags:["average","analog"] },
+  { term:"RC filter", def:"Otpornik + kondenzator za ‘peglanje’ PWM-a u približno analogni napon.", topic:"PWM", tags:["rc","filter"] },
+  { term:"Prag (threshold)", def:"Vrednost na kojoj komparator menja stanje izlaza.", topic:"Komparatori", tags:["threshold","trip"] },
+  { term:"Schmitt trigger", def:"Komparator sa histerezom (pozitivna povratna sprega).", topic:"Komparatori", tags:["schmitt","feedback"] },
+  { term:"Pozitivna povratna sprega", def:"Deo izlaza vraćen na ulaz da bi se formirala histereza i stabilno okidanje.", topic:"Komparatori", tags:["positive","feedback"] },
+  { term:"Lažno okidanje", def:"Brzo prebacivanje izlaza zbog šuma oko praga (bez histereze).", topic:"Komparatori", tags:["false","trigger"] },
+  { term:"Analog Comparator (MCU periferija)", def:"Hardverska jedinica u MCU koja poredi dva ulazna napona i može generisati prekid.", topic:"Komparatori", tags:["avr","peripheral"] },
+  { term:"AIN0 / AIN1", def:"Ulazi analognog komparatora (termini vezani za MCU; mapirani na određene pinove).", topic:"Komparatori", tags:["ain0","ain1"] },
+  { term:"Client", def:"Uređaj/aplikacija koja se povezuje na broker i publish/subscribe-uje.", topic:"MQTT", tags:["client","device"] },
+  { term:"Publish", def:"Slanje poruke na određeni topic.", topic:"MQTT", tags:["publish"] },
+  { term:"Subscribe", def:"Pretplata na topic kako bi se primale poruke.", topic:"MQTT", tags:["subscribe"] },
+  { term:"QoS 0/1/2", def:"Nivoi isporuke poruke (od best effort do najpouzdanijeg uz veći trošak).", topic:"MQTT", tags:["qos","delivery"] },
+  { term:"Keepalive", def:"Mehanizam održavanja veze (periodični ping da konekcija ostane aktivna).", topic:"MQTT", tags:["keepalive","ping"] },
+  { term:"LWT (Last Will and Testament)", def:"Poruka koju broker objavi ako klijent neočekivano nestane.", topic:"MQTT", tags:["lwt","disconnect"] },
+  { term:"Payload", def:"Sadržaj poruke (tekst, JSON, binarno).", topic:"MQTT", tags:["payload","json"] },
+  { term:"TCP/IP", def:"Mrežni slojevi potrebni za standardni MQTT (TCP transport).", topic:"MQTT", tags:["tcp","ip"] },
+  { term:"Wi-Fi/Ethernet modul", def:"Hardver koji dodaje mrežu Arduino UNO (ili koristiš MCU koji već ima mrežu, npr. ESP).", topic:"MQTT", tags:["ethernet","wifi","uno"] },
+  { term:"IDE", def:"Okruženje za pisanje, kompajliranje i upload programa na uređaj.", topic:"IDE & alati", tags:["ide","compile","upload"] },
+  { term:"Regulator napona", def:"Sklop za stabilan napon (linearni ili DC-DC).", topic:"Napajanje", tags:["regulator","stabilizacija"] },
+  { term:"MPPT", def:"Algoritam/uređaj koji traži tačku maksimalne snage solarnog panela.", topic:"Napajanje", tags:["mppt","efficiency"] },
+  { term:"QoS", def:"Nivo isporuke poruke (0/1/2) uz različit kompromis pouzdanosti i troška.", topic:"MQTT", tags:["qos","delivery"] },
+];
+
+const QUESTIONS = [
+  { area:"Serijska komunikacija", q:"Koja je ključna razlika između asinhronog i sinhronog serijskog prenosa?", a:"Asinhroni nema clock liniju (sinhronizacija preko start/stop i dogovorene brzine – UART). Sinhroni ima clock liniju (SPI, I²C) i podatke uz takt." },
+  { area:"Serijska komunikacija", q:"Nabroji linije i tipične parametre UART komunikacije na Arduino Uno.", a:"Linije: TX(D1), RX(D0), GND. Parametri: baud rate (9600/115200…), format (8N1), nivo logike (5 V TTL), opcionalno paritet i stop bitovi." },
+  { area:"Serijska komunikacija", q:"Kako izgleda UART okvir 8N1 (redosled bitova i nivo linije u mirovanju)?", a:"Mirovanje HIGH. START=LOW → 8 data bitova LSB prvo → nema pariteta → 1 STOP=HIGH." },
+  { area:"Serijska komunikacija", q:"Zašto su potrebni pull-up otpornici na I²C magistrali i gde se postavljaju?", a:"SDA/SCL su open-drain: uređaji vuku na LOW, a HIGH daje pull-up. Pull-up ide sa SDA→VCC i SCL→VCC (tipično 4.7k–10k, zavisno od brzine i kapacitivnosti)." },
+  { area:"Serijska komunikacija", q:"Koje su standardne brzine I²C i kako se adresira više uređaja na istoj magistrali?", a:"100 kHz, 400 kHz, 1 MHz (FMP), 3.4 MHz (HS). Više uređaja: adrese (najčešće 7-bit; postoji i 10-bit). Master šalje adresu + R/W bit." },
+  { area:"Serijska komunikacija", q:"Navedite tipične pinove na Unu za UART, I²C i ADC.", a:"UART: D0(RX), D1(TX). I²C: A4(SDA), A5(SCL). ADC: A0–A5." },
+  { area:"Serijska komunikacija", q:"Koje su prednosti i ograničenja UART-a u odnosu na I²C u tipičnoj IoT aplikaciji?", a:"UART: jednostavan, full-duplex, ali point-to-point (teško više uređaja). I²C: dva voda za više uređaja i adresiranje, ali osetljiviji na šum/kapacitivnost i tipično sporiji od SPI." },
+  { area:"Serijska komunikacija", q:"U kojim situacijama daješ prednost SPI magistrali nad I²C-om i zbog kojih razloga?", a:"Kad treba veća brzina i stabilniji timing (displeji, brze memorije, brzi ADC). SPI je tipično brži, ali traži više žica (CS po uređaju)." },
+  { area:"Senzori & ADC", q:"Šta predstavlja 10-bitna rezolucija ADC-a i kolika je veličina LSB-a za Vref = 5.00 V?", a:"10-bit → 1024 nivoa (0–1023). LSB ≈ 5.00/1024 ≈ 4.88 mV." },
+  { area:"Senzori & ADC", q:"Kako bi mapirao ADC vrednost sa A0 na napon u voltima u Arduino kodu?", a:"float v = analogRead(A0) * Vref / 1023.0; (Vref=5.0 ili stvarna referenca)." },
+  { area:"Senzori & ADC", q:"Koji su praktični saveti za stabilnija ADC merenja?", a:"Zajednička masa; stabilan Vref; 100 nF decoupling; RC filter na ulazu; prosečenje više uzoraka; kratki kablovi; udaljiti analogni deo od PWM/releja/motora." },
+  { area:"Senzori & ADC", q:"Koje tipove izlaza senzora razlikujemo i primeri?", a:"Analogni (LDR/NTC u deliocu), digitalni (PIR 0/1), magistrala/protokol (I²C/SPI/1-Wire: DS18B20 1-Wire, BMP280 I²C/SPI)." },
+  { area:"Senzori & ADC", q:"Kako bi klasifikovao LDR, DS18B20 i PIR senzor prema vrsti izlaza?", a:"LDR: analogni (otpornost). DS18B20: digitalni (1-Wire). PIR: digitalni (logički izlaz prisustva)." },
+  { area:"Senzori & ADC", q:"Zašto logički nivo od 5 V može oštetiti ulaz mikrokontrolera od 3,3 V i kako se rešava?", a:"3.3 V pin nije 5 V tolerant → prekoračenje maksimuma može oštetiti. Rešenje: level shifter, delilac (sporo), tranzistorski prevodilac nivoa." },
+  { area:"Senzori & ADC", q:"Kako izračunati 10-bitni ADC kod za 1.65 V uz Vref=3.3 V?", a:"Kod ≈ (1.65/3.3)*1023 ≈ 512." },
+  { area:"Senzori & ADC", q:"Razlika između „merenja“ i „detekcije“?", a:"Merenje daje vrednost (npr. 23.4°C), detekcija daje stanje/događaj (npr. prisustvo DA/NE)." },
+  { area:"PWM", q:"Šta znači PWM i čemu služi?", a:"Pulse Width Modulation – regulacija prosečne snage promenom duty cycle (LED dimming, brzina DC motora)." },
+  { area:"PWM", q:"Šta je duty cycle i kako utiče na prosečan napon?", a:"Procenat vremena HIGH u periodi; idealno Vavg ≈ Vcc*duty (D u 0–1) uz filtriranje/opterećenje." },
+  { area:"PWM", q:"Zašto PWM efikasniji od linearne regulacije?", a:"Jer je prekidački režim (ON/OFF) sa manjom disipacijom i grejanjem nego linearno „gušenje“." },
+  { area:"PWM", q:"Koja frekvencija PWM-a je dovoljna da LED ne treperi?", a:"U praksi >200 Hz; UNO PWM ~490/980 Hz je obično dovoljno." },
+  { area:"PWM", q:"Zašto se analogWrite() ne koristi za RC servo?", a:"Servo traži 50 Hz impulse 1–2 ms; analogWrite() daje PWM druge frekvencije/format." },
+  { area:"PWM", q:"Kako PWM pretvoriti u približno analogni napon?", a:"RC low-pass filter (R+C) ili inercija opterećenja; ripple zavisi od RC i frekvencije." },
+  { area:"Komparatori", q:"Šta je komparator i kako se razlikuje od ADC-a?", a:"Komparator daje binarnu odluku (iznad/ispod praga), ADC daje numeričku vrednost napona." },
+  { area:"Komparatori", q:"Šta je histereza, kako se uvodi i zašto je korisna?", a:"Dva praga (uključenje/isključenje); uvodi se pozitivnom povratnom spregom/Schmitt ulazom; sprečava treperenje zbog šuma." },
+  { area:"Aktuatori", q:"Kako definišeš aktuator i koje tri glavne vrste možeš navesti?", a:"Uređaj koji izvodi fizičku akciju. Vrste: elektromehanički (relej/ventil), motori (DC/servo/step), svetlosni (LED/LED traka)." },
+  { area:"Aktuatori", q:"Po čemu se razlikuju ON/OFF, PWM i pravo analogno upravljanje?", a:"ON/OFF: samo uključeno/isključeno. PWM: impulsno upravljanje prosečnom snagom. Pravo analogno: kontinuiran napon/struja (DAC/analogni regulator) kad PWM smeta ili je potreban stabilan analogni nivo." },
+  { area:"Aktuatori", q:"Zašto se PWM koristi za LED intenzitet i brzinu DC motora?", a:"Efikasan je, lako se generiše, a oko i mehanička inercija „vide“ prosečnu snagu." },
+  { area:"Aktuatori", q:"Tipične vrednosti napona i struja: LED, servo, DC motor, relej modul?", a:"Orijentaciono: LED 5–20 mA; servo 5–6 V sa pikovima 0.5–2 A; DC motor 6–12 V, start/stall struja najveća; relej kalem često 5 V ~60–90 mA (modul ima drajver)." },
+  { area:"Aktuatori", q:"Zašto LED traka 12 V / 500 mA ne ide direktno na pin mikrokontrolera?", a:"Pin ne može dati ni napon ni struju; oštetiće MCU. Koristi se MOSFET/tranzistor i posebno 12 V napajanje." },
+  { area:"Aktuatori", q:"U low-side kolu sa LED trakom: gde ide +12 V, minus trake i emiter tranzistora?", a:"+12 V na plus trake; minus trake na kolektor (ili drain); emiter (source) na GND." },
+  { area:"Aktuatori", q:"Gde stoji otpornik 1 kΩ u kolu sa NPN i koja je uloga?", a:"Serijski između Arduino pina i baze; ograničava baznu struju i štiti pin." },
+  { area:"Aktuatori", q:"Da li tranzistor pojačava napon/struju ili radi kao prekidač u ovom slučaju?", a:"U ovakvom upravljanju radi kao prekidač: MCU upravlja, a struja opterećenja teče iz posebnog napajanja." },
+  { area:"Aktuatori", q:"Zašto se stavlja flyback dioda preko motora/releja?", a:"Induktivno opterećenje pravi prenapon pri isključenju; dioda obezbeđuje put struji i štiti tranzistor/driver." },
+  { area:"Releji", q:"Šta znači galvansko odvajanje?", a:"Nema direktne provodne veze između upravljačkog i energetskog dela; smanjuje rizik i smetnje (npr. optokapler)." },
+  { area:"Releji", q:"Koja su dva osnovna dela relea?", a:"Kalem (zavojnica) i kontaktni sklop (COM/NO/NC)." },
+  { area:"Releji", q:"Šta označavaju NO i NC kontakti?", a:"NO: normalno otvoren, zatvara se kad relej aktivira. NC: normalno zatvoren, otvara se kad relej aktivira." },
+  { area:"Releji", q:"Zašto relej nije pogodan za PWM prigušivanje na kHz?", a:"Mehanički je spor i habljiv; PWM radi na hiljadama preklapanja u sekundi – koristi MOSFET/SSR (odgovarajući)." },
+  { area:"Releji", q:"Šta su IN, COM i VCC na rele modulu?", a:"IN je upravljački ulaz; VCC napajanje modula; COM je zajednički kontakt na strani kontakata (uz NO/NC)." },
+  { area:"Releji", q:"Pseudokod za pametno svetlo sa LDR-om?", a:"if (ldr < TH) relay_on(); else relay_off();" },
+  { area:"Napajanje", q:"Šta je DC izvor i razlika u odnosu na AC?", a:"DC je jednosmeran napon (stalni polaritet). AC menja polaritet periodično." },
+  { area:"Napajanje", q:"Koja je razlika između napajanja preko USB i preko VIN?", a:"USB daje regulisanih 5 V. VIN ide kroz regulator (gubici/grejanje) i traži viši napon (7–12 V)." },
+  { area:"Napajanje", q:"Zašto servo ne treba na 5V pin UNO?", a:"Strujni pikovi obaraju 5 V i resetuju MCU; koristi se zasebno stabilno napajanje + zajednička masa." },
+  { area:"Napajanje", q:"Formula za snagu i pad napona?", a:"Snaga: P=U·I. Pad napona: Vpad=I·R (kabl/izvor)." },
+  { area:"Napajanje", q:"Šta je ripple i zašto je problematičan?", a:"Talasanje DC napona; uvodi šum i nestabilnost (ADC greške, reset)." },
+  { area:"Napajanje", q:"Zašto 9 V kockasta baterija nije dobra za Arduino projekte?", a:"Velik unutrašnji otpor i mali kapacitet pod opterećenjem → napon brzo padne, česta resetovanja." },
+  { area:"Mikrokontroleri", q:"Šta je mikrokontroler (MCU) i razlika u odnosu na mikroprocesor?", a:"MCU ima CPU+mem+periferije na čipu; mikroprocesor je uglavnom CPU i traži spoljne komponente." },
+  { area:"IoT čvorovi", q:"Uporedi Arduino Uno, ESP32 i Raspberry Pi po tipičnoj ulozi u IoT-u.", a:"UNO: osnove, jednostavno, bez mreže. ESP32: IoT čvor sa Wi-Fi/BT. RPi: gejtvej/server/obrada (Linux), više resursa." },
+  { area:"Bezbednost", q:"Najčešći IoT rizici i zašto su bitni?", a:"Slabe lozinke, nešifrovana komunikacija, loš update, curenje podataka → kompromitacija uređaja i privatnosti." },
+  { area:"Arduino pinovi", q:"Koji su PWM, UART, I²C i ADC pinovi na UNO?", a:"PWM: ~3,~5,~6,~9,~10,~11. UART: D0,D1. I²C: A4,A5. ADC: A0–A5." },
+  { area:"PWM", q:"Definiši PWM i objasni šta predstavlja duty cycle.", a:"PWM je impulsna modulacija širine impulsa; duty cycle je procenat vremena u periodi kada je signal HIGH." },
+  { area:"PWM", q:"Zašto se PWM često koristi kao ‘analogni efekat’, i šta je uloga RC filtera?", a:"PWM daje prosečnu vrednost nakon filtriranja/opterećenja; RC filter ‘pegla’ impulsi u sporije promene napona." },
+  { area:"Senzori & ADC", q:"Šta radi ADC i šta znači 10-bitna rezolucija?", a:"ADC pretvara analogni napon u broj; 10-bit znači 1024 diskretna nivoa (0–1023)." },
+  { area:"Senzori & ADC", q:"Šta je Vref i zašto je bitan za tačnost ADC merenja?", a:"Vref je referentni napon prema kojem ADC skališe merenje; promena/šum Vref direktno utiče na rezultat." },
+  { area:"Senzori & ADC", q:"Šta je naponski delilac i zašto se koristi sa LDR/NTC?", a:"Deli napon na osnovu odnosa otpornika; LDR/NTC menja otpor pa se na srednjoj tački dobija merljiv napon." },
+  { area:"Komparatori", q:"Objasni pojam histereze i zašto pomaže kod šuma.", a:"Histereza uvodi dva praga (uključenje/isključenje) i sprečava ‘treperenje’ izlaza oko praga usled šuma." },
+  { area:"Komparatori", q:"Šta je Schmitt trigger?", a:"Komparator sa histerezom realizovan pozitivnom povratnom spregom." },
+  { area:"Mikrokontroleri", q:"Šta znači da pin ima alternativne funkcije?", a:"Jedan fizički pin može da radi kao GPIO ili kao ulaz/izlaz neke periferije (PWM, UART, AIN...)." },
+  { area:"Mikrokontroleri", q:"Šta je interrupt (prekid) i čemu služi u ugrađenim sistemima?", a:"Mehanizam da MCU odmah reaguje na događaj bez čekanja u glavnoj petlji (npr. timer, promena pina, komparator)." },
+  { area:"Napajanje", q:"Nabroj tipične DC izvore za male IoT uređaje i jednu ključnu stvar na koju moraš paziti.", a:"Adapter, power bank, baterije/akumulator, DC-DC; mora se paziti na stabilan napon i dovoljnu struju (i šum/ripple)." },
+  { area:"Napajanje", q:"Šta je DC-DC buck i kada se koristi?", a:"Buck je step-down pretvarač; koristi se kad treba efikasno sniziti napon." },
+  { area:"Napajanje", q:"Šta je kontroler punjenja i šta je MPPT u tom kontekstu?", a:"Kontroler upravlja punjenjem baterije; MPPT traži tačku maksimalne snage panela radi bolje efikasnosti." },
+  { area:"Aktuatori & motori", q:"Šta je H-most i zašto je potreban za promenu smera DC motora?", a:"H-most menja polaritet napona na motoru pa omogućava smer napred/nazad." },
+  { area:"Aktuatori & motori", q:"Čemu služi flyback dioda kod releja/motora?", a:"Štiti od prenapona pri prekidu struje kroz induktivno opterećenje i smanjuje smetnje." },
+  { area:"MQTT", q:"Objasni publish/subscribe model u MQTT-u (uloge: broker, client, topic).", a:"Klijent publish-uje poruke na topic; broker ih prosleđuje svim klijentima koji su subscribe-ovani na taj topic." },
+  { area:"MQTT", q:"Šta je QoS u MQTT-u i čemu služi keepalive?", a:"QoS definiše nivo isporuke poruke (0/1/2); keepalive održava vezu aktivnom periodičnim signalom." },
+  { area:"MQTT", q:"Šta znači retained message i čemu služi LWT?", a:"Retained: broker pamti poslednju poruku na topic-u; LWT: broker objavi poruku ako klijent neočekivano nestane." },
+  { area:"IDE & alati", q:"Šta je bootloader i kakvu ulogu ima pri upload-u programa?", a:"Bootloader omogućava prijem firmware-a preko serijske veze i njegovo upisivanje u memoriju." },
+  { area:"IDE & alati", q:"Šta je IDE u kontekstu mikrokontrolera?", a:"Okruženje za pisanje koda, kompajliranje i upload na uređaj." },
+  { area:"PWM", q:"Šta znači skraćenica PWM?", options:["a) Parallel Wire Modulation","b) Pulse Width Modulation","c) Power Width Measurement","d) Pulse Wire Mode"], a:"b) Pulse Width Modulation" },
+  { area:"PWM", q:"Koja je osnovna uloga PWM signala u Arduino projektima?", options:["a) Prenos digitalnih podataka","b) Generisanje stalnog napona","c) Regulacija snage promjenom širine impulsa","d) Merenje frekvencije signala"], a:"c) Regulacija snage promjenom širine impulsa" },
+  { area:"PWM", q:"Koja funkcija u Arduino IDE-u se koristi za generisanje PWM signala?", options:["a) digitalWrite()","b) analogRead()","c) analogWrite()","d) pwmWrite()"], a:"c) analogWrite()" },
+  { area:"PWM", q:"Kako se menja srednja (efektivna) vrednost napona PWM signala?", options:["a) Promenom frekvencije","b) Promenom širine impulsa (duty cycle)","c) Promenom tipa pina","d) Promenom napona napajanja Arduina"], a:"b) Promenom širine impulsa (duty cycle)" },
+  { area:"PWM", q:"Koju ulogu ima potenciometar u PWM kolu koje smo obrađivali?", options:["a) Pojačava signal","b) Deli napon i daje promenljivi analogni signal","c) Generiše PWM signal","d) Filtrira smetnje"], a:"b) Deli napon i daje promenljivi analogni signal" },
+  { area:"Komparatori", q:"Šta je komparator?", options:["a) Pojačava analogni signal","b) Poredi dva napona i daje logički izlaz","c) Generiše PWM signal","d) Stabilizuje napajanje"], a:"b) Poredi dva napona i daje logički izlaz" },
+  { area:"Komparatori", q:"Kada je izlaz komparatora u logičkom stanju „1“?", options:["a) Kada je ulazni napon manji od referentnog","b) Kada su naponi jednaki","c) Kada je ulazni napon veći od referentnog","d) Uvek"], a:"c) Kada je ulazni napon veći od referentnog" },
+  { area:"Komparatori", q:"Koja je uloga pozitivne povratne sprege kod komparatora sa histerezom?", options:["a) Povećanje šuma","b) Smanjenje oscilacija na izlazu","c) Smanjenje napona napajanja","d) Povećanje frekvencije"], a:"b) Smanjenje oscilacija na izlazu" },
+  { area:"Napajanje", q:"Koja je osnovna uloga napajanja u elektronskom kolu?", options:["a) Obrada signala","b) Merenje napona","c) Obezbeđivanje potrebnog napona i struje","d) Generisanje PWM signala"], a:"c) Obezbeđivanje potrebnog napona i struje" },
+  { area:"Aktuatori", q:"Kako definišeš aktuator i koje tri glavne vrste sa tipičnim primenama možeš da navedeš?", a:"Uređaj koji izvodi fizičku akciju; vrste: elektromehanički (relej/ventil), motori (DC/servo/step), svetlosni (LED)." },
+  { area:"PWM", q:"Zašto Arduino koristi PWM umesto pravog analognog izlaza?", a:"Arduino nema DAC; PWM simulira analogni napon promenom širine impulsa." },
+  { area:"PWM", q:"Koja funkcija generiše PWM signal?", a:"analogWrite()" },
+  { area:"PWM", q:"Koji je opseg vrednosti za analogWrite()?", a:"0–255" },
+  { area:"PWM", q:"Šta se menja kod PWM signala kada menjamo vrednost analogWrite()?", a:"Širina impulsa (duty cycle)" },
+  { area:"Potenciometar", q:"U kom režimu se koristi potenciometar u Arduino kolu?", a:"Kao delilnik napona" },
+  { area:"Potenciometar", q:"Na koje napone su vezani krajevi potenciometra?", a:"Na +5 V i GND" },
+  { area:"Potenciometar", q:"Šta je povezano na klizač potenciometra?", a:"Analogni ulaz Arduina (npr. A0)" },
+  { area:"PWM + Potenciometar", q:"Navedi tok signala u kolu sa potenciometrom i PWM-om.", a:"Potenciometar → analogRead() → Arduino → analogWrite() → PWM izlaz" },
+  { area:"PWM + Potenciometar", q:"Zašto se vrednost sa analogRead() mora prilagoditi pre analogWrite()?", a:"analogRead() daje opseg 0–1023, a analogWrite() prima 0–255." },
+  { area:"Komparatori", q:"Šta radi komparator?", a:"Poredi dva napona i daje digitalni izlaz." },
+  { area:"Komparatori", q:"Koliko stanja ima izlaz komparatora?", a:"Dva (0 i 1)" },
+  { area:"Histereza", q:"Kako se zovu pragovi kod histereze?", a:"Gornji i donji prag." },
+  { area:"Histereza", q:"Koji problem histereza rešava?", a:"Treperenje / nestabilnost izlaza zbog šuma." },
+  { area:"Napajanje", q:"Zašto svi delovi kola moraju imati zajedničku masu?", a:"Da bi napon bio pravilno referenciran i meren." },
+  { area:"Elektronika", q:"Zašto LED mora imati otpornik i kod PWM upravljanja?", a:"PWM ne ograničava struju; otpornik štiti LED." },
+  { area:"PWM", q:"Kako PWM signal daje utisak promenljivog napona?", a:"Promenom odnosa uključenog i isključenog vremena." },
+  { area:"PWM", q:"Šta predstavlja PWM vrednost 0?", a:"Uvek isključen izlaz (0 V)" },
+  { area:"PWM", q:"Šta predstavlja PWM vrednost 255?", a:"Uvek uključen izlaz (≈5 V)" },
+  { area:"PWM", q:"Da li se frekvencija PWM signala menja sa analogWrite()?", a:"Ne, menja se samo duty cycle." },
+  { area:"Potenciometar", q:"Šta Arduino meri kada je potenciometar povezan na analogni ulaz?", a:"Napon" },
+  { area:"Potenciometar", q:"Kako se menja napon na klizaču pri okretanju potenciometra?", a:"Kontinuirano, od 0 V do 5 V." },
+  { area:"Potenciometar", q:"Zašto se potenciometar ne koristi kao običan otpornik u ovom kolu?", a:"Zato što je potreban promenljiv napon, a ne promenljiva otpornost." },
+  { area:"PWM + Potenciometar", q:"Koja je uloga potenciometra u PWM kolu?", a:"Zadaje upravljačku vrednost za PWM." },
+  { area:"PWM + Potenciometar", q:"Šta se dešava sa PWM izlazom kada je potenciometar na minimumu?", a:"PWM vrednost je blizu 0 → izlaz isključen." },
+  { area:"Komparatori", q:"Kada je izlaz komparatora u logičkoj „1“?", a:"Kada je ulazni napon veći od referentnog." },
+  { area:"Komparatori", q:"Zašto je izlaz komparatora digitalan?", a:"Komparator donosi logičku odluku, ne daje analogni signal." },
+  { area:"Histereza", q:"Zašto komparator sa histerezom ima dva praga?", a:"Da bi se sprečilo stalno prebacivanje izlaza oko jednog praga." },
+  { area:"Histereza", q:"Kako se ostvaruje histereza u kolu?", a:"Pozitivnom povratnom spregom." },
+  { area:"Napajanje", q:"Šta se može desiti ako Arduino i komparator nemaju zajedničku masu?", a:"Pogrešno merenje, nestabilan ili neispravan rad." },
+  { area:"Senzori & ADC", q:"Koji su praktični saveti za dobijanje stabilnijih ADC merenja?", a:null },
+  { area:"IoT osnove", q:"Kako bi svojim rečima definisao Internet stvari (IoT) i objasnio njegovu osnovnu svrhu?", a:null },
+  { area:"IoT osnove", q:"Koje komponente čine tipičan IoT sistem i kakvu ulogu ima svaka od njih?", a:null },
+  { area:"IoT osnove", q:"Na koji način senzori doprinose funkcionisanju IoT sistema i koji primer njihove primene možeš da navedeš?", a:null },
+  { area:"IoT osnove", q:"Šta rade aktuatori u IoT sistemu i koji bi primer konkretne akcije mogao da opišeš?", a:null },
+  { area:"IoT osnove", q:"Šta podrazumevamo pod IoT čvorom i koje su njegove ključne funkcije u arhitekturi sistema?", a:null },
+  { area:"IoT osnove", q:"Zbog čega su cloud platforme važne u IoT rešenjima i šta se u njima tipično radi sa podacima?", a:null },
+  { area:"IoT osnove", q:"Kako IoT u slučaju pametne kuće doprinosi uštedi energije na konkretnom primeru?", a:null },
+  { area:"IoT osnove", q:"Koje bezbednosne i privatnosne rizike najčešće srećemo u IoT-u i zašto su oni značajni?", a:null },
+  { area:"IoT osnove", q:"Koje primere IoT primene možeš da navedeš za školu, poljoprivredu i pametni grad?", a:null },
+  { area:"IoT osnove", q:"Kako izgleda kompletan tok podataka u IoT sistemu, od senzora do korisničke aplikacije?", a:null },
+  { area:"IoT osnove", q:"Po čemu se razlikuju obrada na ivici (edge) i u oblaku (cloud) i kada biraš koju opciju?", a:null },
+  { area:"Senzori", q:"Kako objašnjavaš osnovni princip rada senzora i koje fizičke efekte možeš da navedeš kao primere?", a:null },
+  { area:"Senzori", q:"Koje tipove izlaza senzora razlikujemo (analogni, digitalni, magistrala) i koji primer ide uz svaki tip?", a:null },
+  { area:"Senzori", q:"Kako bi klasifikovao LDR, DS18B20 i PIR senzor prema vrsti njihovog izlaza?", a:null },
+  { area:"Napajanje", q:"Kako tipična potrošnja senzora utiče na izbor i dimenzionisanje napajanja u projektu?", a:null },
+  { area:"Senzori & ADC", q:"Šta predstavlja rezolucija ADC-a i kako se izračunava digitalni kod za dati ulazni napon i referencu?", a:null },
+  { area:"Senzori", q:"Koje konkretne senzore možeš da navedeš za merenje temperature, pritiska, gasova i osvetljenosti?", a:null },
+  { area:"Senzori", q:"Koja je suštinska razlika između pojmova „merenja“ i „detekcije“ u kontekstu senzora?", a:null },
+  { area:"Senzori & ADC", q:"Kako bi izračunao 10-bitni ADC kod za napon od 1,65 V uz referencu od 3,3 V?", a:null },
+  { area:"Upravljanje", q:"Šta je histerezis, kako se uvodi i zašto je koristan kod prekidača i senzora prisustva?", a:null },
+  { area:"Aktuatori", q:"Po čemu se razlikuju upravljanje tipa ON/OFF, PWM i pravo analogno upravljanje, i kada koristiš svako od njih?", a:null },
+  { area:"PWM", q:"Zašto se PWM najčešće koristi za kontrolu intenziteta svetla i brzine DC motora?", a:null },
+  { area:"Aktuatori", q:"Koje su tipične vrednosti napona i struja za LED, servo motor, DC motor i relej modul?", a:null },
+  { area:"Bezbednost", q:"Zašto je pri upravljanju mrežnim naponom od 220 V potrebna optoizolacija i šta se njome postiže?", a:null },
+  { area:"Aktuatori", q:"Kako bi u „pametnoj učionici“ odabrao i upravljao akuatorima kao što su svetla i roletne?", a:null },
+  { area:"Aktuatori", q:"Koje kriterijume uzimaš u obzir pri dimenzionisanju aktuatora i potrebne upravljačke elektronike?", a:null },
+  { area:"Aktuatori", q:"Kako izračunavaš vrednost serijskog otpornika za LED kada su zadati napon napajanja, pad napona na LED-u i željena struja?", a:null },
+  { area:"PWM", q:"Kako odabir PWM frekvencije utiče na treperenje LED-a i čujno zujanje motora, i koje vrednosti obično biraš?", a:null },
+  { area:"IoT čvorovi", q:"Kako objašnjavaš pojam IoT čvora i koje funkcije taj uređaj tipično obavlja u sistemu?", a:null },
+  { area:"IoT čvorovi", q:"Kako bi uporedio Arduino Uno, ESP32, Raspberry Pi i STM32 po mogućnostima i tipičnim slučajevima upotrebe?", a:null },
+  { area:"IoT čvorovi", q:"Koje su osnovne hardverske i komunikacione periferije (GPIO, ADC/DAC, PWM, UART/I²C/SPI) koje očekuješ na IoT čvoru?", a:null },
+  { area:"Napajanje", q:"Koje tipične napone i potrošnje struje imaš u vidu za Arduino Uno, ESP32 i Raspberry Pi prilikom dizajna napajanja?", a:null },
+  { area:"IoT čvorovi", q:"Koje kriterijume koristiš da odabereš najprikladniji IoT čvor za konkretan projekat?", a:null },
+  { area:"Serijska komunikacija", q:"Koju ulogu imaju UART, I²C i SPI u povezivanju senzora i aktuatora sa mikrokontrolerom ili gejtvejem?", a:null },
+  { area:"IoT čvorovi", q:"Zašto je važno da planiraš mrežnu povezivost (Wi-Fi, Ethernet, Bluetooth) još u ranoj fazi dizajna?", a:null },
+  { area:"IoT čvorovi", q:"Kako bi osmislio arhitekturu „pametne garaže“ i koje komponente čvora i periferije bi uključio?", a:null },
+  { area:"Upravljanje", q:"Kako se kvalitativno razlikuju režimi potrošnje „aktivno“, „light sleep“ i „deep sleep“ na tipičnom IoT čvoru?", a:null },
+  { area:"Serijska komunikacija", q:"U kojim situacijama daješ prednost SPI magistrali nad I²C-om i zbog kojih tehničkih razloga?", a:null },
+  { area:"Napajanje", q:"Koji su najčešći uzroci nestabilnosti napajanja na mikrokontroleru i kako ih praktično rešavaš?", a:null },
+  { area:"IoT čvorovi", q:"Kako planiraš raspored pinova (pinout) kada imaš ograničen broj ADC, PWM i UART pinova i više periferija?", a:null },
+  { area:"Elektronika", q:"Kolika je približno maksimalna dozvoljena struja jednog digitalnog pina Arduina i zašto je to ograničenje važno?", a:null },
+  { area:"Elektronika", q:"Zašto se mali LED na pinu uvek spaja sa serijskim otpornikom (220–330 Ω)?", a:null },
+  { area:"Elektronika", q:"Napiši redosled elemenata u kolu: mali LED direktno na pin (od pina ka masi).", a:null },
+  { area:"Elektronika", q:"Zašto LED traku od 12 V i 500 mA ne smemo da priključimo direktno na digitalni pin mikrokontrolera?", a:null },
+  { area:"Elektronika", q:"Koja su tri izvoda NPN tranzistora i kakva je funkcija baze, kolektora i emitera?", a:null },
+  { area:"Elektronika", q:"U low-side kolu sa LED trakom, gde se spajaju: (a) plus napajanja 12 V, (b) minus LED trake, (c) emiter tranzistora?", a:null },
+  { area:"Elektronika", q:"Zašto je neophodno da GND Arduina i GND napajanja 12 V budu povezani (zajednička masa)?", a:null },
+  { area:"Elektronika", q:"Gde tačno stoji otpornik 1 kΩ u kolu sa NPN tranzistorom i LED trakom i koja je njegova uloga?", a:null },
+  { area:"Elektronika", q:"Šta se može desiti sa mikrokontrolerom ako LED traku velikog strujnog opterećenja slučajno spojimo direktno na njegov pin bez tranzistora?", a:null },
+  { area:"Elektronika", q:"U ovom scenariju, da li tranzistor \\\"pojačava napon\\\", \\\"pojačava struju\\\" ili se ponaša kao prekidač? Obrazloži jednom rečenicom.", a:null },
+  { area:"Releji", q:"Zašto se rele koristi u IoT sistemu sa Arduinom za uključivanje 12 V ili 220 V potrošača?", a:null },
+  { area:"Releji", q:"Šta je IN, COM i VCC na rele modulu?", a:null },
+  { area:"Releji", q:"Zašto rele nije pogodan za PWM prigušivanje LED trake na nekoliko kHz?", a:null },
+  { area:"Releji", q:"Kako galvansko odvajanje štiti Arduino i korisnika?", a:null },
+  { area:"Releji", q:"Koja je razlika između strane kalema i strane kontakata kod relea?", a:null },
+  { area:"Releji", q:"Šta se dešava kada Arduino aktivira rele modul?", a:null },
+  { area:"Releji", q:"Zašto rele troši više struje nego što Arduino pin može direktno da da?", a:null },
+  { area:"Releji", q:"Napravi pseudokod za pametno svetlo sa LDR-om:", a:null },
+  { area:"Releji", q:"Objasni razliku u bezbednosti između: direktnog paljenja 220 V lampe sa Arduina i paljenja iste lampe preko relea sa galvanskim odvajanjem.", a:null },
+  { area:"Releji", q:"Koji tip relea je pogodan za sporo uključivanje i isključivanje, a koji za brze PWM primene?", a:null },
+  { area:"Releji", q:"Objasni kako rele modul sa optokaplerom dodatno izoluje Arduino od potrošača.", a:null },
+  { area:"Napajanje", q:"Šta je naponski delitelj i čemu služi?", a:null },
+  { area:"Napajanje", q:"Koja je osnovna formula za naponski delitelj?", a:null },
+  { area:"Napajanje", q:"Šta znači VIN na Arduino ploči?", a:null },
+  { area:"Napajanje", q:"Koja je razlika između ulaznog napona preko VIN/DC konektora i direktnog napona na 5V pinu?", a:null },
+  { area:"Napajanje", q:"Koji napon izlazi iz internog regulatora Arduina kada se na VIN pin dovede 9 V?", a:null },
+  { area:"Napajanje", q:"Kako vrednost otpornika utiče na struju kroz naponski delitelj?", a:null },
+  { area:"Napajanje", q:"Zašto mali otpornici troše više energije i mogu grejati?", a:null },
+  { area:"Napajanje", q:"Zašto preveliki otpornici (npr. >1 MΩ) mogu dovesti do šumovitog signala?", a:null },
+  { area:"Napajanje", q:"Zašto naponski delitelj nije dobar za napajanje Arduina?", a:null },
+  { area:"Napajanje", q:"Koja je idealna vrednost otpornika u naponskom delitelju kada merimo signal za ADC?", a:null },
+  { area:"Napajanje", q:"Kako bi povezao naponski delitelj da smanjiš napon baterije od 9 V na 5 V za analogni ulaz Arduina?", a:null },
+  { area:"Napajanje", q:"Ako razdelnik koristiš za napajanje uređaja, zašto je bolje koristiti stabilizator (npr. LM7805)?", a:null },
+  { area:"Napajanje", q:"Šta se dešava kada Arduino vuče struju preko razdelnika – kako to utiče na napon na izlazu?", a:null },
+  { area:"Napajanje", q:"Kako kondenzator paralelno sa donjim otpornikom (R2) utiče na stabilnost napona?", a:null },
+  { area:"Napajanje", q:"Za koje vrste opterećenja kondenzator u razdelniku može pomoći, a kada neće biti dovoljan?", a:null },
+  { area:"Napajanje", q:"Kolika struja prolazi kroz razdelnik sa otpornicima 1 kΩ i 800 Ω kada je ulaz 9 V? Kolika je disipacija energije?", a:null },
+  { area:"Napajanje", q:"Koje su prednosti i mane naponskog delitelja sa otpornicima od 10 kΩ–100 kΩ?", a:null },
+  { area:"Napajanje", q:"Kako Arduino štiti USB liniju kada je prisutan spoljni napon na VIN/DC konektoru?", a:null },
+  { area:"Napajanje", q:"Šta se dešava ako istovremeno spojiš USB i eksterno napajanje direktno na 5V pin?", a:null },
+  { area:"Napajanje", q:"Kako kapacitet kondenzatora u razdelniku utiče na sposobnost „držanja“ napona pri pikovima potrošnje?", a:null },
+  { area:"Napajanje", q:"Ako meriš napon baterije od 9 V preko naponskog delitelja i R1 = 8 kΩ, R2 = 10 kΩ, koliki je izlazni napon na A0 kada je baterija puna?", a:null },
+  { area:"Napajanje", q:"Kako odabrati vrednosti otpornika ako želiš balans između male potrošnje, stabilnog signala i brzog odziva?", a:null },
+  { area:"Napajanje", q:"Zašto se u projektima sa Arduinom najčešće koristi naponski delitelj za senzorski signal, a ne za napajanje?", a:null },
+  { area:"Napajanje", q:"Kako kondenzator može filtrirati šum u naponskom delitelju za ADC ulaz?", a:null },
+  { area:"Napajanje", q:"Koji su tipični izvori napajanja Arduina i kada se koristi ugrađeni regulator napona?", a:null },
+  { area:"PWM", q:"Kako se računa prosečan napon (Vavg) na opterećenju?", a:null },
+  { area:"PWM", q:"Zašto je PWM efikasniji od linearne regulacije?", a:null },
+  { area:"PWM", q:"Kako PWM utiče na LED i DC motor?", a:null },
+  { area:"Elektronika", q:"Zašto se stavlja slobodno-kretnu diodu (flyback) preko motora?", a:null },
+  { area:"PWM", q:"Kako PWM signali mogu biti “pretvoreni” u približno analogni napon?", a:null },
+  { area:"PWM", q:"Koje greške treba izbegavati kod PWM upravljanja (LED, motor, MOSFET)?", a:null },
+  { area:"Potenciometar", q:"Potenciometar se najčešće koristi kao __________ napona.", a:null },
+  { area:"Senzori & ADC", q:"Arduino analogni ulazi (A0–A5) koriste se za očitavanje __________ signala.", a:null },
+  { area:"PWM", q:"PWM signal je digitalni signal koji na izlazu daje __________ napon.", a:null },
+  { area:"Komparatori", q:"Komparator poredi __________ napona i daje digitalni izlaz.", a:null },
+  { area:"PWM", q:"Kod PWM signala, odnos uključenog i isključenog stanja naziva se __________.", a:null },
+  { area:"PWM + Potenciometar", q:"Ukratko objasni kako potenciometar utiče na jačinu svetlosti LED diode u PWM kolu.", a:null },
+  { area:"PWM", q:"Zašto se PWM signal može koristiti kao zamena za analogni izlaz?", a:null },
+  { area:"Elektronika", q:"Koja je razlika između digitalnog i analognog signala u Arduino sistemu?", a:null },
+  { area:"Napajanje", q:"Zašto je važno da napon napajanja odgovara komponentama u kolu?", a:null },
+  { area:"Napajanje", q:"Šta se može desiti ako je napon napajanja veći od dozvoljenog?", a:null },
+  { area:"PWM", q:"Ako je PWM vrednost postavljena na analogWrite(pin, 128) (opseg 0–255): a) koliki je približan duty cycle u %? b) intenzitet LED?", a:null },
+  { area:"Potenciometar", q:"Navedi osnovne priključke potenciometra u Arduino kolu.", a:null },
+  { area:"PWM", q:"Koji pinovi na Arduinu se koriste za PWM izlaz?", a:null },
+  { area:"Napajanje", q:"Šta je DC izvor napajanja i po čemu se razlikuje od AC izvora?", a:null },
+  { area:"Napajanje", q:"Nabroj četiri tipa napajanja IoT sistema.", a:null },
+  { area:"Napajanje", q:"Koja je razlika između napajanja Arduina preko USB-a i preko VIN pina?", a:null },
+  { area:"Napajanje", q:"Šta predstavlja unutrašnji otpor (Ri) realnog DC izvora?", a:null },
+  { area:"Napajanje", q:"Kako unutrašnji otpor utiče na napon izvora pri većem opterećenju?", a:null },
+  { area:"Napajanje", q:"Napiši formulu za snagu električnog potrošača i objasni značenje veličina u formuli.", a:null },
+  { area:"Napajanje", q:"Zašto servo motor ne treba napajati direktno sa 5V pina Arduina?", a:null },
+  { area:"Elektronika", q:"Koja je uloga kondenzatora od 100 nF u elektronskim kolima?", a:null },
+  { area:"Napajanje", q:"Šta se može desiti sa Arduino pločom ako je napajanje nestabilno?", a:null },
+  { area:"Napajanje", q:"Navedi dva praktična načina za poboljšanje stabilnosti napajanja u Arduino projektu.", a:null },
+  { area:"Napajanje", q:"Zašto se kod napajanja preko DC jack-a (9–12 V) Arduino regulator može pregrevati?", a:null },
+  { area:"Napajanje", q:"Šta je pad napona i zbog čega se javlja u kablovima i izvorima napajanja?", a:null },
+  { area:"Napajanje", q:"Napiši formulu za pad napona i objasni značenje veličina.", a:null },
+  { area:"Napajanje", q:"Šta je ripple (talasanje) u DC napajanju i zašto je problematičan?", a:null },
+  { area:"Napajanje", q:"Kako se pravilno napajaju potrošači velike struje (motor, relej) u Arduino sistemu?", a:null },
+  { area:"Napajanje", q:"Čemu služi bulk kondenzator (npr. 100–220 µF) u napajanju?", a:null },
+  { area:"Napajanje", q:"Zašto 9 V kockasta baterija nije dobro rešenje za dugotrajan Arduino projekat?", a:null },
+  { area:"Napajanje", q:"Navedi dva razloga zbog kojih može doći do resetovanja Arduina tokom rada.", a:null },
+];
+
+
+// ===== STATE =====
+let state = { tab:"glossary", q:"", topic:null };
+let ansVisible = false;
+let qCounter = 0;
+
+// ===== TOPIC ORDER =====
+const TOPIC_ORDER = [
+  "IoT osnove","IoT čvorovi","Serijska komunikacija",
+  "Arduino & MCU","Arduino pinovi",
+  "Senzori & ADC","Senzori i merenja",
+  "PWM","Komparatori","Histereza",
+  "Aktuatori","Aktuatori & motori",
+  "Releji","MQTT","Napajanje",
+  "Elektronika osnove","Elektronika","Mikrokontroleri",
+  "IDE & alati","Potenciometar","PWM + Potenciometar","Upravljanje","Bezbednost"
+];
+
+function topicColor(t) { return TOPIC_COLOR[t] || TOPIC_COLOR["default"] || "#5a7090"; }
+
+// ===== CHIPS =====
+function buildChips() {
+  const el = document.getElementById("chips");
+  el.innerHTML = "";
+
+  const items = state.tab === "glossary"
+    ? [...new Set(TERMS.map(t=>t.topic))].sort()
+    : [...new Set(QUESTIONS.map(q=>q.area))].sort();
+
+  // "Sve" chip
+  const all = document.createElement("div");
+  all.className = "chip" + (state.topic===null ? " active" : "");
+  all.textContent = "Sve oblasti";
+  all.style.borderColor = state.topic===null ? "#3b82f6" : "";
+  all.onclick = () => { state.topic=null; buildChips(); applyFilter(); };
+  el.appendChild(all);
+
+  items.forEach(tp => {
+    const c = document.createElement("div");
+    c.className = "chip" + (state.topic===tp ? " active" : "");
+    const col = topicColor(tp);
+    if(state.topic===tp) { c.style.borderColor=col; c.style.color=col; c.style.boxShadow=`0 0 0 2px ${col}22 inset`; }
+    c.textContent = tp;
+    c.onclick = () => { state.topic = state.topic===tp ? null : tp; buildChips(); applyFilter(); };
+    el.appendChild(c);
+  });
+}
+
+// ===== HIGHLIGHT =====
+function hlText(text, q) {
+  if(!q || !q.trim()) return esc(text);
+  let out = esc(text);
+  const words = norm(q).split(/\s+/).filter(Boolean);
+  words.forEach(w => {
+    if(!w) return;
+    const re = new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+    out = out.replace(re, m => `<mark>${m}</mark>`);
+  });
+  return out;
+}
+
+// ===== RENDER GLOSSARY =====
+function renderGlossary(query) {
+  const root = document.getElementById("glossaryRoot");
+  root.innerHTML = "";
+
+  // Grupiši po topic
+  const byTopic = new Map();
+  TERMS.forEach(t => {
+    if(!byTopic.has(t.topic)) byTopic.set(t.topic, []);
+    byTopic.get(t.topic).push(t);
+  });
+
+  // Sortiraj teme po TOPIC_ORDER + ostatak
+  const sortedTopics = [...byTopic.keys()].sort((a,b)=>{
+    const ia = TOPIC_ORDER.indexOf(a);
+    const ib = TOPIC_ORDER.indexOf(b);
+    if(ia>=0&&ib>=0) return ia-ib;
+    if(ia>=0) return -1; if(ib>=0) return 1;
+    return a.localeCompare(b,"sr");
+  });
+
+  let totalVisible = 0;
+
+  sortedTopics.forEach(topic => {
+    const items = byTopic.get(topic);
+    const col = topicColor(topic);
+    const q = norm(query||"");
+
+    // Filter
+    const visible = items.filter(t => {
+      if(state.topic && t.topic!==state.topic) return false;
+      if(!q) return true;
+      const hay = norm([t.term,t.def,t.topic,(t.tags||[]).join(" ")].join(" "));
+      return q.split(/\s+/).filter(Boolean).every(w=>hay.includes(w));
+    });
+    if(!visible.length) return;
+    totalVisible += visible.length;
+
+    const sec = document.createElement("section");
+    sec.className = "group";
+
+    sec.innerHTML = `
+      <div class="group-h">
+        <div class="group-h-left">
+          <div class="group-dot" style="background:${col};box-shadow:0 0 8px ${col}66"></div>
+          <h2>${esc(topic)}</h2>
+        </div>
+        <span class="group-meta">${visible.length} pojmova</span>
+      </div>
+      <div class="cards"></div>
+    `;
+
+    const cardsEl = sec.querySelector(".cards");
+
+    visible.sort((a,b)=>a.term.localeCompare(b.term,"sr")).forEach(t => {
+      const tags = (t.tags||[]);
+      const card = document.createElement("article");
+      card.className = "card";
+      card.onclick = () => { card.classList.toggle("open"); };
+
+      // Proveri da li postoji "dodatni sadržaj" — koristimo def kao detalj
+      // Kratki preview: prva 2 reda; klik = puna definicija + dodatan detalj
+      const hasExtra = t.def && t.def.length > 80;
+
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="card-title-row">
+            <span class="card-term">${hlText(t.term, query)}</span>
+            <span class="badge" style="background:${col}22;border-color:${col}66;color:${col}">${esc(topic)}</span>
+          </div>
+          <p class="card-preview">${hlText(t.def, query)}</p>
+        </div>
+        <div class="card-tags">
+          ${tags.map(tg=>`<span class="tag">${esc(tg)}</span>`).join("")}
+        </div>
+        ${hasExtra ? `
+        <div class="card-body">
+          <p style="margin-bottom:8px">${hlText(t.def, query)}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px">
+            ${tags.map(tg=>`<span class="tag hl-tag">${esc(tg)}</span>`).join("")}
+          </div>
+        </div>
+        <div class="card-expand">▾ klikni za detalje</div>
+        ` : ''}
+      `;
+
+      cardsEl.appendChild(card);
+    });
+
+    root.appendChild(sec);
+  });
+
+  document.getElementById("srch-count").textContent =
+    (totalVisible < TERMS.length) ? `${totalVisible} / ${TERMS.length} pojmova` : "";
+  document.getElementById("empty-msg").classList.toggle("hidden", totalVisible > 0);
+}
+
+// ===== RENDER QUESTIONS =====
+function renderQuestions(query) {
+  const root = document.getElementById("quizRoot");
+  root.innerHTML = "";
+  qCounter = 0;
+
+  const byArea = new Map();
+  QUESTIONS.forEach(q => {
+    if(!byArea.has(q.area)) byArea.set(q.area,[]);
+    byArea.get(q.area).push(q);
+  });
+
+  const sortedAreas = [...byArea.keys()].sort((a,b)=>{
+    const ia=TOPIC_ORDER.indexOf(a), ib=TOPIC_ORDER.indexOf(b);
+    if(ia>=0&&ib>=0) return ia-ib;
+    if(ia>=0) return -1; if(ib>=0) return 1;
+    return a.localeCompare(b,"sr");
+  });
+
+  let totalVisible = 0;
+  const qq = norm(query||"");
+
+  sortedAreas.forEach(area => {
+    const items = byArea.get(area);
+    const col = topicColor(area);
+
+    const visible = items.filter(qi => {
+      if(state.topic && qi.area !== state.topic) return false;
+      if(!qq) return true;
+      const hay = norm([qi.area,qi.q,qi.a||"",(qi.options||[]).join(" ")].join(" "));
+      return qq.split(/\s+/).filter(Boolean).every(w=>hay.includes(w));
+    });
+    if(!visible.length) return;
+    totalVisible += visible.length;
+
+    const group = document.createElement("div");
+    group.className = "qa-group";
+    group.innerHTML = `
+      <div class="qa-group-h">
+        <div class="qa-group-h-left">
+          <div class="group-dot" style="background:${col};box-shadow:0 0 8px ${col}66;width:10px;height:10px;border-radius:50%;flex-shrink:0"></div>
+          <h2>${esc(area)}</h2>
+        </div>
+        <span class="group-meta">${visible.length} pitanja</span>
+      </div>
+      <div class="qa-list"></div>
+    `;
+
+    const listEl = group.querySelector(".qa-list");
+
+    visible.forEach(qi => {
+      qCounter++;
+      const n = qCounter;
+      const hasOpts = qi.options && qi.options.length;
+      const hasAns  = qi.a && qi.a.trim();
+      const typeLabel = hasOpts ? "mc" : "open";
+      const typeText  = hasOpts ? "višestruki izbor" : "otvoreno";
+
+      let ansHtml = "";
+      if(hasOpts) {
+        ansHtml += `<div class="qcard-opts">`;
+        (qi.options||[]).forEach(opt => {
+          const letter = opt.trim().charAt(0).toLowerCase();
+          const aLetter = (qi.a||"").trim().charAt(0).toLowerCase();
+          const correct = letter === aLetter && aLetter && aLetter !== 'n';
+          ansHtml += `<div class="qopt${correct?" correct":""}">`;
+          if(correct) ansHtml += `<span style="color:#86efac;font-weight:700;flex-shrink:0">✓</span>`;
+          ansHtml += `${hlText(opt,query)}</div>`;
+        });
+        ansHtml += `</div>`;
+      }
+      if(hasAns && !hasOpts) {
+        ansHtml += `<div class="ans-label">Odgovor</div>
+          <div class="ans-text">${hlText(qi.a,query)}</div>`;
+      } else if(hasOpts && hasAns) {
+        ansHtml += `<div class="ans-label" style="margin-top:8px">Objašnjenje</div>
+          <div class="ans-text">${hlText(qi.a,query)}</div>`;
+      } else if(!hasOpts && !hasAns) {
+        ansHtml += `<div class="ans-text" style="color:var(--dim);font-style:italic">Odgovor nije naveden — otvoreno pitanje za diskusiju.</div>`;
+      }
+
+      const card = document.createElement("div");
+      card.className = "qcard";
+      card.id = `qc${n}`;
+      card.innerHTML = `
+        <div class="qcard-top" onclick="toggleQ(${n})">
+          <span class="qnum">#${n}</span>
+          <span class="qtype-badge ${typeLabel}">${typeText}</span>
+          <span class="qtext">${hlText(qi.q,query)}</span>
+          <button class="qtog-btn" id="qb${n}">${ansVisible?"Sakrij":"Rešenje"}</button>
+        </div>
+        <div class="qcard-ans${ansVisible?" show":""}" id="qa${n}">${ansHtml}</div>
+      `;
+      listEl.appendChild(card);
+    });
+
+    root.appendChild(group);
+  });
+
+  document.getElementById("qstats").textContent =
+    totalVisible < QUESTIONS.length ? `${totalVisible} / ${QUESTIONS.length} pitanja` : `${QUESTIONS.length} pitanja`;
+  document.getElementById("empty-msg").classList.toggle("hidden", totalVisible > 0);
+}
+
+function toggleQ(n) {
+  const ans = document.getElementById(`qa${n}`);
+  const btn = document.getElementById(`qb${n}`);
+  const show = !ans.classList.contains("show");
+  ans.classList.toggle("show",show);
+  btn.textContent = show ? "Sakrij" : "Rešenje";
+  btn.classList.toggle("on",show);
+}
+
+function toggleAllAns() {
+  ansVisible = true;
+  document.querySelectorAll(".qcard-ans").forEach(a=>a.classList.add("show"));
+  document.querySelectorAll(".qtog-btn").forEach(b=>{b.textContent="Sakrij";b.classList.add("on");});
+}
+function hideAllAns() {
+  ansVisible = false;
+  document.querySelectorAll(".qcard-ans").forEach(a=>a.classList.remove("show"));
+  document.querySelectorAll(".qtog-btn").forEach(b=>{b.textContent="Rešenje";b.classList.remove("on");});
+}
+
+// ===== SEARCH & FILTER =====
+let deb;
+document.getElementById("q").addEventListener("input", function(){ 
+  state.q = this.value;
+  clearTimeout(deb); 
+  deb = setTimeout(()=>applyFilter(), 90);
+});
+
+function applyFilter() {
+  const q = state.q;
+  if(state.tab==="glossary") {
+    renderGlossary(q);
+  } else {
+    renderQuestions(q);
+  }
+}
+
+function switchTab(tab, btn) {
+  state.tab = tab;
+  state.topic = null;
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("panel" + (tab==="glossary"?"Glossary":"Quiz")).classList.add("active");
+  document.getElementById("btn-ans").style.display = tab==="quiz"?"":"none";
+  buildChips();
+  applyFilter();
+}
+
+function resetAll() {
+  state.q=""; state.topic=null;
+  document.getElementById("q").value="";
+  ansVisible=false;
+  buildChips();
+  applyFilter();
+}
+
+// ===== INIT =====
+document.getElementById("s-t").textContent = TERMS.length;
+document.getElementById("s-q").textContent = QUESTIONS.length;
+document.getElementById("s-top").textContent = [...new Set(TERMS.map(t=>t.topic))].length;
+buildChips();
+renderGlossary("");
+</script>
+</body>
+</html>
