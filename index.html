@@ -182,6 +182,7 @@ footer{border-top:1px solid var(--brd);padding:15px 32px;text-align:center;font-
   <button class="tb" onclick="sT('cs',this)">🖥 ARDUINO + C#</button>
   <button class="tb" onclick="sT('bi',this)">📦 BIBLIOTEKE</button>
   <button class="tb" onclick="sT('iot',this)">🌐 IoT TEORIJA</button>
+  <button class="tb" onclick="sT('res',this)">🔗 RESURSI</button>
 </div></div>
 
 <div class="srch"><div class="si">
@@ -264,6 +265,11 @@ footer{border-top:1px solid var(--brd);padding:15px 32px;text-align:center;font-
     <a href="#" onclick="oI('iot13');return false"><span class="arr"></span>IoT-13 IoT čvorovi</a>
     <a href="#" onclick="oI('iot14');return false"><span class="arr"></span>IoT-14 Univerzalni pristup</a>
     <a href="#" onclick="oI('iot15');return false"><span class="arr"></span>IoT-15 Ponavljanje (bank pitanja)</a>
+  </nav></div>
+  <div class="sb"><div class="sbh"><span class="dot" style="background:#ffd700;box-shadow:0 0 5px #ffd700"></span>Resursi</div>
+  <nav class="sbn">
+    <a href="iot_pojmovnik_qa.html" target="_blank"><span class="arr"></span>IoT Pojmovnik (126 pojmova)</a>
+    <a href="iot_pojmovnik_qa.html" target="_blank"><span class="arr"></span>Baza pitanja (231 pitanje)</a>
   </nav></div>
 </aside>
 
@@ -3073,6 +3079,49 @@ Promena u fizičkom svetu</pre></div>
 
 </div><!-- /iot-sec -->
 
+
+<!-- ===== RESURSI ===== -->
+<div class="sec" data-s="res" id="res-sec">
+<div class="sh"><h2 style="color:#ffd700">🔗 RESURSI</h2><div class="sl"></div><div class="sct">Prateci materijali</div></div>
+
+<div class="pc" id="res1" data-q="pojmovnik pitanja baza test MQTT HTTP protokol IoT">
+<div class="pct"><div class="pcs" style="background:linear-gradient(to bottom,#ffd700,rgba(255,215,0,.1))"></div><div style="flex:1">
+<div class="pch" onclick="tC('res1')">
+  <div class="pchl"><div class="pcm"><span class="bg n">RESURS-01</span><span class="bg t">Interaktivni</span></div>
+  <div class="pcti">IoT Pojmovnik + Baza pitanja (standalone)</div>
+  <div class="pcsu">126 pojmova · 231 pitanje · pretraga sa latinice i ćirilice · filteri po temi · rešenja na zahtev · višestruki izbor</div></div>
+  <div class="tog" id="tres1">+</div>
+</div>
+<div class="pcb" id="bres1">
+<div class="pbi"><div class="lst"><div class="lstt">Sadržaj</div><div class="lc">
+  <p>Posebna stranica sa pojmovnikom i bankom pitanja za sve IoT teme. Pretraga normalizuje dijakritike (č→c, ć→c, š→s, ž→z) i radi i na latinici i ćirilici.</p>
+  <h4>Pojmovnik — 126 pojmova u 16 tema</h4>
+  <div class="cg">
+    <div class="ci">IoT osnove, IoT čvorovi, Arduino & MCU, Arduino pinovi</div>
+    <div class="ci">Serijska komunikacija (UART, I²C, SPI)</div>
+    <div class="ci">Senzori & ADC, PWM, Komparatori</div>
+    <div class="ci">Aktuatori & motori, Releji, MQTT</div>
+    <div class="ci">Napajanje (22 pojma), Elektronika osnove, IDE & alati</div>
+    <div class="ci">Naponski delilac, DC-DC, solarno, baterije</div>
+  </div>
+  <h4>Baza pitanja — 231 pitanje u 21 oblasti</h4>
+  <div class="ig">
+    <div class="ii">Otvorena pitanja za usmeni/pismeni ispit</div>
+    <div class="ii">Pitanja višestrukog izbora sa automatskim pregledom tačnog odgovora</div>
+    <div class="ii">Pitanja sa "dopuni rečenicu" tipom</div>
+    <div class="ii">Tematske grupe: MQTT, Napajanje, PWM, Releji, Tranzistor...</div>
+  </div>
+  <div class="inf" style="margin-top:12px">
+    <a href="iot_pojmovnik_qa.html" target="_blank" 
+       style="display:inline-flex;align-items:center;gap:8px;padding:9px 20px;background:rgba(255,215,0,.1);border:1px solid #ffd700;border-radius:6px;color:#ffd700;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:.82rem;letter-spacing:1px;font-weight:700;transition:all .2s"
+       onmouseover="this.style.background='rgba(255,215,0,.2)'" onmouseout="this.style.background='rgba(255,215,0,.1)'">
+      🔗 Otvori IoT Pojmovnik + Q&amp;A →
+    </a>
+  </div>
+</div></div></div></div></div></div>
+
+</div><!-- /res-sec -->
+
 </main><!-- /cnt -->
 </div><!-- /main -->
 
@@ -3163,6 +3212,12 @@ function _dS(q) {
 
 function oI(id) {
   sT('iot', qS(6));
+  setTimeout(() => { tC(id, true); scrollTo(id); }, 50);
+}
+
+
+function oRes(id) {
+  sT('res', qS(7));
   setTimeout(() => { tC(id, true); scrollTo(id); }, 50);
 }
 
